@@ -46,7 +46,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, documentBuilder);
   SwaggerModule.setup('/', app, document);
 
-  await app.listen(configService.get('PUBLIC_APP_PORT'));
+  await app.listen(configService.get('app.port'));
 
   Logger.log(`Application is running on: ${await app.getUrl()}`);
 }
