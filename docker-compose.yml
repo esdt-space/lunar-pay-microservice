@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo
+    ports:
+      - '27017-27019:27017-27019'
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - lunar-pay-api
+    volumes:
+      - mongo:/data/db
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    networks:
+      - lunar-pay-api
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+
+volumes:
+  mongo:
+    name: lunar-pay-api-db-volume
+
+networks:
+  lunar-pay-api:

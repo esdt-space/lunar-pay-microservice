@@ -1,0 +1,12 @@
+app:
+  port: 3001
+
+urls:
+  blockchainApi: 'https://api.multiversx.com'
+  elasticHost: 'https://index.multiversx.com'
+  gatewayHost: 'https://gateway.multiversx.com'
+
+nativeAuth:
+  maxExpirySeconds: 86400
+  acceptedOrigins:
+    - lunar-pay.finance

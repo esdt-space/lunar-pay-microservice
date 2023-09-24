@@ -1,0 +1,13 @@
+app:
+  port: 3001
+
+urls:
+  blockchainApi: 'https://testnet-api.multiversx.com'
+  elasticHost: 'https://testnet-index.multiversx.com'
+  gatewayHost: 'https://testnet-gateway.multiversx.com'
+
+nativeAuth:
+  maxExpirySeconds: 86400
+  acceptedOrigins:
+    - localhost
+    - testnet.lunar-pay.finance

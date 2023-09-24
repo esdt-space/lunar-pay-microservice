@@ -1,0 +1,10 @@
+urls:
+  blockchainApi: 'https://devnet-api.multiversx.com'
+  elasticHost: 'https://devnet-index.multiversx.com'
+  gatewayHost: 'https://devnet-gateway.multiversx.com'
+
+nativeAuth:
+  maxExpirySeconds: 86400
+  acceptedOrigins:
+    - https://localhost:5173
+    - https://devnet.lunar-pay.finance
