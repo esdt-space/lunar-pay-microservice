@@ -20,6 +20,6 @@ import {
     ]),
   ],
   providers: [UacService, UacRepository, UacEventsHandler],
-  exports: [UacEventsHandler],
+  exports: [UacService, UacEventsHandler],
 })
 export class UacModule {}
