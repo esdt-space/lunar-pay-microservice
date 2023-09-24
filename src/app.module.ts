@@ -11,6 +11,17 @@ import { NativeAuthModule } from '@/libs/security/native-auth';
 import configuration from '../config/configuration';
 import { BlockchainEventsNotifierModule } from '@/libs/blockchain/mvx/events-notifier';
 
+import { AccountModule } from '@/common/blockchain/account/account.module';
+import { TokensModule } from '@/common/blockchain/tokens/tokens.module';
+import { TokensController } from '@/common/blockchain/tokens/tokens.controller';
+import { AccountController } from '@/common/blockchain/account/account.controller';
+import { TokenPricesController } from '@/common/blockchain/tokens/token-prices.controller';
+
+import { UacController } from '@/features/uac';
+import { UacModule } from '@/features/uac/uac.module';
+import { SubscriptionsModule } from '@/features/subscriptions/subscriptions.module';
+import { SubscriptionsController } from '@/features/subscriptions/subscriptions.controller';
+
 @Module({
   imports: [
     /** Common Modules **/
@@ -27,7 +38,20 @@ import { BlockchainEventsNotifierModule } from '@/libs/blockchain/mvx/events-not
     BlockchainEventsNotifierModule,
 
     NativeAuthModule,
+
+    AccountModule,
+    TokensModule,
+
+    UacModule,
+    SubscriptionsModule,
   ],
-  controllers: [],
+  controllers: [
+    AccountController,
+    TokensController,
+    TokenPricesController,
+
+    UacController,
+    SubscriptionsController,
+  ],
 })
 export default class AppModule {}
