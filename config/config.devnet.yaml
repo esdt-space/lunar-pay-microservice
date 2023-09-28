@@ -6,6 +6,9 @@ urls:
   elasticHost: 'https://devnet-index.multiversx.com'
   gatewayHost: 'https://devnet-gateway.multiversx.com'
 
+contracts:
+  lunarPayVault: 'erd1qqqqqqqqqqqqqpgqpt9mvmz3hm7p8vzkmrjrm62m5wtafdnrttdqtma5nf'
+
 nativeAuth:
   maxExpirySeconds: 86400
   acceptedOrigins:

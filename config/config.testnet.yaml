@@ -6,6 +6,9 @@ urls:
   elasticHost: 'https://testnet-index.multiversx.com'
   gatewayHost: 'https://testnet-gateway.multiversx.com'
 
+contracts:
+  lunarPayVault:
+
 nativeAuth:
   maxExpirySeconds: 86400
   acceptedOrigins:

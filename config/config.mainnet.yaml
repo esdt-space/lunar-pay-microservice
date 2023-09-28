@@ -6,6 +6,9 @@ urls:
   elasticHost: 'https://index.multiversx.com'
   gatewayHost: 'https://gateway.multiversx.com'
 
+contracts:
+  lunarPayVault:
+
 nativeAuth:
   maxExpirySeconds: 86400
   acceptedOrigins:
