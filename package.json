@@ -6,8 +6,6 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "nest build",
-    "start:prod": "node dist/main",
     "build:devnet": "npm run copy-devnet-config && nest build",
     "build:testnet": "npm run copy-testnet-config && nest build",
     "build:mainnet": "npm run copy-mainnet-config && nest build",
