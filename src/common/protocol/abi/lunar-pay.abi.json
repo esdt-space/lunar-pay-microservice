@@ -37,6 +37,17 @@
             ]
         },
         {
+            "name": "getUsedTokenIds",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<EgldOrEsdtTokenIdentifier>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
             "name": "getWhitelistedAddresses",
             "mutability": "readonly",
             "inputs": [],
@@ -138,6 +149,25 @@
             "outputs": []
         },
         {
+            "docs": [
+                "\\n     * It returns the total account balances\\n     "
+            ],
+            "name": "getAccountBalances",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<tuple<EgldOrEsdtTokenIdentifier,BigUint>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
             "name": "whitelistToken",
             "onlyOwner": true,
             "mutability": "mutable",
@@ -221,8 +251,69 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "id",
+                    "name": "_id",
                     "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "createSubscription",
+            "mutability": "mutable",
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "subscribe",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "_agreement_id",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "unsubscribe",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "_agreement_id",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "chargeAllSubscriptions",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "_agreement_id",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "chargeSubscription",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "_agreement_id",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "paySubscription",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "_agreement_id",
+                    "type": "bytes"
                 }
             ],
             "outputs": []

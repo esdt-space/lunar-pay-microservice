@@ -5,6 +5,7 @@ import {
   EndpointDefinition,
   ResultsParser,
   SmartContract,
+  TypedValue,
 } from '@multiversx/sdk-core/out';
 import { ProxyNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { IContractQuery } from '@multiversx/sdk-network-providers/out/interface';
@@ -21,9 +22,14 @@ export class ContractQueryHandler {
     );
   }
 
-  async queryContract(contract: SmartContract, functionName: string) {
+  async queryContract(
+    contract: SmartContract,
+    functionName: string,
+    args: TypedValue[] = [],
+  ) {
     const query = contract.createQuery({
       func: new ContractFunction(functionName),
+      args: args,
     });
 
     const endpointDefinition = contract.getEndpoint(functionName);
