@@ -7,9 +7,13 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
-    "start": "nest start",
-    "start:dev": "npm run copy-devnet-config && nest start --watch",
     "start:prod": "node dist/main",
+    "build:devnet": "npm run copy-devnet-config && nest build",
+    "build:testnet": "npm run copy-testnet-config && nest build",
+    "build:mainnet": "npm run copy-mainnet-config && nest build",
+    "start:devnet": "npm run copy-devnet-config && nest start --watch",
+    "start:testnet": "npm run copy-testnet-config && nest start --watch",
+    "start:mainnet": "npm run copy-mainnet-config && nest start --watch",
     "copy-devnet-config": "cp ./config/config.devnet.yaml ./config/config.yaml",
     "copy-testnet-config": "cp ./config/config.testnet.yaml ./config/config.yaml",
     "copy-mainnet-config": "cp ./config/config.mainnet.yaml ./config/config.yaml"
