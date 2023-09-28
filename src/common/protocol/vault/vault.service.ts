@@ -74,7 +74,10 @@ export class VaultService {
         return firstValue.getItems().map((item: Tuple) => {
           const fields = item.getFields();
 
-          return [fields[0].value.toString(), fields[1].value.toString()];
+          return {
+            identifier: fields[0].value.toString(),
+            balance: fields[1].value.toString(),
+          };
         });
       })
       .catch((err) => {
