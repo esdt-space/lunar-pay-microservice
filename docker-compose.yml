@@ -1,5 +1,23 @@
 version: '3.8'
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile-development
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo
+      - redis
+    env_file:
+      - .env
+    networks:
+      - lunar-pay-api
+    volumes:
+      - ./src:/src
+      - ./config:/config
+      - ./nest-cli.json:/nest-cli.json
+
   mongo:
     image: mongo
     ports:
