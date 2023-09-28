@@ -13,4 +13,4 @@ nativeAuth:
   maxExpirySeconds: 86400
   acceptedOrigins:
     - https://localhost:5173
-    - https://devnet.lunar-pay.finance
+    - https://devnet.lunarpay.finance

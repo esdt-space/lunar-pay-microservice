@@ -13,4 +13,4 @@ nativeAuth:
   maxExpirySeconds: 86400
   acceptedOrigins:
     - localhost
-    - testnet.lunar-pay.finance
+    - testnet.lunarpay.finance
