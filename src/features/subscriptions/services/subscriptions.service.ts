@@ -6,11 +6,17 @@ import { SubscriptionDto } from '../dto/subscription.dto';
 export class SubscriptionsService {
   constructor(private readonly repository: SubscriptionRepository) {}
 
-  async findAll(): Promise<SubscriptionEntity[]> {
+  async findAllSubscriptions(): Promise<SubscriptionEntity[]> {
     return this.repository.model.find();
   }
 
-  async create(
+  async findOneSubscriptionById(
+    id: Types.ObjectId,
+  ): Promise<SubscriptionEntity> {
+    return this.repository.model.findOne({ _id: id }).orFail();
+  }
+
+  async createSubscription(
     subscriptionId: Types.ObjectId,
     dto: SubscriptionDto,
   ): Promise<SubscriptionEntity> {

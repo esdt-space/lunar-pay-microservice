@@ -2,6 +2,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 import { SubscriptionsService } from './services/subscriptions.service';
+import { MongooseObjectIdPipe } from '@/libs/database/mongo';
 
 @ApiTags('Subscriptions')
 @Controller('subscriptions')
@@ -12,15 +13,16 @@ export class SubscriptionsController {
   @UseGuards(NativeAuthGuard)
   getAccountSubscriptions(@NativeAuth('address') address: string) {
     console.debug(address);
-    return this.subscriptionsService.findAll();
+    return this.subscriptionsService.findAllSubscriptions();
   }
 
   @Get(':id')
   @UseGuards(NativeAuthGuard)
   async getOneById(
     @NativeAuth('address') address: string,
-    @Param('id') id: string,
+    @Param('id', MongooseObjectIdPipe) id,
   ) {
     console.debug(address);
+    return this.subscriptionsService.findOneSubscriptionById(id);
   }
 }
