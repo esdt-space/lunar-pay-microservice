@@ -27,4 +27,8 @@ export class SubscriptionsService {
 
     return newSubscription;
   }
+
+  async deleteOneSubscriptionById(id: Types.ObjectId) {
+    return this.repository.model.deleteOne({ _id: id });
+  }
 }
