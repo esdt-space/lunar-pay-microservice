@@ -40,7 +40,7 @@ export class SubscriptionsController {
 
   @Get(':id')
   @UseGuards(NativeAuthGuard)
-  async getOneSubscriptionById(
+  async getSubscription(
     @NativeAuth('address') address: string,
     @Param('id', MongooseObjectIdPipe) id,
   ) {
@@ -51,7 +51,7 @@ export class SubscriptionsController {
 
   @Delete(':id')
   @UseGuards(NativeAuthGuard)
-  async deleteOneSubscriptionById(
+  async deleteSubscription(
     @NativeAuth('address') address: string,
     @Param('id', MongooseObjectIdPipe) id,
   ) {

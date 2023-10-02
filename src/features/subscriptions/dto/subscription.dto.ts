@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsArray } from 'class-validator';
 
-// TO DO Update the dto with the propper types
+// TO DO Update the dto with the proper types
 export class SubscriptionDto {
   @IsString()
   @IsNotEmpty()

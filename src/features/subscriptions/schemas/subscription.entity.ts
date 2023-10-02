@@ -5,7 +5,7 @@ import { Exclude, Type } from 'class-transformer';
 import { Types } from 'mongoose';
 import { Subscription } from 'rxjs';
 
-// TO DO Update the Schema with the propper types
+// TO DO Update the Schema with the proper types
 @Schema({
   ...defaultSchemaOptions,
   collection: 'lunar-pay-subscriptions',
