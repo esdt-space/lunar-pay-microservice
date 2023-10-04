@@ -13,17 +13,11 @@ export class SubscriptionsService {
   async findOneSubscriptionById(
     id: Types.ObjectId,
   ): Promise<SubscriptionEntity> {
-    return this.repository.model.findOne({ _id: id }).orFail();
+    return this.repository.findOne({ _id: id });
   }
 
-  async createSubscription(
-    subscriptionId: Types.ObjectId,
-    dto: SubscriptionDto,
-  ): Promise<SubscriptionEntity> {
-    const newSubscription = await this.repository.create({
-      subscriptionId: subscriptionId,
-      ...dto,
-    });
+  async createSubscription(dto: SubscriptionDto): Promise<SubscriptionEntity> {
+    const newSubscription = await this.repository.create(dto);
 
     return newSubscription;
   }

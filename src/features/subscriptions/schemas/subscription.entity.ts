@@ -1,24 +1,10 @@
-import { AbstractDocument, defaultSchemaOptions } from '@/libs/database/mongo';
+import { AbstractDocument } from '@/libs/database/mongo';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Type } from 'class-transformer';
-import { Types } from 'mongoose';
-import { Subscription } from 'rxjs';
 
 // TO DO Update the Schema with the proper types
-@Schema({
-  ...defaultSchemaOptions,
-  collection: 'lunar-pay-subscriptions',
-  autoIndex: true,
-})
+@Schema()
 export class SubscriptionEntity extends AbstractDocument {
-  @Type(() => String)
-  @Prop({ type: Types.ObjectId, ref: Subscription.name })
-  @ApiProperty({ type: String })
-  @Exclude()
-  subscriptionId: Types.ObjectId;
-
-  @Prop()
+  @Prop({ type: String })
   name: string;
 
   @Prop()
@@ -30,7 +16,7 @@ export class SubscriptionEntity extends AbstractDocument {
   @Prop()
   frequency: string;
 
-  @Prop()
+  @Prop({ type: String })
   description: string;
 
   @Prop()

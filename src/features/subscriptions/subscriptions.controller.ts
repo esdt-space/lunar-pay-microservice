@@ -28,14 +28,13 @@ export class SubscriptionsController {
 
   @Post()
   @UseGuards(NativeAuthGuard)
-  create(
+  createNewSubscription(
     @NativeAuth('address') address: string,
-    @Param('id', MongooseObjectIdPipe) id,
     @Body() dto: SubscriptionDto,
   ) {
     console.debug(address);
 
-    return this.subscriptionsService.createSubscription(id, dto);
+    return this.subscriptionsService.createSubscription(dto);
   }
 
   @Get(':id')

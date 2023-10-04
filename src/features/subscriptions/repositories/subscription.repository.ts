@@ -10,8 +10,7 @@ import { SubscriptionEntity } from '../schemas/subscription.entity';
 export class SubscriptionRepository extends AbstractRepository<SubscriptionEntity> {
   constructor(
     @InjectConnection() connection: Connection,
-    @InjectModel(SubscriptionEntity.name)
-    public model: Model<SubscriptionEntity>,
+    @InjectModel(SubscriptionEntity.name) model: Model<SubscriptionEntity>,
   ) {
     super(model, connection);
   }
