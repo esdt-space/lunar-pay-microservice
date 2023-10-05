@@ -7,29 +7,14 @@ export class SubscriptionEntity extends AbstractDocument {
   @Prop({ type: String })
   name: string;
 
-  @Prop()
-  token: string;
+  @Prop({ type: String })
+  owner: string;
 
   @Prop()
-  inputAmount: string;
-
-  @Prop()
-  frequency: string;
+  benefits: string[];
 
   @Prop({ type: String })
   description: string;
-
-  @Prop()
-  status: string; // success / reject
-
-  @Prop()
-  ipn: string;
-
-  @Prop()
-  subscribers: string[];
-
-  @Prop()
-  transactions: string[];
 }
 
 export const SunscriptionSchema =

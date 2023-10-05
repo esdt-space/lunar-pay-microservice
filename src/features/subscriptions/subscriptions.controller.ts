@@ -23,7 +23,7 @@ export class SubscriptionsController {
   getAccountSubscriptions(@NativeAuth('address') address: string) {
     console.debug(address);
 
-    return this.subscriptionsService.findAllSubscriptions();
+    return this.subscriptionsService.findAccountSubscriptions(address);
   }
 
   @Post()
@@ -34,7 +34,7 @@ export class SubscriptionsController {
   ) {
     console.debug(address);
 
-    return this.subscriptionsService.createSubscription(dto);
+    return this.subscriptionsService.createSubscription(address, dto);
   }
 
   @Get(':id')

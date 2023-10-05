@@ -8,39 +8,12 @@ export class SubscriptionDto {
   @ApiProperty()
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsArray()
   @ApiProperty()
-  token: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  inputAmount: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  frequency: string;
+  benefits: string[];
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
   description: string;
-
-  @IsString()
-  @ApiProperty()
-  status: string;
-
-  @IsString()
-  @ApiProperty()
-  ipn: string;
-
-  @IsArray()
-  @ApiProperty()
-  subscribers: string[];
-
-  @IsArray()
-  @ApiProperty()
-  transactions: string[];
 }
