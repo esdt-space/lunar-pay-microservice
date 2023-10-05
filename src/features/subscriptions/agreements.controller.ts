@@ -6,12 +6,13 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 import { AgreementsService } from './services/agreements.service';
 import { MongooseObjectIdPipe } from '@/libs/database/mongo';
-import { AgreementDto } from './dto/agreement.dto';
+import { UpdateAgreementDto } from './dto/agreement.dto';
 
 @ApiTags('Agreements')
 @Controller('agreements')
@@ -26,12 +27,10 @@ export class AgreementsController {
     return this.agreementsService.findAccountAgreements(address);
   }
 
+  // TO DO: Remove create after SC implementation
   @Post()
   @UseGuards(NativeAuthGuard)
-  createNewAgreement(
-    @NativeAuth('address') address: string,
-    @Body() dto: AgreementDto,
-  ) {
+  createNewAgreement(@NativeAuth('address') address: string, @Body() dto: any) {
     console.debug(address);
 
     return this.agreementsService.createAgreement(address, dto);
@@ -57,5 +56,17 @@ export class AgreementsController {
     console.debug(address);
 
     return this.agreementsService.deleteOneAgreementById(id);
+  }
+
+  @Put(':id')
+  @UseGuards(NativeAuthGuard)
+  async updateAgreement(
+    @NativeAuth('address') address: string,
+    @Param('id', MongooseObjectIdPipe) id,
+    @Body() dto: UpdateAgreementDto,
+  ) {
+    console.debug(address);
+
+    return this.agreementsService.updateAgreementById(address, id, dto);
   }
 }

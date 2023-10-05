@@ -59,7 +59,7 @@ type TimeBoundPayoutToReceive = {
   amountType: AnyAmount | BoundedAmount | BoundedAmountPerSubscriber;
 };
 
-type AgreementType =
+export type AgreementType =
   | RecurringPayoutToSend
   | RecurringPayoutToReceive
   | TimeBoundPayoutToSend
