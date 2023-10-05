@@ -9,53 +9,53 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
-import { SubscriptionsService } from './services/subscriptions.service';
+import { AgreementsService } from './services/agreements.service';
 import { MongooseObjectIdPipe } from '@/libs/database/mongo';
-import { SubscriptionDto } from './dto/subscription.dto';
+import { AgreementDto } from './dto/agreement.dto';
 
-@ApiTags('Subscriptions')
-@Controller('subscriptions')
-export class SubscriptionsController {
-  constructor(private readonly subscriptionsService: SubscriptionsService) {}
+@ApiTags('Agreements')
+@Controller('agreements')
+export class AgreementsController {
+  constructor(private readonly agreementsService: AgreementsService) {}
 
   @Get()
   @UseGuards(NativeAuthGuard)
-  getAccountSubscriptions(@NativeAuth('address') address: string) {
+  getAccountAgreements(@NativeAuth('address') address: string) {
     console.debug(address);
 
-    return this.subscriptionsService.findAccountSubscriptions(address);
+    return this.agreementsService.findAccountAgreements(address);
   }
 
   @Post()
   @UseGuards(NativeAuthGuard)
-  createNewSubscription(
+  createNewAgreement(
     @NativeAuth('address') address: string,
-    @Body() dto: SubscriptionDto,
+    @Body() dto: AgreementDto,
   ) {
     console.debug(address);
 
-    return this.subscriptionsService.createSubscription(address, dto);
+    return this.agreementsService.createAgreement(address, dto);
   }
 
   @Get(':id')
   @UseGuards(NativeAuthGuard)
-  async getSubscription(
+  async getAgreement(
     @NativeAuth('address') address: string,
     @Param('id', MongooseObjectIdPipe) id,
   ) {
     console.debug(address);
 
-    return this.subscriptionsService.findOneSubscriptionById(id);
+    return this.agreementsService.findOneAgreementById(id);
   }
 
   @Delete(':id')
   @UseGuards(NativeAuthGuard)
-  async deleteSubscription(
+  async deleteAgreement(
     @NativeAuth('address') address: string,
     @Param('id', MongooseObjectIdPipe) id,
   ) {
     console.debug(address);
 
-    return this.subscriptionsService.deleteOneSubscriptionById(id);
+    return this.agreementsService.deleteOneAgreementById(id);
   }
 }

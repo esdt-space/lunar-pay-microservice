@@ -4,13 +4,13 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 
 import { AbstractRepository } from '@/libs/database/mongo';
 
-import { SubscriptionEntity } from '../schemas/subscription.entity';
+import { AgreementEntity } from '../schemas/agreement.entity';
 
 @Injectable()
-export class SubscriptionRepository extends AbstractRepository<SubscriptionEntity> {
+export class AgreementsRepository extends AbstractRepository<AgreementEntity> {
   constructor(
     @InjectConnection() connection: Connection,
-    @InjectModel(SubscriptionEntity.name) model: Model<SubscriptionEntity>,
+    @InjectModel(AgreementEntity.name) model: Model<AgreementEntity>,
   ) {
     super(model, connection);
   }

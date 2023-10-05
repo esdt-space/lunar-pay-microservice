@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 // TO DO Update the Schema with the proper types
 @Schema()
-export class SubscriptionEntity extends AbstractDocument {
+export class AgreementEntity extends AbstractDocument {
   @Prop({ type: String })
   name: string;
 
@@ -17,5 +17,4 @@ export class SubscriptionEntity extends AbstractDocument {
   description: string;
 }
 
-export const SunscriptionSchema =
-  SchemaFactory.createForClass(SubscriptionEntity);
+export const AgreementSchema = SchemaFactory.createForClass(AgreementEntity);

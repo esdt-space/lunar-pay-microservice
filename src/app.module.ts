@@ -19,8 +19,8 @@ import { TokenPricesController } from '@/common/blockchain/tokens/token-prices.c
 
 import { UacController } from '@/features/uac';
 import { UacModule } from '@/features/uac/uac.module';
-import { SubscriptionsModule } from '@/features/subscriptions/subscriptions.module';
-import { SubscriptionsController } from '@/features/subscriptions/subscriptions.controller';
+import { AgreementsModule } from '@/features/subscriptions/agreements.module';
+import { AgreementsController } from '@/features/subscriptions/agreements.controller';
 import { VaultController } from '@/common/protocol/vault/vault.controller';
 import { VaultModule } from '@/common/protocol/vault/vault.module';
 
@@ -45,7 +45,7 @@ import { VaultModule } from '@/common/protocol/vault/vault.module';
     TokensModule,
 
     UacModule,
-    SubscriptionsModule,
+    AgreementsModule,
 
     VaultModule,
   ],
@@ -55,7 +55,7 @@ import { VaultModule } from '@/common/protocol/vault/vault.module';
     TokenPricesController,
 
     UacController,
-    SubscriptionsController,
+    AgreementsController,
 
     VaultController,
   ],
