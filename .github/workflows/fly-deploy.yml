@@ -24,16 +24,16 @@ jobs:
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy mainnet app to fly.io
-        if: ${{ github.ref_name == "main" }}
+        if: ${{ github.ref_name == 'main' }}
         run: |
           flyctl deploy -c fly.mainnet.toml --remote-only
 
       - name: Deploy devnet app to fly.io
-        if: ${{ github.ref_name == "devnet" }}
+        if: ${{ github.ref_name == 'devnet' }}
         run: |
           flyctl deploy -c fly.devnet.toml --remote-only
 
       - name: Deploy testnet app to fly.io
-        if: ${{ github.ref_name == "testnet" }}
+        if: ${{ github.ref_name == 'testnet' }}
         run: |
           flyctl deploy -c fly.testnet.toml --remote-only
