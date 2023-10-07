@@ -2,7 +2,7 @@ name: CI/CD pipeline
 on:
   push:
     branches:
-      - mainnet
+      - main
       - devnet
       - testnet
 
