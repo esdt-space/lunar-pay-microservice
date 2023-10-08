@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({
   ...defaultSchemaOptions,
-  collection: 'transactions',
+  collection: 'transfer-events',
   autoIndex: true,
 })
 export class TransferEvents extends AbstractDocument {
