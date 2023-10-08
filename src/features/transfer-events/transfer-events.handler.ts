@@ -9,6 +9,7 @@ export class TransferEventsHandler {
 
   public handleEvents(event: TransferEvent) {
     // TODO: Implement
+    console.log(event);
   }
 
   private async handleTransferCreatedEvent(

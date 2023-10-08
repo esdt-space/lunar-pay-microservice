@@ -9,10 +9,12 @@ import {
   WithdrawEvent,
   TransferEvent,
 } from '@/events-notifier/events';
-import { TransferEventsService } from '@/features/transfer-events/services/transfer.events.service';
-import { TransactionsEventHandler } from "@/features/transactions/transactions-event.handler";
-import {TransactionType} from "@/features/transactions/enums/transaction-type.enum";
-import {TRANSACTION_EVENT, TRANSFER_EVENTS} from "@/events-notifier/events/generic.event.types";
+import { TransactionsEventHandler } from '@/features/transactions/transactions-event.handler';
+import {
+  TRANSACTION_EVENT,
+  TRANSFER_EVENTS,
+} from '@/events-notifier/events/generic.event.types';
+import { TransferEventsHandler } from '@/features/transfer-events/transfer-events.handler';
 
 @Injectable()
 export class EventsConsumerService {
@@ -21,7 +23,7 @@ export class EventsConsumerService {
   constructor(
     private readonly uacEventsHandler: UacEventsHandler,
     private readonly transactionEventHandler: TransactionsEventHandler,
-    private readonly transferEventService: TransferEventsService,
+    private readonly transferEventsHandler: TransferEventsHandler,
   ) {}
 
   @CompetingRabbitConsumer({
@@ -55,8 +57,9 @@ export class EventsConsumerService {
           new WithdrawEvent(rawEvent),
         );
       case TRANSFER_EVENTS.TRANSFER:
-        const eventTransfer = new TransferEvent(rawEvent);
-        return eventTransfer;
+        return this.transferEventsHandler.handleEvents(
+          new TransferEvent(rawEvent),
+        );
       default:
         return new GenericEvent(rawEvent);
     }
