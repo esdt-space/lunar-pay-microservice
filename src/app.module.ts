@@ -23,6 +23,10 @@ import { AgreementsModule } from '@/features/subscriptions/agreements.module';
 import { AgreementsController } from '@/features/subscriptions/agreements.controller';
 import { VaultController } from '@/common/protocol/vault/vault.controller';
 import { VaultModule } from '@/common/protocol/vault/vault.module';
+import { TransactionModule } from '@/features/transactions/transaction.module';
+import { TransferEventsModule } from '@/features/transfer-events/transfer.events.module';
+import { TransactionsController } from '@/features/transactions/transactions.controller';
+import { TransferEventsController } from '@/features/transfer-events/transfer.events.controller';
 
 @Module({
   imports: [
@@ -46,6 +50,8 @@ import { VaultModule } from '@/common/protocol/vault/vault.module';
 
     UacModule,
     AgreementsModule,
+    TransactionModule,
+    TransferEventsModule,
 
     VaultModule,
   ],
@@ -56,6 +62,8 @@ import { VaultModule } from '@/common/protocol/vault/vault.module';
 
     UacController,
     AgreementsController,
+    TransactionsController,
+    TransferEventsController,
 
     VaultController,
   ],
