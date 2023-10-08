@@ -11,6 +11,7 @@ export class TransferEvent extends GenericEvent {
 
   readonly sender: string;
   readonly receiver: string;
+  readonly isInternal: boolean;
   readonly token: GenericToken | undefined;
 
   constructor(init: RawEventType) {
@@ -23,6 +24,7 @@ export class TransferEvent extends GenericEvent {
     this.token = topicData.token;
     this.sender = topicData.sender;
     this.receiver = topicData.receiver;
+    this.isInternal = topicData.isInternal;
   }
 
   getTopics() {

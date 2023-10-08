@@ -19,8 +19,8 @@ export class TransferEvents extends AbstractDocument {
   @Prop({ type: Number })
   amount: number;
 
-  @Prop({ type: String })
-  nonce: string | undefined;
+  @Prop({ type: Number })
+  nonce: number;
 
   @Prop({ type: Boolean })
   isInternal: boolean;

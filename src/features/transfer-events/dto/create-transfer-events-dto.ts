@@ -17,9 +17,9 @@ export class CreateTransferEventsDto {
   @IsNotEmpty()
   tokenID;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  nonce: string;
+  nonce: number;
 
   @IsNotEmpty()
   @IsBoolean()

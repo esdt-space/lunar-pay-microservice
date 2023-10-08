@@ -8,14 +8,23 @@ export class TransferEventsHandler {
   constructor(public readonly transferEventsService: TransferEventsService) {}
 
   public handleEvents(event: TransferEvent) {
-    // TODO: Implement
-    console.log(event);
+    const transferToken = event.token.toJSON();
+
+    const transferEventDto: CreateTransferEventsDto = {
+      sender: event.address,
+      receiver: event.receiver,
+      tokenID: transferToken.tokenID,
+      amount: transferToken.amount,
+      nonce: transferToken.nonce,
+      isInternal: event.isInternal,
+    };
+
+    return this.handleTransferCreatedEvent(transferEventDto);
   }
 
   private async handleTransferCreatedEvent(
     transferEvent: CreateTransferEventsDto,
   ) {
-    // TODO: Implement
     await this.transferEventsService.create(transferEvent);
   }
 }

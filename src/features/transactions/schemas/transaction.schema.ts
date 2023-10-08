@@ -18,8 +18,8 @@ export class Transaction extends AbstractDocument {
   @Prop({ type: Number })
   amount: number;
 
-  @Prop({ type: String })
-  nonce: string | undefined;
+  @Prop({ type: Number })
+  nonce: number;
 
   @Prop({ type: String, enum: Object.values(TransactionType) })
   type: string;

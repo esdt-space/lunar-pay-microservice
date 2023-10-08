@@ -13,9 +13,9 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   amount;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  nonce: string;
+  nonce: number;
 
   @IsString()
   @IsNotEmpty()

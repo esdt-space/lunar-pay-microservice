@@ -9,18 +9,26 @@ export class TransactionsEventHandler {
   constructor(public readonly transactionService: TransactionService) {}
 
   public handleEvents(event: DepositEvent | WithdrawEvent) {
-    // TODO: Implement
-
     const transactionType =
       event.getIdentifier() === TransactionType.DEPOSIT
         ? TransactionType.DEPOSIT
         : TransactionType.WITHDRAW;
+    const transactionToken = event.token.toJSON();
+
+    const transactionDto: CreateTransactionDto = {
+      address: event.address,
+      tokenID: transactionToken.tokenID,
+      amount: transactionToken.amount,
+      nonce: transactionToken.nonce,
+      type: transactionType,
+    };
+
+    return this.handleTransactionCreatedEvent(transactionDto);
   }
 
   private async handleTransactionCreatedEvent(
     createTransaction: CreateTransactionDto,
   ) {
-    // TODO: Implement
     await this.transactionService.create(createTransaction);
   }
 }
