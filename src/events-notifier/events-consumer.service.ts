@@ -30,10 +30,10 @@ export class EventsConsumerService {
   consumeEvents(rawEvents: any) {
     try {
       const events: any[] = rawEvents?.events ?? [];
-      for (const rawEvent of events) {
-        const decodedEvent = this.decodeEvent(rawEvent);
-        console.log(decodedEvent);
-      }
+      // for (const rawEvent of events) {
+      //   const decodedEvent = this.decodeEvent(rawEvent);
+      //   console.log(decodedEvent);
+      // }
     } catch (error) {
       this.logger.error(
         `An unhandled error occurred when consuming events: ${JSON.stringify(
