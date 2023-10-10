@@ -1,0 +1,39 @@
+name: CI/CD pipeline
+on:
+  push:
+    branches:
+      - main
+      - devnet
+      - testnet
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    container: node:18
+    steps:
+      - name: Github checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Setup Fly.io config
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy mainnet app to fly.io
+        if: ${{ github.ref_name == 'main' }}
+        run: |
+          flyctl deploy -c fly.mainnet.toml --remote-only
+
+      - name: Deploy devnet app to fly.io
+        if: ${{ github.ref_name == 'devnet' }}
+        run: |
+          flyctl deploy -c fly.devnet.toml --remote-only
+
+      - name: Deploy testnet app to fly.io
+        if: ${{ github.ref_name == 'testnet' }}
+        run: |
+          flyctl deploy -c fly.testnet.toml --remote-only

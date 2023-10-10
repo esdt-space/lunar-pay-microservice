@@ -1,0 +1,21 @@
+# flyctl launch added from .gitignore
+# Editors
+**/.idea
+
+# Dependencies
+**/dist
+**/node_modules
+
+# Secrets
+**/.env*
+!**/.env.example
+
+**/config/config.yaml
+
+# flyctl launch added from .idea/.gitignore
+# Default ignored files
+.idea/shelf
+.idea/workspace.xml
+# Editor-based HTTP Client requests
+.idea/httpRequests
+fly.toml

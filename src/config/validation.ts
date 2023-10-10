@@ -15,6 +15,9 @@ class EnvironmentVariables {
   REDIS_USERNAME: string;
   @IsString()
   REDIS_PASSWORD: string;
+
+  @IsString()
+  EVENTS_NOTIFIER_CONNECTION_STRING: string;
 }
 
 export function validate(config: Record<string, unknown>) {
