@@ -4,6 +4,7 @@ import {
   Injectable,
   ParseEnumPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
@@ -11,6 +12,7 @@ import { TransactionService } from '@/features/transactions/services/transaction
 import { TransactionType } from '@/features/transactions/enums/transaction-type.enum';
 import TransactionsFilters from '@/features/transactions/models/transactions.filters.model';
 import PaginationParams from '@/common/models/pagination.params.model';
+import { NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 
 @Injectable()
 @ApiTags('Transactions')
@@ -19,6 +21,7 @@ export class TransactionsController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Get('all')
+  @UseGuards(NativeAuthGuard)
   @ApiOperation({
     summary: 'Transactions list',
     description: 'Returns a list of available transactions on the blockchain.',
