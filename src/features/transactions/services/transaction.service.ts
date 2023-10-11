@@ -3,6 +3,8 @@ import { TransactionRepository } from '../repositories/transaction.repository';
 import { Transaction } from '../schemas/transaction.schema';
 
 import { CreateTransactionDto } from '../dto';
+import TransactionsFilters from '@/features/transactions/models/transactions.filters.model';
+import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
 export class TransactionService {
@@ -20,8 +22,37 @@ export class TransactionService {
     }
     return null;
   }
-  async findAll(): Promise<Transaction[]> {
-    return this.repository.model.find();
+  async findAll(
+    filter: TransactionsFilters,
+    pagination: PaginationParams,
+  ): Promise<Transaction[]> {
+    let filters = {};
+
+    if (filter.type) {
+      filters = {
+        type: filter.type,
+        ...filters,
+      };
+    }
+
+    if (filter.sender) {
+      filters = {
+        sender: filter.sender,
+        ...filters,
+      };
+    }
+
+    if (filter.receiver) {
+      filters = {
+        receiver: filter.receiver,
+        ...filters,
+      };
+    }
+
+    return this.repository.model
+      .find(filters)
+      .skip(pagination.skip)
+      .limit(pagination.limit);
   }
 
   async findOneById(id: string): Promise<Transaction> {

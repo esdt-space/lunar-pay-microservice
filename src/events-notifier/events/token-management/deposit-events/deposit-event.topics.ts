@@ -7,7 +7,7 @@ import { GenericToken } from '@/libs/blockchain/mvx/event-decoder';
 export class DepositEventTopics extends LunarPayEventTopics {
   private readonly address: Address;
   private readonly tokenIdentifier: string;
-  private readonly tokenNonce: string;
+  private readonly tokenNonce: string | number;
   private readonly amount: number;
 
   constructor(rawTopics: string[]) {
@@ -15,10 +15,11 @@ export class DepositEventTopics extends LunarPayEventTopics {
 
     this.address = new Address(Buffer.from(rawTopics[1], 'base64'));
     this.tokenIdentifier = Buffer.from(rawTopics[2], 'base64').toString();
-    this.tokenNonce = Buffer.from(rawTopics[2], 'base64').toString();
+    this.tokenNonce =
+      rawTopics[3] === '' ? 0 : Buffer.from(rawTopics[3], 'base64').toString();
 
     this.amount = parseInt(
-      Buffer.from(rawTopics[3], 'base64').toString('hex'),
+      Buffer.from(rawTopics[4], 'base64').toString('hex'),
       16,
     );
   }

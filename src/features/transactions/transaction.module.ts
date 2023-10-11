@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionSchema, Transaction } from './schemas/transaction.schema';
 import { TransactionRepository } from './repositories/transaction.repository';
 import { TransactionService } from './services/transaction.service';
+import { TransactionsEventHandler } from '@/features/transactions/transactions-event.handler';
 
 @Module({
   imports: [
@@ -11,12 +12,11 @@ import { TransactionService } from './services/transaction.service';
       { name: Transaction.name, schema: TransactionSchema },
     ]),
   ],
-  providers: [TransactionService, TransactionRepository],
-  exports: [
+  providers: [
     TransactionService,
-    MongooseModule.forFeature([
-      { name: Transaction.name, schema: TransactionSchema },
-    ]),
+    TransactionRepository,
+    TransactionsEventHandler,
   ],
+  exports: [TransactionService, TransactionsEventHandler],
 })
 export class TransactionModule {}

@@ -24,9 +24,8 @@ import { AgreementsController } from '@/features/subscriptions/agreements.contro
 import { VaultController } from '@/common/protocol/vault/vault.controller';
 import { VaultModule } from '@/common/protocol/vault/vault.module';
 import { TransactionModule } from '@/features/transactions/transaction.module';
-import { TransferEventsModule } from '@/features/transfer-events/transfer.events.module';
 import { TransactionsController } from '@/features/transactions/transactions.controller';
-import { TransferEventsController } from '@/features/transfer-events/transfer.events.controller';
+import { EventsNotifierModule } from '@/events-notifier';
 
 @Module({
   imports: [
@@ -51,9 +50,9 @@ import { TransferEventsController } from '@/features/transfer-events/transfer.ev
     UacModule,
     AgreementsModule,
     TransactionModule,
-    TransferEventsModule,
 
     VaultModule,
+    EventsNotifierModule,
   ],
   controllers: [
     AccountController,
@@ -63,7 +62,6 @@ import { TransferEventsController } from '@/features/transfer-events/transfer.ev
     UacController,
     AgreementsController,
     TransactionsController,
-    TransferEventsController,
 
     VaultController,
   ],

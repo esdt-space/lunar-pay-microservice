@@ -6,6 +6,7 @@ export class RawEvent {
   name: string | undefined;
   topics: string[] = [];
   data: string | undefined;
+  txHash: string | undefined;
 
   constructor(init: RawEventType) {
     if (init) {

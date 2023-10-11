@@ -10,11 +10,8 @@ import {
   TransferEvent,
 } from '@/events-notifier/events';
 import { TransactionsEventHandler } from '@/features/transactions/transactions-event.handler';
-import {
-  TRANSACTION_EVENT,
-  TRANSFER_EVENTS,
-} from '@/events-notifier/events/generic.event.types';
-import { TransferEventsHandler } from '@/features/transfer-events/transfer-events.handler';
+import { TRANSACTION_EVENT } from '@/events-notifier/events/generic.event.types';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class EventsConsumerService {
@@ -23,19 +20,23 @@ export class EventsConsumerService {
   constructor(
     private readonly uacEventsHandler: UacEventsHandler,
     private readonly transactionEventHandler: TransactionsEventHandler,
-    private readonly transferEventsHandler: TransferEventsHandler,
+    private readonly config: ConfigService,
   ) {}
 
   @CompetingRabbitConsumer({
-    queueName: 'events-59fc754',
+    queueName: 'events-7cfbcb1b',
   })
   consumeEvents(rawEvents: any) {
     try {
       const events: any[] = rawEvents?.events ?? [];
-      // for (const rawEvent of events) {
-      //   const decodedEvent = this.decodeEvent(rawEvent);
-      //   console.log(decodedEvent);
-      // }
+
+      const lunarPayEvent = events.filter(
+        (item) => item.address === this.config.get('contracts').lunarPayVault,
+      );
+
+      for (const rawEvent of lunarPayEvent) {
+        this.decodeEvent(rawEvent);
+      }
     } catch (error) {
       this.logger.error(
         `An unhandled error occurred when consuming events: ${JSON.stringify(
@@ -47,7 +48,7 @@ export class EventsConsumerService {
   }
 
   private decodeEvent(rawEvent: RawEvent) {
-    switch (rawEvent.name) {
+    switch (rawEvent.identifier) {
       case TRANSACTION_EVENT.DEPOSIT_EVENT:
         return this.transactionEventHandler.handleEvents(
           new DepositEvent(rawEvent),
@@ -56,8 +57,8 @@ export class EventsConsumerService {
         return this.transactionEventHandler.handleEvents(
           new WithdrawEvent(rawEvent),
         );
-      case TRANSFER_EVENTS.TRANSFER:
-        return this.transferEventsHandler.handleEvents(
+      case TRANSACTION_EVENT.TRANSFER_EVENT:
+        return this.transactionEventHandler.handleEvents(
           new TransferEvent(rawEvent),
         );
       default:

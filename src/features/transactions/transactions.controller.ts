@@ -2,15 +2,15 @@ import {
   Controller,
   Get,
   Injectable,
-  UseGuards,
-  UseInterceptors,
+  ParseEnumPipe,
+  Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
-import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
-import { DurationConstants } from '@/utils/time/duration-constants';
 import { TransactionService } from '@/features/transactions/services/transaction.service';
-import { NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
+import { TransactionType } from '@/features/transactions/enums/transaction-type.enum';
+import TransactionsFilters from '@/features/transactions/models/transactions.filters.model';
+import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
 @ApiTags('Transactions')
@@ -18,27 +18,40 @@ import { NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 export class TransactionsController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @Get('deposit')
+  @Get('all')
   @ApiOperation({
-    summary: 'Deposit list',
-    description: 'Returns a list of deposits available on the blockchain.',
+    summary: 'Transactions list',
+    description: 'Returns a list of available transactions on the blockchain.',
   })
-  @UseInterceptors(CacheInterceptor)
-  @CacheTTL(DurationConstants.oneMinute())
-  @UseGuards(NativeAuthGuard)
-  async getDepositTransactions() {
-    return this.transactionService.findAll();
-  }
-
-  @Get('withdraw')
-  @ApiOperation({
-    summary: 'Withdraw list',
-    description: 'Returns a list of withdraw available on the blockchain.',
+  @ApiQuery({
+    name: 'sender',
+    description: 'Address of the transaction sender',
+    required: false,
   })
-  @UseInterceptors(CacheInterceptor)
-  @CacheTTL(DurationConstants.oneMinute())
-  @UseGuards(NativeAuthGuard)
-  async getWithdrawTransactions() {
-    return this.transactionService.findAll();
+  @ApiQuery({
+    name: 'receiver',
+    description: 'Address of the transaction receiver',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'type',
+    description: 'Type of the transaction (deposit / withdrawal / transfer)',
+    required: false,
+    enum: TransactionType,
+  })
+  async list(
+    @Query() pagination: PaginationParams,
+    @Query('sender') sender?: string,
+    @Query('receiver') receiver?: string,
+    @Query('type', new ParseEnumPipe(TransactionType)) type?: TransactionType,
+  ) {
+    return this.transactionService.findAll(
+      new TransactionsFilters({
+        sender,
+        receiver,
+        type,
+      }),
+      pagination,
+    );
   }
 }

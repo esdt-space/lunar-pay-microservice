@@ -1,9 +1,19 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmpty,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class CreateTransactionDto {
   @IsString()
   @IsNotEmpty()
-  address: string;
+  sender: string;
+
+  @IsString()
+  @IsNotEmpty()
+  receiver: string;
 
   @IsNumber()
   @IsNotEmpty()
@@ -20,4 +30,11 @@ export class CreateTransactionDto {
   @IsString()
   @IsNotEmpty()
   type: string;
+
+  @IsString()
+  @IsNotEmpty()
+  txHash: string;
+
+  @IsBoolean()
+  isInternal?: boolean;
 }

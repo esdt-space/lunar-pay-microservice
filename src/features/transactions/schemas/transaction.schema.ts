@@ -10,9 +10,12 @@ import { TransactionType } from '@/features/transactions/enums/transaction-type.
 })
 export class Transaction extends AbstractDocument {
   @Prop({ type: String, index: true })
-  address: string;
+  sender: string;
 
-  @Prop({ type: String, unique: true, index: true })
+  @Prop({ type: String, index: true })
+  receiver: string;
+
+  @Prop({ type: String, index: true })
   tokenID: string;
 
   @Prop({ type: Number })
@@ -21,8 +24,14 @@ export class Transaction extends AbstractDocument {
   @Prop({ type: Number })
   nonce: number;
 
+  @Prop({ type: String, nullable: true })
+  txHash: string;
+
   @Prop({ type: String, enum: Object.values(TransactionType) })
   type: string;
+
+  @Prop({ type: Boolean, nullable: true })
+  isInternal: boolean;
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);
