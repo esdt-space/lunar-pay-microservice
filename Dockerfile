@@ -1,15 +1,15 @@
 FROM node:18-alpine AS builder
 
-# Create app directory
 WORKDIR /usr/src/app
 
 RUN apk --no-cache add --virtual .builds-deps build-base python3
 
 COPY --chown=node:node . .
 
-# Install app dependencies
+ARG BUILD_ENV=mainnet
+
 RUN npm ci
-RUN npm run build:mainnet
+RUN npm run build:${BUILD_ENV}
 
 USER node
 

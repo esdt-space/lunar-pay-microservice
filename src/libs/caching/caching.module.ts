@@ -20,6 +20,8 @@ import { ConfigService } from '@nestjs/config';
           port: config.get<number>('REDIS_PORT'),
           username: config.get<string>('REDIS_USERNAME'),
           password: config.get<string>('REDIS_PASSWORD'),
+          // @ts-ignore
+          family: 6,
         }),
       inject: [ConfigService],
     }),
@@ -27,13 +29,6 @@ import { ConfigService } from '@nestjs/config';
       isGlobal: true,
       useClass: CacheConfigService,
     }),
-  ],
-  providers: [
-    // CachingService,
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: CacheInterceptor,
-    // },
   ],
 })
 export class CachingModule {}
