@@ -33,7 +33,7 @@ export class TransferEventTopics extends LunarPayEventTopics {
       receiver: this.receiver.bech32(),
       isInternal: this.isInternal,
       token: new GenericToken({
-        tokenID: this.tokenIdentifier,
+        tokenIdentifier: this.tokenIdentifier,
         nonce: new BigNumber(this.tokenNonce),
         amount: new BigNumber(this.amount),
       }),

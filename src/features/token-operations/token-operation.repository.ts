@@ -4,13 +4,13 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 
 import { AbstractRepository } from '@/libs/database/mongo';
 
-import { Transaction } from '../schemas/transaction.schema';
+import { TokenOperation } from './token-operation.schema';
 
 @Injectable()
-export class TransactionRepository extends AbstractRepository<Transaction> {
+export class TokenOperationRepository extends AbstractRepository<TokenOperation> {
   constructor(
     @InjectConnection() connection: Connection,
-    @InjectModel(Transaction.name) public model: Model<Transaction>,
+    @InjectModel(TokenOperation.name) public model: Model<TokenOperation>,
   ) {
     super(model, connection);
   }

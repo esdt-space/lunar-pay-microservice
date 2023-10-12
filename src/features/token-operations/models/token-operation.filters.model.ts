@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from 'class-validator';
 
-import { TransactionType } from '@/features/transactions/enums/transaction-type.enum';
+import { TokenOperationType } from '../enums/token-operation-type.enum';
 
 export default class TransactionsFilters {
   constructor(init?: Partial<TransactionsFilters>) {
@@ -10,9 +10,11 @@ export default class TransactionsFilters {
   @IsString()
   @IsOptional()
   sender?: string;
+
   @IsOptional()
   @IsString()
   receiver?: string;
+
   @IsString()
-  type: TransactionType;
+  type: TokenOperationType;
 }

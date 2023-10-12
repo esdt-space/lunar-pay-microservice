@@ -23,8 +23,8 @@ import { AgreementsModule } from '@/features/subscriptions/agreements.module';
 import { AgreementsController } from '@/features/subscriptions/agreements.controller';
 import { VaultController } from '@/common/protocol/vault/vault.controller';
 import { VaultModule } from '@/common/protocol/vault/vault.module';
-import { TransactionModule } from '@/features/transactions/transaction.module';
-import { TransactionsController } from '@/features/transactions/transactions.controller';
+import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
+import { TokenOperationController } from '@/features/token-operations/token-operation.controller';
 import { EventsNotifierModule } from '@/events-notifier';
 
 @Module({
@@ -49,7 +49,7 @@ import { EventsNotifierModule } from '@/events-notifier';
 
     UacModule,
     AgreementsModule,
-    TransactionModule,
+    TokenOperationModule,
 
     VaultModule,
     EventsNotifierModule,
@@ -61,7 +61,7 @@ import { EventsNotifierModule } from '@/events-notifier';
 
     UacController,
     AgreementsController,
-    TransactionsController,
+    TokenOperationController,
 
     VaultController,
   ],

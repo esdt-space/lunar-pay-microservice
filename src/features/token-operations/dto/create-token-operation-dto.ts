@@ -1,12 +1,6 @@
-import {
-  IsBoolean,
-  IsEmpty,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CreateTransactionDto {
+export class CreateTokenOperationDto {
   @IsString()
   @IsNotEmpty()
   sender: string;
@@ -17,15 +11,15 @@ export class CreateTransactionDto {
 
   @IsNumber()
   @IsNotEmpty()
-  tokenID;
+  amount: string;
 
   @IsNumber()
   @IsNotEmpty()
-  amount;
+  tokenIdentifier: string;
 
   @IsNumber()
   @IsNotEmpty()
-  nonce: number;
+  tokenNonce: number;
 
   @IsString()
   @IsNotEmpty()

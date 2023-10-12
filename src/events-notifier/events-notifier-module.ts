@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { EventsConsumerService } from './events-consumer.service';
+import { EventsNotifierService } from './events-notifier.service';
 
-import { UacModule } from '@/features/uac/uac.module';
-import { TransactionModule } from '@/features/transactions/transaction.module';
+import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
 
 @Module({
-  imports: [UacModule, TransactionModule],
-  providers: [EventsConsumerService],
+  imports: [TokenOperationModule],
+  providers: [EventsNotifierService],
 })
 export class EventsNotifierModule {}

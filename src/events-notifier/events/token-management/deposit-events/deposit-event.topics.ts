@@ -29,7 +29,7 @@ export class DepositEventTopics extends LunarPayEventTopics {
       eventName: this.eventName,
       address: this.address.bech32(),
       token: new GenericToken({
-        tokenID: this.tokenIdentifier,
+        tokenIdentifier: this.tokenIdentifier,
         nonce: new BigNumber(this.tokenNonce),
         amount: new BigNumber(this.amount),
       }),

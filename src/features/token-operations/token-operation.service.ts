@@ -1,20 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { TransactionRepository } from '../repositories/transaction.repository';
-import { Transaction } from '../schemas/transaction.schema';
+import { TokenOperationRepository } from './token-operation.repository';
+import { TokenOperation } from './token-operation.schema';
 
-import { CreateTransactionDto } from '../dto';
-import TransactionsFilters from '@/features/transactions/models/transactions.filters.model';
+import { CreateTokenOperationDto } from './dto';
+import TransactionsFilters from '@/features/token-operations/models/token-operation.filters.model';
 import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
-export class TransactionService {
+export class TokenOperationService {
   logger = new Logger();
 
-  constructor(private readonly repository: TransactionRepository) {
+  constructor(private readonly repository: TokenOperationRepository) {
     this.logger = new Logger(this.constructor.name);
   }
 
-  async create(transaction: CreateTransactionDto): Promise<Transaction> {
+  async create(transaction: CreateTokenOperationDto): Promise<TokenOperation> {
     try {
       return await this.repository.model.create(transaction);
     } catch (e: any) {
@@ -22,10 +22,11 @@ export class TransactionService {
     }
     return null;
   }
+
   async findAll(
     filter: TransactionsFilters,
     pagination: PaginationParams,
-  ): Promise<Transaction[]> {
+  ): Promise<TokenOperation[]> {
     let filters = {};
 
     if (filter.type) {
@@ -55,7 +56,7 @@ export class TransactionService {
       .limit(pagination.limit);
   }
 
-  async findOneById(id: string): Promise<Transaction> {
+  async findOneById(id: string): Promise<TokenOperation> {
     return this.repository.model.findOne({ _id: id });
   }
 }
