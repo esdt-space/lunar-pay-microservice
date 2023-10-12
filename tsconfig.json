@@ -20,5 +20,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
   },
-  "extends": "./tsconfig.paths.json",
+  "watchOptions": {
+    "watchFile": "fixedPollingInterval"
+  },
+  "extends": "./tsconfig.paths.json"
 }

@@ -81,7 +81,7 @@ export class VaultService {
         });
       })
       .catch((err) => {
-        this.logger.log('Unable to call getWhitelistedTokens', err);
+        this.logger.log('Unable to call getAccountBalances', err);
 
         throw Error(err);
       });
