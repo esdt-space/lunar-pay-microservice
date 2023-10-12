@@ -29,6 +29,8 @@ export class EventsNotifierService {
       );
 
       for (const rawEvent of lunarPayEvent) {
+        if((rawEvent as GenericEvent).identifier === 'completedTxEvent') continue;
+
         const event = this.decodeEvent(rawEvent);
         await this.transactionEventHandler.handleEvents(event);
       }
