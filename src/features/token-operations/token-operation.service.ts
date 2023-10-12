@@ -25,7 +25,7 @@ export class TokenOperationService {
     return null;
   }
 
-  async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters, pagination: PaginationParams) {
+  async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
     let queryFilters: FilterQuery<TokenOperation> = {};
 
     if (filters.type) {
