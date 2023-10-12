@@ -45,7 +45,7 @@ export class TokenOperationEventHandler {
       ...this.getCommonDtoProperties(event),
       sender: event.address,
       receiver: this.config.get('contracts').lunarPayVault as string,
-      transactionType: TokenOperationType.DEPOSIT,
+      type: TokenOperationType.DEPOSIT,
     } as CreateTokenOperationDto;
   }
 
@@ -54,7 +54,7 @@ export class TokenOperationEventHandler {
       ...this.getCommonDtoProperties(event),
       sender: this.config.get('contracts').lunarPayVault as string,
       receiver: event.address,
-      transactionType: TokenOperationType.WITHDRAWAL,
+      type: TokenOperationType.WITHDRAWAL,
     } as CreateTokenOperationDto;
   }
 
