@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { redisStore } from 'cache-manager-ioredis-yet';
 import {
   CacheModuleOptions,
   CacheOptionsFactory,
   CacheStore,
 } from '@nestjs/cache-manager';
+import { ioRedisStore } from '@tirke/node-cache-manager-ioredis';
 
 @Injectable()
 export class CacheConfigService implements CacheOptionsFactory {
@@ -14,12 +14,12 @@ export class CacheConfigService implements CacheOptionsFactory {
   async createCacheOptions(): Promise<CacheModuleOptions> {
     return {
       ttl: 5,
-      store: (await redisStore({
+      store: (ioRedisStore({
         host: this.config.get<string>('REDIS_HOST'),
         port: this.config.get<number>('REDIS_PORT'),
         username: this.config.get<string>('REDIS_USERNAME'),
         password: this.config.get<string>('REDIS_PASSWORD'),
-        family: 6,
+        family: this.config.get<number>('REDIS_FAMILY'),
       })) as unknown as CacheStore,
     };
   }
