@@ -19,7 +19,7 @@ export class EventsNotifierService {
   ) {}
 
   @CompetingRabbitConsumer({
-    queueName: 'events-7cfbcb1b',
+    queueName: process.env.EVENTS_NOTIFIER_QUEUE_NAME,
   })
   async consumeEvents(rawEvents: any) {
     try {
