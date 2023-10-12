@@ -6,7 +6,7 @@ import { TokenOperationType } from './enums';
 @Schema({ ...defaultSchemaOptions, collection: 'token-operations' })
 export class TokenOperation extends AbstractDocument {
   @Prop({ type: String, enum: Object.values(TokenOperationType) })
-  type: string;
+  type: TokenOperationType;
 
   @Prop({ type: String, index: true })
   sender: string;

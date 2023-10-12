@@ -1,5 +1,5 @@
 export enum TokenOperationType {
   DEPOSIT = 'deposit',
-  WITHDRAWAL = 'withdrawal',
+  WITHDRAW = 'withdraw',
   TRANSFER = 'transfer',
 }

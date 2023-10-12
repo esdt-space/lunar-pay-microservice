@@ -24,13 +24,13 @@ export class TokenOperationEventHandler {
     let dto: CreateTokenOperationDto;
 
     switch (true) {
-      case event instanceof DepositEvent:
+      case event.name === TokenOperationType.DEPOSIT:
         dto = this.handleDepositEvent(event as DepositEvent);
         break;
-      case event instanceof WithdrawEvent:
+      case event.name === TokenOperationType.WITHDRAW:
         dto = this.handleWithdrawEvent(event as WithdrawEvent);
         break;
-      case event instanceof TransferEvent:
+      case event.name === TokenOperationType.TRANSFER:
         dto = this.handleTransferEvent(event as TransferEvent);
         break;
       default:
@@ -54,7 +54,7 @@ export class TokenOperationEventHandler {
       ...this.getCommonDtoProperties(event),
       sender: this.config.get('contracts').lunarPayVault as string,
       receiver: event.address,
-      type: TokenOperationType.WITHDRAWAL,
+      type: TokenOperationType.WITHDRAW,
     } as CreateTokenOperationDto;
   }
 
