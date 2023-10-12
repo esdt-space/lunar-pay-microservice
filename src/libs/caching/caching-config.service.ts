@@ -19,7 +19,7 @@ export class CacheConfigService implements CacheOptionsFactory {
         port: this.config.get<number>('REDIS_PORT'),
         username: this.config.get<string>('REDIS_USERNAME'),
         password: this.config.get<string>('REDIS_PASSWORD'),
-        family: this.config.get<number>('REDIS_FAMILY'),
+        family: Number(this.config.get<number>('REDIS_FAMILY')),
       })) as unknown as CacheStore,
     };
   }

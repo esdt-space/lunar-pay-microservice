@@ -20,7 +20,7 @@ import { CacheConfigService } from './caching-config.service';
           username: config.get<string>('REDIS_USERNAME'),
           password: config.get<string>('REDIS_PASSWORD'),
           // @ts-ignore
-          family: config.get<number>('REDIS_FAMILY'),
+          family: Number(config.get<number>('REDIS_FAMILY')),
         }),
       inject: [ConfigService],
     }),
