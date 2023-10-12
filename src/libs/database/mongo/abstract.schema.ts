@@ -7,6 +7,7 @@ export const defaultSchemaOptions = {
   versionKey: false,
   virtuals: true,
   timestamps: true,
+  autoIndex: true,
   toJSON: { virtuals: true },
 };
 

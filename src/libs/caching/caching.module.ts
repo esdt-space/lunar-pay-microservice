@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Global, Module } from '@nestjs/common';
 import { CacheModule } from '@nestjs/cache-manager';
 
@@ -7,13 +8,11 @@ import {
 } from '@multiversx/sdk-nestjs-cache';
 
 import { CacheConfigService } from './caching-config.service';
-import { ConfigService } from '@nestjs/config';
 
 @Global()
 @Module({
   imports: [
     MxCacheModule.forRootAsync({
-      // imports: [ApiConfigModule.forRoot(configuration)],
       useFactory: (config: ConfigService) =>
         new RedisCacheModuleOptions({
           host: config.get<string>('REDIS_HOST'),
