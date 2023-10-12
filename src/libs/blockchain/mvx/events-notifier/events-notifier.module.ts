@@ -9,7 +9,9 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         uri: config.get<string>('EVENTS_NOTIFIER_CONNECTION_STRING'),
-        defaultRpcTimeout: 10000,
+        connectionInitOptions: {
+          timeout: 30000,
+        }
       }),
     }),
   ],
