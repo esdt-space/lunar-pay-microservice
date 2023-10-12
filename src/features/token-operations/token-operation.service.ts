@@ -1,10 +1,12 @@
+import { FilterQuery } from 'mongoose';
 import { Injectable, Logger } from '@nestjs/common';
-import { TokenOperationRepository } from './token-operation.repository';
-import { TokenOperation } from './token-operation.schema';
+
+import PaginationParams from '@/common/models/pagination.params.model';
 
 import { CreateTokenOperationDto } from './dto';
-import TransactionsFilters from '@/features/token-operations/models/token-operation.filters.model';
-import PaginationParams from '@/common/models/pagination.params.model';
+import { TokenOperation } from './token-operation.schema';
+import { TokenOperationRepository } from './token-operation.repository';
+import TokenOperationFilters from './models/token-operation.filters.model';
 
 @Injectable()
 export class TokenOperationService {
@@ -23,35 +25,31 @@ export class TokenOperationService {
     return null;
   }
 
-  async findAll(
-    filter: TransactionsFilters,
-    pagination: PaginationParams,
-  ): Promise<TokenOperation[]> {
-    let filters = {};
+  async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters, pagination: PaginationParams) {
+    let queryFilters: FilterQuery<TokenOperation> = {};
 
-    if (filter.type) {
-      filters = {
-        type: filter.type,
-        ...filters,
-      };
+    if (filters.type) {
+      queryFilters.type = filters.type;
     }
 
-    if (filter.sender) {
-      filters = {
-        sender: filter.sender,
-        ...filters,
-      };
+    if (filters.sender) {
+      queryFilters.sender = filters.sender;
     }
 
-    if (filter.receiver) {
-      filters = {
-        receiver: filter.receiver,
-        ...filters,
-      };
+    if (filters.receiver) {
+      queryFilters.receiver = filters.receiver;
     }
+
+    queryFilters = {
+      ...queryFilters,
+      $or: [
+        { sender: address },
+        { receiver: address },
+      ]
+    };
 
     return this.repository.model
-      .find(filters)
+      .find(queryFilters)
       .skip(pagination.skip)
       .limit(pagination.limit);
   }
