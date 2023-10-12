@@ -2,17 +2,15 @@ import {
   Controller,
   Get,
   Injectable,
-  ParseEnumPipe,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import PaginationParams from '@/common/models/pagination.params.model';
 
 import { TokenOperationService } from './token-operation.service';
-import { TokenOperationType } from './enums/token-operation-type.enum';
 import TokenOperationFilters from './models/token-operation.filters.model';
 
 @Injectable()
