@@ -61,6 +61,8 @@ export class TokenOperationEventHandler {
   private handleTransferEvent(event: TransferEvent) {
     return {
       ...this.getCommonDtoProperties(event),
+      sender: event.sender,
+      receiver: event.receiver,
       isInternal: event.isInternal,
       type: TokenOperationType.TRANSFER,
     } as CreateTokenOperationDto;

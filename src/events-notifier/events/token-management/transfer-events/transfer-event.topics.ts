@@ -18,7 +18,7 @@ export class TransferEventTopics extends LunarPayEventTopics {
     this.sender = new Address(Buffer.from(rawTopics[1], 'base64'));
     this.receiver = new Address(Buffer.from(rawTopics[2], 'base64'));
     this.tokenIdentifier = Buffer.from(rawTopics[3], 'base64').toString();
-    this.tokenNonce = Buffer.from(rawTopics[4], 'base64').toString();
+    this.tokenNonce = rawTopics[4] === '' ? '0' : Buffer.from(rawTopics[4], 'base64').toString();
     this.amount = parseInt(
       Buffer.from(rawTopics[5], 'base64').toString('hex'),
       16,
