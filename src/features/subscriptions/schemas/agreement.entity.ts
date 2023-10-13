@@ -5,16 +5,31 @@ import { AgreementType } from '../agreements-types';
 @Schema()
 export class AgreementEntity extends AbstractDocument {
   @Prop({ type: String })
-  name: string;
-
-  @Prop({ type: String })
   owner: string;
 
-  @Prop()
-  benefits: string[];
+  @Prop({ type: Object })
+  agreementType: AgreementType;
 
   @Prop({ type: String })
-  description: string;
+  tokenNonce?: string;
+
+  @Prop({ type: String })
+  tokenIdentifier?: string;
+
+  @Prop({ type: String })
+  whitelistEnabled?: string;
+
+  @Prop()
+  whitelist?: string[];
+
+  @Prop({ type: String })
+  name?: string;
+
+  @Prop({ type: String })
+  description?: string;
+
+  @Prop()
+  benefits?: string[];
 
   @Prop({ type: String })
   amount?: string;
@@ -27,21 +42,6 @@ export class AgreementEntity extends AbstractDocument {
 
   @Prop({ type: String })
   subscriberAmounts?: string;
-
-  @Prop({ type: Object })
-  agreementType?: AgreementType;
-
-  @Prop({ type: String })
-  token_nonce?: string;
-
-  @Prop({ type: String })
-  token_identifier?: string;
-
-  @Prop({ type: String })
-  whitelist_enabled?: string;
-
-  @Prop()
-  whitelist?: string[];
 }
 
 export const AgreementSchema = SchemaFactory.createForClass(AgreementEntity);
