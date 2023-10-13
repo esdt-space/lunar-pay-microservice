@@ -51,7 +51,8 @@ export class TokenOperationService {
     return this.repository.model
       .find(queryFilters)
       .skip(pagination.skip)
-      .limit(pagination.limit);
+      .limit(pagination.limit)
+      .sort({ _id: 'desc' });
   }
 
   async findOneById(id: string): Promise<TokenOperation> {
