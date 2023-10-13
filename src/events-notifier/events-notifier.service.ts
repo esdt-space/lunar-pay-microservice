@@ -22,25 +22,26 @@ export class EventsNotifierService {
     queueName: process.env.EVENTS_NOTIFIER_QUEUE_NAME,
   })
   async consumeEvents(rawEvents: any) {
-    try {
-      const events: any[] = rawEvents?.events ?? [];
-      const lunarPayEvent = events.filter(
-        (item) => item.address === this.config.get('contracts').lunarPayVault,
-      );
+    const events: any[] = rawEvents?.events ?? [];
+    const lunarPayEvent = events.filter(
+      (item) => item.address === this.config.get('contracts').lunarPayVault,
+    );
 
-      for (const rawEvent of lunarPayEvent) {
-        if((rawEvent as GenericEvent).identifier === 'completedTxEvent') continue;
+    for (const rawEvent of lunarPayEvent) {
+      if((rawEvent as GenericEvent).identifier === 'completedTxEvent') continue;
 
+      try {
         const event = this.decodeEvent(rawEvent);
         await this.transactionEventHandler.handleEvents(event);
+      } catch (error) {
+        this.logger.error(
+          `An unhandled error occurred when consuming event: ${JSON.stringify(
+            rawEvent,
+          )}`,
+        );
+
+        this.logger.error(error);
       }
-    } catch (error) {
-      this.logger.error(
-        `An unhandled error occurred when consuming events: ${JSON.stringify(
-          rawEvents,
-        )}`,
-      );
-      this.logger.error(error);
     }
   }
 
