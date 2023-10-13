@@ -17,21 +17,6 @@ export class AgreementEntity extends AbstractDocument {
   description: string;
 
   @Prop({ type: String })
-  sender?: string;
-
-  @Prop({ type: String })
-  receiver?: string;
-
-  @Prop({ type: String })
-  senders?: string;
-
-  @Prop({ type: String })
-  receivers?: string;
-
-  @Prop({ type: String })
-  amountType?: string;
-
-  @Prop({ type: String })
   amount?: string;
 
   @Prop({ type: String })
