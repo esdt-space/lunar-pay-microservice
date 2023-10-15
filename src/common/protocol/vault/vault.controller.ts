@@ -4,10 +4,11 @@ import {
   Get,
   Injectable,
   UseGuards,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 
+import { HttpCacheInterpreter } from '@/libs/caching';
 import { DurationConstants } from '@/utils/time/duration-constants';
 
 import { VaultService } from './vault.service';
@@ -36,7 +37,7 @@ export class VaultController {
   }
 
   @Get('account-balances')
-  @UseInterceptors(CacheInterceptor)
+  @UseInterceptors(HttpCacheInterpreter)
   @CacheTTL(DurationConstants.oneSecond() * 10)
   @UseGuards(NativeAuthGuard)
   async getAccountBalances(@NativeAuth('address') address: string) {
