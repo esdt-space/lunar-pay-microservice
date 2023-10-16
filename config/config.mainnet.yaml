@@ -12,4 +12,4 @@ contracts:
 nativeAuth:
   maxExpirySeconds: 86400
   acceptedOrigins:
-    - lunarpay.finance
+    - https://lunarpay.finance

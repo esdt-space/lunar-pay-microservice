@@ -26,7 +26,7 @@ jobs:
       - name: Deploy mainnet app to fly.io
         if: ${{ github.ref_name == 'main' }}
         run: |
-          flyctl deploy -c fly.mainnet.toml --remote-only
+          flyctl deploy -c fly.devnet.toml --remote-only
 
       - name: Deploy devnet app to fly.io
         if: ${{ github.ref_name == 'devnet' }}
