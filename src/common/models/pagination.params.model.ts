@@ -16,5 +16,5 @@ export default class PaginationParams {
   @IsNumber()
   @Min(1)
   @Max(1000)
-  limit?: number = 10;
+  limit?: number;
 }
