@@ -5,22 +5,22 @@ import { AgreementAmountType, AgreementType } from '@/features/payment-agreement
 
 @Schema({ ...defaultSchemaOptions, collection: 'payment-agreements' })
 export class PaymentAgreement extends AbstractDocument {
-  @Prop({ type: String })
+  @Prop({ type: String, index: true })
   owner: string;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, index: true, unique: true })
   agreementIdentifier: number;
 
-  @Prop({ type: String, enum: AgreementType })
+  @Prop({ type: String, enum: AgreementType, index: true })
   agreementType: AgreementType;
 
-  @Prop({ type: String, enum: AgreementAmountType })
+  @Prop({ type: String, enum: AgreementAmountType, index: true })
   amountType: AgreementAmountType;
 
   @Prop({ type: Number })
   tokenNonce: number;
 
-  @Prop({ type: String })
+  @Prop({ type: String, index: true })
   tokenIdentifier: string;
 
   @Prop({ type: Number })
