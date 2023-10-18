@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray, IsOptional } from 'class-validator';
 
-export class UpdateAgreementDto {
+export class CreateAgreementDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
@@ -10,6 +10,11 @@ export class UpdateAgreementDto {
   @IsArray()
   @ApiProperty()
   benefits: string[];
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  content: string;
 
   @IsString()
   @IsNotEmpty()

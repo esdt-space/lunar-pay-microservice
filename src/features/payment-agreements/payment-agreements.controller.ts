@@ -2,7 +2,6 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Post,
@@ -10,20 +9,26 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
-import { AgreementsService } from './services/agreements.service';
+
 import { MongooseObjectIdPipe } from '@/libs/database/mongo';
-import { UpdateAgreementDto } from './dto/agreement.dto';
 
-@ApiTags('Agreements')
-@Controller('agreements')
-export class AgreementsController {
-  constructor(private readonly agreementsService: AgreementsService) {}
+import { UpdateAgreementDto } from './dto/update-agreement.dto';
+import { PaymentAgreementsService } from './payment-agreements.service';
 
-  @Get()
+@ApiTags('Payment Agreements')
+@Controller('payment-agreements')
+export class PaymentAgreementsController {
+  constructor(private readonly agreementsService: PaymentAgreementsService) {}
+
+  @Get('created')
   @UseGuards(NativeAuthGuard)
-  getAccountAgreements(@NativeAuth('address') address: string) {
-    console.debug(address);
+  getAgreementsCreated(@NativeAuth('address') address: string) {
+    return this.agreementsService.findAccountAgreements(address);
+  }
 
+  @Get('signed')
+  @UseGuards(NativeAuthGuard)
+  getAgreementsSigned(@NativeAuth('address') address: string) {
     return this.agreementsService.findAccountAgreements(address);
   }
 
@@ -31,8 +36,6 @@ export class AgreementsController {
   @Post()
   @UseGuards(NativeAuthGuard)
   createNewAgreement(@NativeAuth('address') address: string, @Body() dto: any) {
-    console.debug(address);
-
     return this.agreementsService.createAgreement(address, dto);
   }
 
@@ -42,20 +45,7 @@ export class AgreementsController {
     @NativeAuth('address') address: string,
     @Param('id', MongooseObjectIdPipe) id,
   ) {
-    console.debug(address);
-
     return this.agreementsService.findOneAgreementById(id);
-  }
-
-  @Delete(':id')
-  @UseGuards(NativeAuthGuard)
-  async deleteAgreement(
-    @NativeAuth('address') address: string,
-    @Param('id', MongooseObjectIdPipe) id,
-  ) {
-    console.debug(address);
-
-    return this.agreementsService.deleteOneAgreementById(id);
   }
 
   @Put(':id')
@@ -65,8 +55,6 @@ export class AgreementsController {
     @Param('id', MongooseObjectIdPipe) id,
     @Body() dto: UpdateAgreementDto,
   ) {
-    console.debug(address);
-
     return this.agreementsService.updateAgreementById(address, id, dto);
   }
 }
