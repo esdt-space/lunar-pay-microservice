@@ -21,13 +21,19 @@ export class PaymentAgreement extends AbstractDocument {
   userFriendlyType: AgreementUserFriendlyType;
 
   @Prop({ type: Number })
+  frequency: number;
+
+  @Prop({ type: Number, default: 0 })
   tokenNonce: number;
 
   @Prop({ type: String, index: true })
   tokenIdentifier: string;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: 0 })
   accountsCount: number;
+
+  @Prop({ type: Number, default: 0 })
+  activeAccountsCount: number;
 
 
   @Prop({ type: String })
