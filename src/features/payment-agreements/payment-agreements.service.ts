@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { UpdateAgreementDto } from './dto/update-agreement.dto';
 import { PaymentAgreement } from './payment-agreement.schema';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
+import { CreateAgreementDto } from '@/features/payment-agreements/dto/create-agreement.dto';
 
 @Injectable()
 export class PaymentAgreementsService {
@@ -32,6 +33,25 @@ export class PaymentAgreementsService {
     return this.repository.model.findByIdAndUpdate(id, {
       owner: address,
       ...dto,
+    });
+  }
+
+  create(dto: CreateAgreementDto) {
+    return this.repository.model.create({
+      owner: dto.owner,
+      createdAt: dto.createdAt,
+      agreementIdentifier: dto.agreementIdentifier,
+
+      tokenNonce: dto.tokenNonce,
+      tokenIdentifier: dto.tokenIdentifier,
+
+      frequency: dto.frequency,
+      amountType: dto.amountType,
+      agreementType: dto.agreementType,
+
+      fixedAmount: dto.fixedAmount,
+      minimumAmount: dto.minimumAmount,
+      maximumAmount: dto.maximumAmount,
     });
   }
 }

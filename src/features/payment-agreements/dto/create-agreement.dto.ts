@@ -1,23 +1,47 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsArray, IsOptional } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateAgreementDto {
+  @IsNumber()
+  @IsNotEmpty()
+  owner: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  agreementIdentifier: number;
+
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
-  name: string;
+  tokenIdentifier: string;
 
-  @IsArray()
-  @ApiProperty()
-  benefits: string[];
+  @IsNumber()
+  @IsNotEmpty()
+  tokenNonce: number;
 
-  @IsString()
+  @IsNumber()
+  @IsNotEmpty()
+  agreementType: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  amountType: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  frequency: number;
+
+  @IsDate()
+  @IsNotEmpty()
+  createdAt: Date;
+
   @IsOptional()
-  @ApiProperty()
-  content: string;
-
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  description: string;
+  fixedAmount: string | undefined;
+
+  @IsOptional()
+  @IsString()
+  minimumAmount: string | undefined;
+
+  @IsOptional()
+  @IsString()
+  maximumAmount: string | undefined;
 }

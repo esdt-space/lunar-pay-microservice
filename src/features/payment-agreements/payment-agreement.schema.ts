@@ -49,7 +49,7 @@ export class PaymentAgreement extends AbstractDocument {
   content: string;
 
   @Prop({ type: String })
-  amount?: string;
+  fixedAmount?: string;
 
   @Prop({ type: String })
   minimumAmount?: string;

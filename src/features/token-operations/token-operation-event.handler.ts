@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { OnEvent } from '@nestjs/event-emitter';
 
-import {
-  DepositEvent,
-  TransferEvent,
-  WithdrawEvent,
-} from '@/events-notifier/events';
+import { BlockchainEventDecoded } from '@/events-notifier/enums';
+import { DepositEvent, TransferEvent, WithdrawEvent } from '@/events-notifier/events';
 
 import { TokenOperationType } from './enums';
 import { CreateTokenOperationDto } from './dto';
@@ -20,52 +18,42 @@ export class TokenOperationEventHandler {
     public readonly tokenOperationService: TokenOperationService,
   ) {}
 
-  public handleEvents(event: TokenOperationEvent) {
-    let dto: CreateTokenOperationDto;
-
-    switch (true) {
-      case event.name === TokenOperationType.DEPOSIT:
-        dto = this.handleDepositEvent(event as DepositEvent);
-        break;
-      case event.name === TokenOperationType.WITHDRAW:
-        dto = this.handleWithdrawEvent(event as WithdrawEvent);
-        break;
-      case event.name === TokenOperationType.TRANSFER:
-        dto = this.handleTransferEvent(event as TransferEvent);
-        break;
-      default:
-        throw new Error('Cannot handle event');
-    }
-
-    return this.tokenOperationService.create(dto);
-  }
-
-  private handleDepositEvent(event: DepositEvent) {
-    return {
+  @OnEvent(BlockchainEventDecoded.BlockchainDepositEventDecoded)
+  async handleDepositEvent(event: DepositEvent) {
+    const dto =  {
       ...this.getCommonDtoProperties(event),
       sender: event.address,
       receiver: this.config.get('contracts').lunarPayVault as string,
       type: TokenOperationType.DEPOSIT,
     } as CreateTokenOperationDto;
+
+    return this.tokenOperationService.create(dto);
   }
 
-  private handleWithdrawEvent(event: WithdrawEvent) {
-    return {
+  @OnEvent(BlockchainEventDecoded.BlockchainWithdrawEventDecoded)
+  async handleWithdrawEvent(event: WithdrawEvent) {
+    const dto = {
       ...this.getCommonDtoProperties(event),
       sender: this.config.get('contracts').lunarPayVault as string,
       receiver: event.address,
       type: TokenOperationType.WITHDRAW,
     } as CreateTokenOperationDto;
+
+    return this.tokenOperationService.create(dto);
+
   }
 
-  private handleTransferEvent(event: TransferEvent) {
-    return {
+  @OnEvent(BlockchainEventDecoded.BlockchainTokenTransferEventDecoded)
+  async handleTransferEvent(event: TransferEvent) {
+    const dto = {
       ...this.getCommonDtoProperties(event),
       sender: event.sender,
       receiver: event.receiver,
       isInternal: event.isInternal,
       type: TokenOperationType.TRANSFER,
     } as CreateTokenOperationDto;
+
+    return this.tokenOperationService.create(dto);
   }
 
   private getCommonDtoProperties(event: TokenOperationEvent) {

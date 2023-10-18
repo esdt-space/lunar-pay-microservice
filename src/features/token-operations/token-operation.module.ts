@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { TokenOperationSchema, TokenOperation } from './token-operation.schema';
-import { TokenOperationRepository } from './token-operation.repository';
 import { TokenOperationService } from './token-operation.service';
-import { TokenOperationEventHandler } from '@/features/token-operations/token-operation-event.handler';
+import { TokenOperationRepository } from './token-operation.repository';
+import { TokenOperationEventHandler } from './token-operation-event.handler';
+import { TokenOperationSchema, TokenOperation } from './token-operation.schema';
 
 @Module({
   imports: [
@@ -17,6 +17,6 @@ import { TokenOperationEventHandler } from '@/features/token-operations/token-op
     TokenOperationRepository,
     TokenOperationEventHandler,
   ],
-  exports: [TokenOperationService, TokenOperationEventHandler],
+  exports: [TokenOperationService],
 })
 export class TokenOperationModule {}

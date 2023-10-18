@@ -4,7 +4,7 @@ import { Address } from '@multiversx/sdk-core/out';
 import { GenericToken } from '@/libs/blockchain/mvx/event-decoder';
 import { LunarPayEventTopics } from '../../lunar-pay-event.topics';
 
-export class DepositEventTopics extends LunarPayEventTopics {
+export class WithdrawEventTopics extends LunarPayEventTopics {
   private readonly address: Address;
   private readonly tokenIdentifier: string;
   private readonly tokenNonce: string | number;

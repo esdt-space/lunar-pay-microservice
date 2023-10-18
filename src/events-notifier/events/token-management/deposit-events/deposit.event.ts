@@ -4,10 +4,14 @@ import {
   RawEventType,
 } from '@/libs/blockchain/mvx/event-decoder';
 
+import { LunarPayEvent } from '../../lunar-pay-event';
+import { BlockchainEventDecoded } from '../../../enums';
+
 import { DepositEventTopics } from './deposit-event.topics';
 
-export class DepositEvent extends GenericEvent {
+export class DepositEvent extends GenericEvent implements LunarPayEvent {
   readonly decodedTopics: DepositEventTopics;
+  readonly emitEventName = BlockchainEventDecoded.BlockchainDepositEventDecoded;
 
   readonly address: string;
   readonly token: GenericToken | undefined;
