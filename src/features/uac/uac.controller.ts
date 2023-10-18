@@ -9,7 +9,7 @@ import { UacService } from './uac.service';
 import { UniqueAgreementIdentifier } from './uac.schema';
 
 @ApiTags('Subscriptions')
-@Controller('subscriptions')
+@Controller('payment-agreements')
 @UseInterceptors(MongooseClassSerializer(UniqueAgreementIdentifier))
 export class UacController extends BaseController {
   constructor(private readonly uacService: UacService) {
