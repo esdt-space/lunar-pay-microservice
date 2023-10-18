@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { AbstractDocument, defaultSchemaOptions } from '@/libs/database/mongo';
-import { AgreementAmountType, AgreementType } from '@/features/payment-agreements/enums';
+import { AgreementAmountType, AgreementType, AgreementUserFriendlyType } from '@/features/payment-agreements/enums';
 
 @Schema({ ...defaultSchemaOptions, collection: 'payment-agreements' })
 export class PaymentAgreement extends AbstractDocument {
@@ -16,6 +16,9 @@ export class PaymentAgreement extends AbstractDocument {
 
   @Prop({ type: String, enum: AgreementAmountType, index: true })
   amountType: AgreementAmountType;
+
+  @Prop({ type: String, enum: AgreementUserFriendlyType })
+  userFriendlyType: AgreementUserFriendlyType;
 
   @Prop({ type: Number })
   tokenNonce: number;
