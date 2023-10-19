@@ -8,7 +8,7 @@ import { CreateAgreementDto } from './dto/create-agreement.dto';
 import { PaymentAgreementsService } from './payment-agreements.service';
 import {
   blockchainAgreementAmountTypeToApiType,
-  blockchainAgreementTypeToApiType
+  blockchainAgreementTypeToApiType,
 } from '@/features/payment-agreements/transformers';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class PaymentAgreementsEventHandler {
   async handlePaymentAgreementCreatedEvent(event: CreatePaymentAgreementEvent) {
     const eventData = event.decodedTopics.toPlainObject();
 
-    const dto =  {
+    const dto = {
       owner: eventData.address,
       agreementIdentifier: eventData.agreementId,
 
@@ -35,7 +35,7 @@ export class PaymentAgreementsEventHandler {
       minimumAmount: eventData.minimumAmount,
       maximumAmount: eventData.maximumAmount,
 
-      createdAt: new Date(eventData.timeCreated),
+      createdAt: new Date(eventData.timeCreated * 1000),
     } as CreateAgreementDto;
 
     return this.paymentAgreementService.create(dto);
