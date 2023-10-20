@@ -5,4 +5,5 @@ export enum EventIdentifier {
   ESDT_WITHDRAWAL = 'withdrawEsdt',
   TOKEN_TRANSFER = 'transferTokens',
   CREATE_PAYMENT_AGREEMENT = 'createPaymentAgreement',
+  SIGN_PAYMENT_AGREEMENT = 'signAgreement',
 }

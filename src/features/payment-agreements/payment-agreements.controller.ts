@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Param,
-  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -14,38 +13,45 @@ import { MongooseObjectIdPipe } from '@/libs/database/mongo';
 
 import { UpdateAgreementDto } from './dto/update-agreement.dto';
 import { PaymentAgreementsService } from './payment-agreements.service';
+import { PaymentAgreementMembersService } from './payment-agreement-members.service';
 
 @ApiTags('Payment Agreements')
 @Controller('payment-agreements')
 export class PaymentAgreementsController {
-  constructor(private readonly agreementsService: PaymentAgreementsService) {}
+  constructor(
+    private readonly agreementsService: PaymentAgreementsService,
+    private readonly membersService: PaymentAgreementMembersService,
+  ) {}
 
   @Get('created')
   @UseGuards(NativeAuthGuard)
   getAgreementsCreated(@NativeAuth('address') address: string) {
-    return this.agreementsService.findAccountAgreements(address);
+    return this.agreementsService.findAgreementsCreatedByAccount(address);
+  }
+
+  @Get('created/latest')
+  @UseGuards(NativeAuthGuard)
+  getLatestAgreementCreated(@NativeAuth('address') address: string) {
+    return this.agreementsService.findLatestAgreementCreatedByAccount(address);
   }
 
   @Get('signed')
   @UseGuards(NativeAuthGuard)
   getAgreementsSigned(@NativeAuth('address') address: string) {
-    return this.agreementsService.findAccountAgreements(address);
-  }
-
-  // TO DO: Remove create after SC implementation
-  @Post()
-  @UseGuards(NativeAuthGuard)
-  createNewAgreement(@NativeAuth('address') address: string, @Body() dto: any) {
-    return this.agreementsService.createAgreement(address, dto);
+    return this.membersService.findAddressMemberships(address);
   }
 
   @Get(':id')
-  @UseGuards(NativeAuthGuard)
-  async getAgreement(
-    @NativeAuth('address') address: string,
-    @Param('id', MongooseObjectIdPipe) id,
-  ) {
+  async getAgreement(@Param('id', MongooseObjectIdPipe) id) {
     return this.agreementsService.findOneAgreementById(id);
+  }
+
+  @Get(':id/members')
+  @UseGuards(NativeAuthGuard)
+  async getAgreementMembers(
+    @NativeAuth('address') address: string,
+    @Param('id', MongooseObjectIdPipe) id) {
+    return this.membersService.findAgreementMembers(id);
   }
 
   @Put(':id')

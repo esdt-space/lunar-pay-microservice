@@ -5,14 +5,26 @@ import { PaymentAgreementsService } from './payment-agreements.service';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
 import { PaymentAgreementsEventHandler } from './payment-agreements-event.handler';
 import { PaymentAgreement, PaymentAgreementSchema } from './payment-agreement.schema';
+import { PaymentAgreementMember, PaymentAgreementMemberSchema } from './payment-agreement-member.schema';
+
+import { PaymentAgreementMembersService } from './payment-agreement-members.service';
+import { PaymentAgreementMemberRepository } from './payment-agreement-member.repository';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: PaymentAgreement.name, schema: PaymentAgreementSchema },
+      { name: PaymentAgreementMember.name, schema: PaymentAgreementMemberSchema },
     ]),
   ],
-  providers: [PaymentAgreementsService, PaymentAgreementRepository, PaymentAgreementsEventHandler],
-  exports: [PaymentAgreementsService, PaymentAgreementRepository],
+  providers: [
+    PaymentAgreementsService, PaymentAgreementRepository,
+    PaymentAgreementMembersService, PaymentAgreementMemberRepository,
+    PaymentAgreementsEventHandler
+  ],
+  exports: [
+    PaymentAgreementsService, PaymentAgreementRepository,
+    PaymentAgreementMembersService, PaymentAgreementMemberRepository,
+  ],
 })
 export class PaymentAgreementsModule {}

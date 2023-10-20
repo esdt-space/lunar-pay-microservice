@@ -6,7 +6,13 @@ import { GenericEvent, RawEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { CompetingRabbitConsumer } from '@/libs/blockchain/mvx/events-notifier';
 
 import { EventIdentifier } from './enums';
-import { DepositEvent, WithdrawEvent, TransferEvent, CreatePaymentAgreementEvent } from './events';
+import {
+  DepositEvent,
+  WithdrawEvent,
+  TransferEvent,
+  CreatePaymentAgreementEvent,
+  SignPaymentAgreementEvent
+} from './events';
 
 @Injectable()
 export class EventsNotifierService {
@@ -57,6 +63,9 @@ export class EventsNotifierService {
 
       case EventIdentifier.CREATE_PAYMENT_AGREEMENT:
         return new CreatePaymentAgreementEvent(rawEvent);
+
+      case EventIdentifier.SIGN_PAYMENT_AGREEMENT:
+        return new SignPaymentAgreementEvent(rawEvent);
     }
   }
 }

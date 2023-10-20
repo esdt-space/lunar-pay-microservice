@@ -14,6 +14,14 @@ export class PaymentAgreementsService {
     return this.repository.model.findOne({ _id: id });
   }
 
+  async findOneByIdSmartContractId(id: number): Promise<PaymentAgreement> {
+    return this.repository.model.findOne({ agreementIdentifier: id });
+  }
+
+  async findLatestAgreementCreatedByAccount(address: string): Promise<PaymentAgreement> {
+    return this.repository.model.findOne({ owner: address }).sort({ '_id': 'desc' });
+  }
+
   async findAgreementsCreatedByAccount(address: string): Promise<PaymentAgreement[]> {
     return this.repository.model.find({ owner: address });
   }
