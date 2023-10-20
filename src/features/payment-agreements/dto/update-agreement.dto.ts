@@ -5,7 +5,12 @@ export class UpdateAgreementDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  name: string;
+  ownerName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  itemName: string;
 
   @IsArray()
   @ApiProperty()

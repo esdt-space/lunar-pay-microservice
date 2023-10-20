@@ -37,7 +37,10 @@ export class PaymentAgreement extends AbstractDocument {
 
 
   @Prop({ type: String })
-  name?: string;
+  ownerName?: string;
+
+  @Prop({ type: String })
+  itemName?: string;
 
   @Prop({ type: String })
   description?: string;

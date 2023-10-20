@@ -1,10 +1,9 @@
 import { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 
-import { UpdateAgreementDto } from './dto/update-agreement.dto';
 import { PaymentAgreement } from './payment-agreement.schema';
+import { CreateAgreementDto, UpdateAgreementDto } from './dto';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
-import { CreateAgreementDto } from '@/features/payment-agreements/dto/create-agreement.dto';
 
 @Injectable()
 export class PaymentAgreementsService {
