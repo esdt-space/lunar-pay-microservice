@@ -1,7 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { AbstractDocument, defaultSchemaOptions } from '@/libs/database/mongo';
-import { AgreementAmountType, AgreementType, AgreementUserFriendlyType } from '@/features/payment-agreements/enums';
+import {
+  AgreementAmountType,
+  AgreementType,
+  AgreementUserFriendlyType,
+} from '@/features/payment-agreements/enums';
 
 @Schema({ ...defaultSchemaOptions, collection: 'payment-agreements' })
 export class PaymentAgreement extends AbstractDocument {
@@ -35,9 +39,11 @@ export class PaymentAgreement extends AbstractDocument {
   @Prop({ type: Number, default: 0 })
   activeAccountsCount: number;
 
+  @Prop({ type: String })
+  ownerName?: string;
 
   @Prop({ type: String })
-  name?: string;
+  itemName?: string;
 
   @Prop({ type: String })
   description?: string;
@@ -58,4 +64,5 @@ export class PaymentAgreement extends AbstractDocument {
   maximumAmount?: string;
 }
 
-export const PaymentAgreementSchema = SchemaFactory.createForClass(PaymentAgreement);
+export const PaymentAgreementSchema =
+  SchemaFactory.createForClass(PaymentAgreement);
