@@ -1,4 +1,5 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class CreateTokenOperationDto {
   @IsString()
@@ -31,4 +32,12 @@ export class CreateTokenOperationDto {
 
   @IsBoolean()
   isInternal?: boolean;
+
+  @IsOptional()
+  @IsNotEmpty()
+  agreementId: Types.ObjectId;
+
+  @IsOptional()
+  @IsNotEmpty()
+  details: string;
 }

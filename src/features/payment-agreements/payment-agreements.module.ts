@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
+
 import { PaymentAgreementsService } from './payment-agreements.service';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
 import { PaymentAgreementsEventHandler } from './payment-agreements-event.handler';
@@ -12,6 +14,7 @@ import { PaymentAgreementMemberRepository } from './payment-agreement-member.rep
 
 @Module({
   imports: [
+    TokenOperationModule,
     MongooseModule.forFeature([
       { name: PaymentAgreement.name, schema: PaymentAgreementSchema },
       { name: PaymentAgreementMember.name, schema: PaymentAgreementMemberSchema },

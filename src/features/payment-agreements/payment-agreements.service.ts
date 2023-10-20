@@ -61,4 +61,8 @@ export class PaymentAgreementsService {
       maximumAmount: dto.maximumAmount,
     });
   }
+
+  async incrementMembersCount(id: Types.ObjectId): Promise<void> {
+    await this.repository.model.findOneAndUpdate({ _id: id }, { $inc: { accountsCount: 1 } });
+  }
 }

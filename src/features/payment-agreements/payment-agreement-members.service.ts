@@ -10,11 +10,11 @@ export class PaymentAgreementMembersService {
   constructor(private readonly repository: PaymentAgreementMemberRepository) {}
 
   async findAddressMemberships(address: string): Promise<PaymentAgreement[]> {
-    return this.repository.model.findOne({ member: address });
+    return this.repository.model.find({ member: address });
   }
 
   async findAgreementMembers(id: Types.ObjectId): Promise<PaymentAgreement[]> {
-    return this.repository.model.findOne({ internalAgreementId: id });
+    return this.repository.model.find({ internalAgreementId: id });
   }
 
   createMembership(dto: CreateAgreementMemberDto) {

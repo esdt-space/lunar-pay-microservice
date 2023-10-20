@@ -12,12 +12,15 @@ import {
 } from '@/features/payment-agreements/transformers';
 import { CreateAgreementMemberDto } from './dto/create-agreement-member.dto';
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
+import { TokenOperationService } from '@/features/token-operations/token-operation.service';
+import { TokenOperationType } from '@/features/token-operations/enums';
 
 @Injectable()
 export class PaymentAgreementsEventHandler {
   constructor(
     public readonly agreementsService: PaymentAgreementsService,
     public readonly membersService: PaymentAgreementMembersService,
+    private readonly tokenOperationsService: TokenOperationService,
   ) {}
 
   @OnEvent(BlockchainEventDecoded.SignPaymentAgreement)
@@ -35,6 +38,20 @@ export class PaymentAgreementsEventHandler {
       createdAt: eventData.signedAt,
       agreementType: agreement.agreementType,
     } as CreateAgreementMemberDto;
+
+    await this.agreementsService.incrementMembersCount(agreement._id);
+    await this.tokenOperationsService.create({
+      sender: eventData.address,
+      receiver: agreement.owner,
+      amount: agreement.fixedAmount,
+      tokenIdentifier: agreement.tokenIdentifier,
+      tokenNonce: agreement.tokenNonce,
+      type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
+      txHash: event.txHash,
+      agreementId: agreement._id,
+      details: 'Initial charge',
+      isInternal: true
+    });
 
     return this.membersService.createMembership(dto);
   }
