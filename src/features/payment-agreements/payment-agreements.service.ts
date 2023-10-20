@@ -17,12 +17,20 @@ export class PaymentAgreementsService {
     return this.repository.model.findOne({ agreementIdentifier: id });
   }
 
-  async findLatestAgreementCreatedByAccount(address: string): Promise<PaymentAgreement> {
-    return this.repository.model.findOne({ owner: address }).sort({ '_id': 'desc' });
+  async findLatestAgreementCreatedByAccount(
+    address: string,
+  ): Promise<PaymentAgreement> {
+    return this.repository.model
+      .findOne({ owner: address })
+      .sort({ _id: 'desc' });
   }
 
-  async findAgreementsCreatedByAccount(address: string): Promise<PaymentAgreement[]> {
-    return this.repository.model.find({ owner: address });
+  async findAgreementsCreatedByAccount(
+    address: string,
+  ): Promise<PaymentAgreement[]> {
+    return this.repository.model
+      .find({ owner: address })
+      .sort({ createdAt: 'desc' });
   }
 
   async findAccountAgreements(address: string): Promise<PaymentAgreement[]> {
@@ -36,7 +44,11 @@ export class PaymentAgreementsService {
     });
   }
 
-  async updateAgreementById(address: string, id: string, dto: UpdateAgreementDto): Promise<PaymentAgreement> {
+  async updateAgreementById(
+    address: string,
+    id: string,
+    dto: UpdateAgreementDto,
+  ): Promise<PaymentAgreement> {
     return this.repository.model.findByIdAndUpdate(id, {
       owner: address,
       ...dto,
@@ -63,6 +75,9 @@ export class PaymentAgreementsService {
   }
 
   async incrementMembersCount(id: Types.ObjectId): Promise<void> {
-    await this.repository.model.findOneAndUpdate({ _id: id }, { $inc: { accountsCount: 1 } });
+    await this.repository.model.findOneAndUpdate(
+      { _id: id },
+      { $inc: { accountsCount: 1 } },
+    );
   }
 }
