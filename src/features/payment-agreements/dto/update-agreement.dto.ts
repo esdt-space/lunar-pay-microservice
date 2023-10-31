@@ -22,7 +22,6 @@ export class UpdateAgreementDto {
   content: string;
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty()
   description: string;
 }
