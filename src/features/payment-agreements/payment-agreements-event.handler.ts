@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
-import { CreatePaymentAgreementEvent, SignPaymentAgreementEvent } from '@/events-notifier/events';
+import { ClaimTotalAmountSuccessEvent, CreatePaymentAgreementEvent, SignPaymentAgreementEvent } from '@/events-notifier/events';
 
 import { CreateAgreementDto } from './dto/create-agreement.dto';
 import { PaymentAgreementsService } from './payment-agreements.service';
@@ -78,5 +78,25 @@ export class PaymentAgreementsEventHandler {
     } as CreateAgreementDto;
 
     return this.agreementsService.create(dto);
+  }
+
+  @OnEvent(BlockchainEventDecoded.TriggerPaymentAgreement)
+  async handleClaimTotalAmountSuccessEvent(event: ClaimTotalAmountSuccessEvent) {
+    const eventData = event.decodedTopics.toPlainObject();
+
+    const agreement = await this.agreementsService
+      .findOneByIdSmartContractId(eventData.agreementId);
+
+    const dto = {
+      agreementId: agreement._id,
+
+      accounts: eventData.accounts,
+      cycles: eventData.cycles,
+      amounts: eventData.amounts,
+
+      createdAt: eventData.claimedAt,
+    }
+
+    return dto;
   }
 }
