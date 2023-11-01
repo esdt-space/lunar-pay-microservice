@@ -87,16 +87,17 @@ export class PaymentAgreementsEventHandler {
     const agreement = await this.agreementsService
       .findOneByIdSmartContractId(eventData.agreementId);
 
-    const dto = {
+    return this.tokenOperationsService.create({
+      sender: eventData.address,
+      receiver: agreement.owner,
+      amount: eventData.amounts.reduce((acc, val) => acc + val, 0).toString(),
+      tokenIdentifier: agreement.tokenIdentifier,
+      tokenNonce: agreement.tokenNonce,
+      type: TokenOperationType.CLAIM_TOTAL_AMOUNT_SUCCESS,
+      txHash: event.txHash,
       agreementId: agreement._id,
-
-      accounts: eventData.accounts,
-      cycles: eventData.cycles,
-      amounts: eventData.amounts,
-
-      createdAt: eventData.claimedAt,
-    }
-
-    return dto;
+      details: 'Claim total amount success',
+      isInternal: true,
+    });
   }
 }
