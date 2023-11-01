@@ -96,7 +96,7 @@ export class PaymentAgreementsEventHandler {
       type: TokenOperationType.CLAIM_TOTAL_AMOUNT_SUCCESS,
       txHash: event.txHash,
       agreementId: agreement._id,
-      details: 'Claim total amount success',
+      details: 'Claim total amount',
       isInternal: true,
     });
   }
