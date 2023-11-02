@@ -61,10 +61,10 @@ export class PaymentAgreement extends AbstractDocument {
   maximumAmount?: string;
 
   @Prop({ type: String })
-  onSuccessRedirectUrl?: string;
+  newMemberUrl?: string;
 
   @Prop({ type: String })
-  onFailRedirectUrl?: string;
+  cancelAgreementUrl?: string;
 }
 
 export const PaymentAgreementSchema = SchemaFactory.createForClass(PaymentAgreement);
