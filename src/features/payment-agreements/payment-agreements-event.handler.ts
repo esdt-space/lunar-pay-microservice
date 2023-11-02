@@ -93,7 +93,7 @@ export class PaymentAgreementsEventHandler {
       amount: eventData.amounts.reduce((acc, val) => acc + val, 0).toString(),
       tokenIdentifier: agreement.tokenIdentifier,
       tokenNonce: agreement.tokenNonce,
-      type: TokenOperationType.CLAIM_TOTAL_AMOUNT_SUCCESS,
+      type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
       txHash: event.txHash,
       agreementId: agreement._id,
       details: 'Claim total amount',
