@@ -44,4 +44,12 @@ export class CreateAgreementDto {
   @IsOptional()
   @IsString()
   maximumAmount: string | undefined;
+
+  @IsOptional()
+  @IsString()
+  newMemberUrl: string | undefined;
+
+  @IsOptional()
+  @IsString()
+  cancelAgreementUrl: string | undefined;
 }
