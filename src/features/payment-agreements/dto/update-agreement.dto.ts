@@ -24,4 +24,12 @@ export class UpdateAgreementDto {
   @IsString()
   @ApiProperty()
   description: string;
+
+  @IsOptional()
+  @IsString()
+  signAgreementHttpCallbackUrl: string | undefined;
+
+  @IsOptional()
+  @IsString()
+  cancelAgreementHttpCallbackUrl: string | undefined;
 }
