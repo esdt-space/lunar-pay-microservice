@@ -87,6 +87,25 @@ export class PaymentAgreementsEventHandler {
     const agreement = await this.agreementsService
       .findOneByIdSmartContractId(eventData.agreementId);
 
+    const memberAmount = eventData.cycles.length * Number(agreement.fixedAmount)
+
+    eventData.accounts.forEach((el) => {
+      if ( el !== agreement.owner ) {
+        this.tokenOperationsService.create({
+          sender: el,
+          receiver: agreement.owner,
+          amount: memberAmount.toString(),
+          tokenIdentifier: agreement.tokenIdentifier,
+          tokenNonce: agreement.tokenNonce,
+          type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
+          txHash: event.txHash,
+          agreementId: agreement._id,
+          details: 'Recurring Charge',
+          isInternal: true,
+        })
+      }
+    })
+
     return this.tokenOperationsService.create({
       sender: eventData.address,
       receiver: agreement.owner,
