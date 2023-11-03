@@ -17,7 +17,7 @@ export class TokensCron {
     private readonly blockchainTokensService: BlockchainTokensService,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_2_HOURS)
   private fetchBlockchainEsdtTokensRunner() {
     Locker.lock('fetchBlockchainEsdtTokens', () =>
       this.fetchBlockchainEsdtTokens(),

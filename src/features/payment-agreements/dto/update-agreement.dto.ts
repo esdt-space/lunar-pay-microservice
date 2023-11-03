@@ -22,7 +22,18 @@ export class UpdateAgreementDto {
   content: string;
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty()
-  description: string;
+  description?: string;
+
+  @IsOptional()
+  @IsString()
+  signAgreementHttpCallbackUrl: string | undefined;
+
+  @IsOptional()
+  @IsString()
+  cancelAgreementHttpCallbackUrl: string | undefined;
+
+  @IsOptional()
+  @IsString()
+  signAgreementRedirectUrl: string | undefined;
 }
