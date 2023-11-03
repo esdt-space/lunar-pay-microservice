@@ -23,7 +23,7 @@ export class UpdateAgreementDto {
 
   @IsString()
   @ApiProperty()
-  description: string;
+  description?: string;
 
   @IsOptional()
   @IsString()
