@@ -32,4 +32,8 @@ export class UpdateAgreementDto {
   @IsOptional()
   @IsString()
   cancelAgreementHttpCallbackUrl: string | undefined;
+
+  @IsOptional()
+  @IsString()
+  newMemberRedirectUrl: string | undefined;
 }
