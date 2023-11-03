@@ -35,5 +35,5 @@ export class UpdateAgreementDto {
 
   @IsOptional()
   @IsString()
-  newMemberRedirectUrl: string | undefined;
+  signAgreementRedirectUrl: string | undefined;
 }

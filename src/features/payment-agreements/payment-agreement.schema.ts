@@ -67,7 +67,7 @@ export class PaymentAgreement extends AbstractDocument {
   cancelAgreementHttpCallbackUrl?: string;
 
   @Prop({ type: String })
-  newMemberRedirectUrl?: string;
+  signAgreementRedirectUrl?: string;
 }
 
 export const PaymentAgreementSchema = SchemaFactory.createForClass(PaymentAgreement);
