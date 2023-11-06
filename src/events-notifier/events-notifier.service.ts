@@ -69,10 +69,10 @@ export class EventsNotifierService {
       case EventIdentifier.SIGN_PAYMENT_AGREEMENT:
         return new SignPaymentAgreementEvent(rawEvent);
 
-      case EventIdentifier.CLAIM_TOTAL_AMOUNT_SUCCESS:
+      case EventIdentifier.SUCCESSFUL_AGREEMENT_CHARGES:
         return new ClaimTotalAmountSuccessEvent(rawEvent);
 
-      case EventIdentifier.CLAIM_TOTAL_AMOUNT_FAILED:
+      case EventIdentifier.FAILED_AGREEMENT_CHARGES:
         return new ClaimTotalAmountFailedEvent(rawEvent);
     }
   }

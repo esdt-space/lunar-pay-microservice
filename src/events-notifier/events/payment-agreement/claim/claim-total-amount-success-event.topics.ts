@@ -14,13 +14,13 @@ export class ClaimTotalAmountSuccessEventTopics extends LunarPayEventTopics {
     super(rawTopics);
 
     this.agreementId = this.parseIntValue(rawTopics[1]);
-    this.claimedAt = this.parseIntValue(rawTopics[2]);
-
-    this.accounts = rawTopics.slice(3).map((topic) => Buffer.from(topic, 'base64').toString());
+    this.accounts = rawTopics.slice(2).map((topic) => Buffer.from(topic, 'base64').toString());
+    this.amounts = rawTopics.slice(3).map((topic) => this.parseBigUintValue(topic));
     this.cycles = rawTopics.slice(4).map((topic) => Buffer.from(topic, 'base64').toString());
-    this.amounts = rawTopics.slice(5).map((topic) => this.parseBigUintValue(topic));
 
-    this.address = new Address(Buffer.from(rawTopics[6], 'base64'));
+    this.address = new Address(Buffer.from(rawTopics[5], 'base64'));
+    
+    this.claimedAt = this.parseIntValue(rawTopics[6]);
   }
 
   toPlainObject() {

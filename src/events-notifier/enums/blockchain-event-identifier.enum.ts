@@ -6,6 +6,6 @@ export enum EventIdentifier {
   TOKEN_TRANSFER = 'transferTokens',
   CREATE_PAYMENT_AGREEMENT = 'createPaymentAgreement',
   SIGN_PAYMENT_AGREEMENT = 'signAgreement',
-  CLAIM_TOTAL_AMOUNT_SUCCESS = 'claimTotalAmountSuccess',
-  CLAIM_TOTAL_AMOUNT_FAILED = 'claimTotalAmountFailed',
+  SUCCESSFUL_AGREEMENT_CHARGES = 'successfulAgreementCharges',
+  FAILED_AGREEMENT_CHARGES = 'failedAgreementCharges',
 }

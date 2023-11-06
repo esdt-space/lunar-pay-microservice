@@ -94,33 +94,18 @@ export class PaymentAgreementsEventHandler {
     }
 
     eventData.accounts.forEach((el, index) => {
-      if ( el !== agreement.owner ) {
-        this.tokenOperationsService.create({
-          sender: el,
-          receiver: agreement.owner,
-          amount: memberAmount(index),
-          tokenIdentifier: agreement.tokenIdentifier,
-          tokenNonce: agreement.tokenNonce,
-          type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
-          txHash: event.txHash,
-          agreementId: agreement._id,
-          details: 'Recurring Charge',
-          isInternal: true,
-        })
-      }
+      this.tokenOperationsService.create({
+        sender: el,
+        receiver: agreement.owner,
+        amount: memberAmount(index),
+        tokenIdentifier: agreement.tokenIdentifier,
+        tokenNonce: agreement.tokenNonce,
+        type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
+        txHash: event.txHash,
+        agreementId: agreement._id,
+        details: 'Recurring Charge',
+        isInternal: true,
+      })
     })
-
-    return this.tokenOperationsService.create({
-      sender: eventData.address,
-      receiver: agreement.owner,
-      amount: eventData.amounts.reduce((acc, val) => acc + val, 0).toString(),
-      tokenIdentifier: agreement.tokenIdentifier,
-      tokenNonce: agreement.tokenNonce,
-      type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
-      txHash: event.txHash,
-      agreementId: agreement._id,
-      details: 'Claim total amount',
-      isInternal: true,
-    });
   }
 }
