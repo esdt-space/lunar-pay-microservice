@@ -1,4 +1,4 @@
-import { GenericEvent, RawEventType } from '@/libs/blockchain/mvx/event-decoder';
+import { GenericEvent, GenericToken, RawEventType } from '@/libs/blockchain/mvx/event-decoder';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
 import { LunarPayEvent } from '@/events-notifier/events/lunar-pay-event';
@@ -9,10 +9,18 @@ export class ClaimTotalAmountSuccessEvent extends GenericEvent implements LunarP
   readonly decodedTopics: ClaimTotalAmountSuccessEventTopics;
   readonly emitEventName = BlockchainEventDecoded.TriggerPaymentAgreement;
 
+  readonly address: string;
+  readonly token: GenericToken | undefined;
+
   constructor(init: RawEventType) {
     super(init);
     Object.assign(this, init);
     this.decodedTopics = new ClaimTotalAmountSuccessEventTopics(this.topics);
+
+    const topicData = this.getTopics();
+
+    this.token = topicData.token;
+    this.address = topicData.address;
   }
 
   getTopics() {
