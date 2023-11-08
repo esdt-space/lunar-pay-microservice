@@ -12,8 +12,7 @@ import {
   TransferEvent,
   CreatePaymentAgreementEvent,
   SignPaymentAgreementEvent,
-  ClaimTotalAmountSuccessEvent,
-  ClaimTotalAmountFailedEvent
+  TriggerAgreementEvent,
 } from './events';
 
 @Injectable()
@@ -69,11 +68,8 @@ export class EventsNotifierService {
       case EventIdentifier.SIGN_PAYMENT_AGREEMENT:
         return new SignPaymentAgreementEvent(rawEvent);
 
-      case EventIdentifier.SUCCESSFUL_AGREEMENT_CHARGES:
-        return new ClaimTotalAmountSuccessEvent(rawEvent);
-
-      case EventIdentifier.FAILED_AGREEMENT_CHARGES:
-        return new ClaimTotalAmountFailedEvent(rawEvent);
+      case EventIdentifier.TRIGGER_AGREEMENT:
+        return new TriggerAgreementEvent(rawEvent);
     }
   }
 }
