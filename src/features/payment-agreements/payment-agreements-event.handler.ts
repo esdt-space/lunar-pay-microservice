@@ -49,6 +49,7 @@ export class PaymentAgreementsEventHandler {
       type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
       txHash: event.txHash,
       agreementId: agreement._id,
+      agreementName: agreement.itemName,
       details: 'Initial charge',
       isInternal: true
     });
@@ -103,6 +104,7 @@ export class PaymentAgreementsEventHandler {
         type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
         txHash: event.txHash,
         agreementId: agreement._id,
+        agreementName: agreement.itemName,
         details: 'Recurring Charge',
         isInternal: true,
       })

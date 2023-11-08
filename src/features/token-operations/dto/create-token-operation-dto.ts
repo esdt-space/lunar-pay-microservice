@@ -37,6 +37,10 @@ export class CreateTokenOperationDto {
   @IsNotEmpty()
   agreementId: Types.ObjectId;
 
+  @IsString()
+  @IsNotEmpty()
+  agreementName: string;
+
   @IsOptional()
   @IsNotEmpty()
   details: string;

@@ -34,6 +34,9 @@ export class TokenOperation extends AbstractDocument {
   agreementId?: Types.ObjectId;
 
   @Prop({ type: String })
+  agreementName: string;
+
+  @Prop({ type: String })
   details?: string;
 }
 
