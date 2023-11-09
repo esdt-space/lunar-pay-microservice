@@ -3,7 +3,7 @@ import { GenericEvent, GenericToken, RawEventType } from '@/libs/blockchain/mvx/
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
 import { LunarPayEvent } from '@/events-notifier/events/lunar-pay-event';
 
-import { TriggerAgreementEventTopics } from './claim-total-amount-success-event.topics';
+import { TriggerAgreementEventTopics } from './trigger-agreement-event.topics';
 
 export class TriggerAgreementEvent extends GenericEvent implements LunarPayEvent {
   readonly decodedTopics: TriggerAgreementEventTopics;

@@ -1,5 +1,4 @@
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
-import { Address, AddressType, VariadicType, VariadicValue } from '@multiversx/sdk-core/out';
 
 export class TriggerAgreementEventTopics extends LunarPayEventTopics {
   private readonly agreementId: number;
@@ -9,10 +8,6 @@ export class TriggerAgreementEventTopics extends LunarPayEventTopics {
 
   constructor(rawTopics: string[]) {
     super(rawTopics);
-
-    console.log(Buffer.from(rawTopics[2], 'base64').toString())
-    console.log(Buffer.from(rawTopics[3], 'base64').toString())
-    console.log(Buffer.from(rawTopics[4], 'base64').toString())
 
     this.agreementId = this.parseIntValue(rawTopics[1]);
     this.accounts = Buffer.from(rawTopics[2], 'base64').toString().split(',')
