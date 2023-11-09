@@ -12,7 +12,6 @@ export class TriggerAgreementEvent extends GenericEvent implements LunarPayEvent
   constructor(init: RawEventType) {
     super(init);
     Object.assign(this, init);
-    console.log('this topics',this.topics)
     this.decodedTopics = new TriggerAgreementEventTopics(this.topics);
   }
 

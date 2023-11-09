@@ -48,8 +48,7 @@ export class PaymentAgreementsEventHandler {
       tokenNonce: agreement.tokenNonce,
       type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
       txHash: event.txHash,
-      agreementId: agreement._id,
-      agreementName: agreement.itemName,
+      agreement: agreement._id,
       details: 'Initial charge',
       isInternal: true
     });
@@ -103,8 +102,7 @@ export class PaymentAgreementsEventHandler {
         tokenNonce: agreement.tokenNonce,
         type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
         txHash: event.txHash,
-        agreementId: agreement._id,
-        agreementName: agreement.itemName,
+        agreement: agreement._id,
         details: 'Recurring Charge',
         isInternal: true,
       })

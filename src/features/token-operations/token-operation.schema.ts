@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { AbstractDocument, defaultSchemaOptions } from '@/libs/database/mongo';
+import { PaymentAgreement } from '../payment-agreements/payment-agreement.schema';
 
 import { TokenOperationType } from './enums';
 
@@ -30,11 +31,8 @@ export class TokenOperation extends AbstractDocument {
   @Prop({ type: Boolean, nullable: true })
   isInternal: boolean;
 
-  @Prop({ type: Types.ObjectId })
-  agreementId?: Types.ObjectId;
-
-  @Prop({ type: String })
-  agreementName: string;
+  @Prop({ type: Types.ObjectId, ref: PaymentAgreement.name })
+  agreement?: Types.ObjectId;
 
   @Prop({ type: String })
   details?: string;

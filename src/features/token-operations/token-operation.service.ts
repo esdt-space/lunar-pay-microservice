@@ -52,6 +52,7 @@ export class TokenOperationService {
       .find(queryFilters)
       .skip(pagination.skip)
       .limit(pagination.limit)
+      .populate('agreement')
       .sort({ _id: 'desc' });
   }
 
