@@ -5,6 +5,7 @@ import { PaymentAgreement } from './payment-agreement.schema';
 import { CreateAgreementDto, UpdateAgreementDto } from './dto';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
 import { GetProviderAgreementDto } from './dto/get-provider-agreement.dto';
+import { providerAgreementsEntityToDto } from './mapping';
 
 @Injectable()
 export class PaymentAgreementsService {
@@ -33,23 +34,7 @@ export class PaymentAgreementsService {
       .find({ owner: address })
       .sort({ createdAt: 'desc' });
 
-    return allAgreements.map((el) => {
-      return {
-        ownerName: el.ownerName,
-        itemName: el.itemName,
-        tokenIdentifier: el.tokenIdentifier,
-        benefits: el.benefits,
-        content: el.content,
-        description: el.description,
-        frequency: el.frequency,
-        accountsCount: el.accountsCount,
-        fixedAmount: el.fixedAmount,
-        createdAt: el.createdAt,
-        signAgreementRedirectUrl: el.signAgreementRedirectUrl,
-        signAgreementHttpCallbackUrl: el.signAgreementHttpCallbackUrl,
-        cancelAgreementHttpCallbackUrl: el.cancelAgreementHttpCallbackUrl
-      }
-    })
+    return providerAgreementsEntityToDto(allAgreements)
   }
 
   async findAccountAgreements(address: string): Promise<PaymentAgreement[]> {

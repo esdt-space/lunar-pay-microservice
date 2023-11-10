@@ -6,6 +6,7 @@ import { PaymentAgreement } from './payment-agreement.schema';
 import { PaymentAgreementMemberRepository } from './payment-agreement-member.repository';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
 import { GetSignedAgreementDto } from './dto/get-signed-agreement.dto';
+import { signedAgreementsEntityToDto } from './mapping';
 
 @Injectable()
 export class PaymentAgreementMembersService {
@@ -21,20 +22,7 @@ export class PaymentAgreementMembersService {
 
     const allSignedAgreements: PaymentAgreement[] = await this.agreementsRepository.find({ _id: { $in: aggrementIds } });
 
-    return allSignedAgreements.map((el) => {
-      return {
-        ownerName: el.ownerName,
-        itemName: el.itemName,
-        tokenIdentifier: el.tokenIdentifier,
-        benefits: el.benefits,
-        content: el.content,
-        description: el.description,
-        frequency: el.frequency,
-        accountsCount: el.accountsCount,
-        fixedAmount: el.fixedAmount,
-        createdAt: el.createdAt
-      }
-    })
+    return signedAgreementsEntityToDto(allSignedAgreements)
   }
 
   async findAgreementMembers(id: Types.ObjectId): Promise<PaymentAgreement[]> {
