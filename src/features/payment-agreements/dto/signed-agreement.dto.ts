@@ -1,7 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsArray, IsOptional, IsNumber, IsDateString } from 'class-validator';
+import { PaymentAgreement } from '../payment-agreement.schema';
 
-export class GetProviderAgreementDto {
+export class SignedAgreementDto {
+  constructor(params: Partial<PaymentAgreement> = {}){
+    Object.assign(this, params)
+  }
+  
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
@@ -49,19 +54,4 @@ export class GetProviderAgreementDto {
   @IsNotEmpty()
   @ApiProperty()
   createdAt: Date;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty()
-  signAgreementRedirectUrl?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty()
-  signAgreementHttpCallbackUrl?: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiProperty()
-  cancelAgreementHttpCallbackUrl?: string;
 }

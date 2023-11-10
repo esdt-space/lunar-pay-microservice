@@ -5,8 +5,7 @@ import { CreateAgreementMemberDto } from './dto';
 import { PaymentAgreement } from './payment-agreement.schema';
 import { PaymentAgreementMemberRepository } from './payment-agreement-member.repository';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
-import { GetSignedAgreementDto } from './dto/get-signed-agreement.dto';
-import { signedAgreementsEntityToDto } from './mapping';
+import { SignedAgreementDto } from './dto/signed-agreement.dto';
 
 @Injectable()
 export class PaymentAgreementMembersService {
@@ -15,14 +14,16 @@ export class PaymentAgreementMembersService {
     private readonly agreementsRepository: PaymentAgreementRepository,
   ) {}
 
-  async findAddressMemberships(address: string): Promise<GetSignedAgreementDto[]> {
+  async findAddressMemberships(address: string): Promise<SignedAgreementDto[]> {
     const memberships = await this.repository.model.find({ member: address });
 
     const aggrementIds = memberships.map(item => item.internalAgreementId);
 
     const allSignedAgreements: PaymentAgreement[] = await this.agreementsRepository.find({ _id: { $in: aggrementIds } });
 
-    return signedAgreementsEntityToDto(allSignedAgreements)
+    return allSignedAgreements.map((el) => {
+      return new SignedAgreementDto(el)
+    })
   }
 
   async findAgreementMembers(id: Types.ObjectId): Promise<PaymentAgreement[]> {
