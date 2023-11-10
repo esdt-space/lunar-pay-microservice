@@ -4,6 +4,7 @@ import { PaymentAgreement } from "../payment-agreement.schema";
 export const providerAgreementsEntityToDto = (agreementsList: PaymentAgreement[]): GetProviderAgreementDto[] => {
   return agreementsList.map((el) => {
     return {
+      id: el._id,
       ownerName: el.ownerName,
       itemName: el.itemName,
       tokenIdentifier: el.tokenIdentifier,
