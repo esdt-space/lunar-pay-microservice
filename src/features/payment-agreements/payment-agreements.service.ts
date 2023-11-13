@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { PaymentAgreement } from './payment-agreement.schema';
 import { CreateAgreementDto, UpdateAgreementDto } from './dto';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
+import { AgreementDto } from './dto/agreement.dto';
 
 @Injectable()
 export class PaymentAgreementsService {
@@ -27,10 +28,15 @@ export class PaymentAgreementsService {
 
   async findAgreementsCreatedByAccount(
     address: string,
-  ): Promise<PaymentAgreement[]> {
-    return this.repository.model
+  ): Promise<AgreementDto[]> {
+    const agreementsList: PaymentAgreement[] = await this.repository.model
       .find({ owner: address })
-      .sort({ createdAt: 'desc' });
+      .sort({ createdAt: 'desc' })
+      .lean()
+
+    return agreementsList.map((el) => {
+      return new AgreementDto(el)
+    })
   }
 
   async findAccountAgreements(address: string): Promise<PaymentAgreement[]> {

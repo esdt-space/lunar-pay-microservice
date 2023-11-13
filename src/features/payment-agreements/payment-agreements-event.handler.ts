@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
-import { CreatePaymentAgreementEvent, SignPaymentAgreementEvent } from '@/events-notifier/events';
+import { CreatePaymentAgreementEvent, SignPaymentAgreementEvent, TriggerAgreementEvent } from '@/events-notifier/events';
 
 import { CreateAgreementDto } from './dto/create-agreement.dto';
 import { PaymentAgreementsService } from './payment-agreements.service';
@@ -48,7 +48,7 @@ export class PaymentAgreementsEventHandler {
       tokenNonce: agreement.tokenNonce,
       type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
       txHash: event.txHash,
-      agreementId: agreement._id,
+      agreement: agreement._id,
       details: 'Initial charge',
       isInternal: true
     });
@@ -78,5 +78,34 @@ export class PaymentAgreementsEventHandler {
     } as CreateAgreementDto;
 
     return this.agreementsService.create(dto);
+  }
+
+  @OnEvent(BlockchainEventDecoded.TriggerPaymentAgreement)
+  async handleTriggerAgreementEvent(event: TriggerAgreementEvent) {
+    const eventData = event.decodedTopics.toPlainObject();
+
+    const agreement = await this.agreementsService
+      .findOneByIdSmartContractId(eventData.agreementId);
+
+    const memberAmount = (index: number) => {
+      const result = Number(eventData.cycles[index]) * Number(agreement.fixedAmount)
+
+      return result.toString()
+    }
+
+    eventData.accounts.forEach((el, index) => {
+      this.tokenOperationsService.create({
+        sender: el,
+        receiver: agreement.owner,
+        amount: memberAmount(index),
+        tokenIdentifier: agreement.tokenIdentifier,
+        tokenNonce: agreement.tokenNonce,
+        type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
+        txHash: event.txHash,
+        agreement: agreement._id,
+        details: 'Recurring Charge',
+        isInternal: true,
+      })
+    })
   }
 }
