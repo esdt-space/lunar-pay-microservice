@@ -15,11 +15,16 @@ export class PaymentAgreementMembersService {
   ) {}
 
   async findAddressMemberships(address: string): Promise<SignedAgreementDto[]> {
-    const memberships = await this.repository.model.find({ member: address });
+    const memberships = await this.repository.model
+    .find({ member: address })
+    
 
     const aggrementIds = memberships.map(item => item.internalAgreementId);
 
-    const allSignedAgreements: PaymentAgreement[] = await this.agreementsRepository.find({ _id: { $in: aggrementIds } });
+    const allSignedAgreements: PaymentAgreement[] = await this.agreementsRepository.model
+      .find({ _id: { $in: aggrementIds } })
+      .sort({ createdAt: 'desc' })
+      .lean();
 
     return allSignedAgreements.map((el) => {
       return new SignedAgreementDto(el)

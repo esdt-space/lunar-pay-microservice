@@ -31,7 +31,8 @@ export class PaymentAgreementsService {
   ): Promise<AgreementDto[]> {
     const agreementsList: PaymentAgreement[] = await this.repository.model
       .find({ owner: address })
-      .sort({ createdAt: 'desc' });
+      .sort({ createdAt: 'desc' })
+      .lean()
 
     return agreementsList.map((el) => {
       return new AgreementDto(el)
