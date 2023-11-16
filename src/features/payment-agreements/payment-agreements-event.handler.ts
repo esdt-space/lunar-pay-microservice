@@ -14,6 +14,7 @@ import { CreateAgreementMemberDto } from './dto/create-agreement-member.dto';
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
 import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
+import { AgreementTriggerService } from '@/features/agreement-triggers/agreement-triggers.service';
 
 @Injectable()
 export class PaymentAgreementsEventHandler {
@@ -21,6 +22,7 @@ export class PaymentAgreementsEventHandler {
     public readonly agreementsService: PaymentAgreementsService,
     public readonly membersService: PaymentAgreementMembersService,
     private readonly tokenOperationsService: TokenOperationService,
+    private readonly agreementTriggersService: AgreementTriggerService,
   ) {}
 
   @OnEvent(BlockchainEventDecoded.SignPaymentAgreement)
@@ -84,6 +86,9 @@ export class PaymentAgreementsEventHandler {
   async handleTriggerAgreementEvent(event: TriggerAgreementEvent) {
     const eventData = event.decodedTopics.toPlainObject();
 
+    const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString()
+    let isSuccessfulCharge: boolean | null = null
+
     const agreement = await this.agreementsService
       .findOneByIdSmartContractId(eventData.agreementId);
 
@@ -93,14 +98,29 @@ export class PaymentAgreementsEventHandler {
       return result.toString()
     }
 
+    const agreementTrigger = await this.agreementTriggersService.create({
+      agreement: agreement._id,
+      txHash: event.txHash
+    })
+
     this.membersService.updateLastChargedAt(agreement._id)
 
+    if(event.name === "failedAgreementCharges") {
+      isSuccessfulCharge = false
+
+      this.agreementTriggersService.updateAgreementTrigger(agreementTrigger._id, totalAmount, isSuccessfulCharge)
+    }
+
     if(event.name === "successfulAgreementCharges") {
+      isSuccessfulCharge = true
+
+      this.agreementTriggersService.updateAgreementTrigger(agreementTrigger._id, totalAmount, isSuccessfulCharge)
+
       const providerOperation = await this.tokenOperationsService.create({
         sender: null,
         receiver: agreement.owner,
         status: TokenOperationStatus.SUCCESS,
-        amount: eventData.amounts.reduce((acc, val) => acc + val, 0).toString(),
+        amount: totalAmount,
         tokenIdentifier: agreement.tokenIdentifier,
         tokenNonce: agreement.tokenNonce,
         type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,

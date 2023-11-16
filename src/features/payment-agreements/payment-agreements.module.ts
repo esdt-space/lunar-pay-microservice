@@ -11,9 +11,11 @@ import { PaymentAgreementMember, PaymentAgreementMemberSchema } from './payment-
 
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
 import { PaymentAgreementMemberRepository } from './payment-agreement-member.repository';
+import { AgreementTriggerModule } from '../agreement-triggers/agreement-triggers.module';
 
 @Module({
   imports: [
+    AgreementTriggerModule,
     TokenOperationModule,
     MongooseModule.forFeature([
       { name: PaymentAgreement.name, schema: PaymentAgreementSchema },
