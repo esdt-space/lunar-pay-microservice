@@ -7,6 +7,7 @@ import { CreateTokenOperationDto } from './dto';
 import { TokenOperation } from './token-operation.schema';
 import { TokenOperationRepository } from './token-operation.repository';
 import TokenOperationFilters from './models/token-operation.filters.model';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class TokenOperationService {
@@ -23,6 +24,18 @@ export class TokenOperationService {
       this.logger.error('create_transaction', { error: e.stack });
     }
     return null;
+  }
+
+  async findChargeTokenOperationsByParentId(id: string, pagination: PaginationParams = new PaginationParams()) {
+    const parentId = new ObjectId(id)
+    const queryFilters = { parentId: parentId }
+
+    return this.repository.model
+      .find(queryFilters)
+      .skip(pagination.skip)
+      .limit(pagination.limit)
+      .populate('agreement')
+      .sort({ _id: 'desc' });
   }
 
   async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {

@@ -10,6 +10,10 @@ export class CreateTokenOperationDto {
   @IsNotEmpty()
   receiver: string;
 
+  @IsString()
+  @IsOptional()
+  status?: string;
+
   @IsNumber()
   @IsNotEmpty()
   amount: string;
@@ -33,11 +37,12 @@ export class CreateTokenOperationDto {
   @IsBoolean()
   isInternal?: boolean;
 
-  @IsOptional()
   @IsNotEmpty()
   agreement: Types.ObjectId;
 
   @IsOptional()
-  @IsNotEmpty()
+  parentId?: Types.ObjectId;
+
+  @IsOptional()
   details: string;
 }

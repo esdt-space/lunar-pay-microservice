@@ -13,7 +13,7 @@ import {
 import { CreateAgreementMemberDto } from './dto/create-agreement-member.dto';
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
-import { TokenOperationType } from '@/features/token-operations/enums';
+import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
 
 @Injectable()
 export class PaymentAgreementsEventHandler {
@@ -93,19 +93,40 @@ export class PaymentAgreementsEventHandler {
       return result.toString()
     }
 
-    eventData.accounts.forEach((el, index) => {
-      this.tokenOperationsService.create({
-        sender: el,
+    this.membersService.updateLastChargedAt(agreement._id)
+
+    if(event.name === "successfulAgreementCharges") {
+      const providerOperation = await this.tokenOperationsService.create({
+        sender: null,
         receiver: agreement.owner,
-        amount: memberAmount(index),
+        status: TokenOperationStatus.SUCCESS,
+        amount: eventData.amounts.reduce((acc, val) => acc + val, 0).toString(),
         tokenIdentifier: agreement.tokenIdentifier,
         tokenNonce: agreement.tokenNonce,
         type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
         txHash: event.txHash,
         agreement: agreement._id,
+        parentId: null,
         details: 'Recurring Charge',
         isInternal: true,
       })
-    })
+  
+      eventData.accounts.forEach((el, index) => {
+        this.tokenOperationsService.create({
+          sender: el,
+          receiver: null,
+          status: TokenOperationStatus.SUCCESS,
+          amount: memberAmount(index),
+          tokenIdentifier: agreement.tokenIdentifier,
+          tokenNonce: agreement.tokenNonce,
+          type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
+          txHash: event.txHash,
+          agreement: agreement._id,
+          parentId: providerOperation._id,
+          details: 'Recurring Charge',
+          isInternal: true,
+        })
+      })
+    }
   }
 }
