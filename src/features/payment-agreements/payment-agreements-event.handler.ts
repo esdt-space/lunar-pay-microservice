@@ -44,6 +44,7 @@ export class PaymentAgreementsEventHandler {
     await this.agreementsService.incrementMembersCount(agreement._id);
     await this.tokenOperationsService.create({
       sender: eventData.address,
+      senderAccountsCount: null,
       receiver: agreement.owner,
       amount: agreement.fixedAmount,
       tokenIdentifier: agreement.tokenIdentifier,
@@ -118,6 +119,7 @@ export class PaymentAgreementsEventHandler {
 
       const providerOperation = await this.tokenOperationsService.create({
         sender: null,
+        senderAccountsCount: eventData.accounts.length,
         receiver: agreement.owner,
         status: TokenOperationStatus.SUCCESS,
         amount: totalAmount,
@@ -134,6 +136,7 @@ export class PaymentAgreementsEventHandler {
       eventData.accounts.forEach((el, index) => {
         this.tokenOperationsService.create({
           sender: el,
+          senderAccountsCount: null,
           receiver: null,
           status: TokenOperationStatus.SUCCESS,
           amount: memberAmount(index),

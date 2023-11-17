@@ -13,6 +13,9 @@ export class TokenOperation extends AbstractDocument {
   @Prop({ type: String, index: true, nullable: true })
   sender: string;
 
+  @Prop({ type: String, nullable: true })
+  senderAccountsCount: number;
+
   @Prop({ type: String, index: true, nullable: true  })
   receiver: string;
 

@@ -6,6 +6,10 @@ export class CreateTokenOperationDto {
   @IsNotEmpty()
   sender: string;
 
+  @IsNumber()
+  @IsNotEmpty()
+  senderAccountsCount: number;
+
   @IsString()
   @IsNotEmpty()
   receiver: string;
