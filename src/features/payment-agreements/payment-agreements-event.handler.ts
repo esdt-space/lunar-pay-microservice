@@ -15,6 +15,7 @@ import { PaymentAgreementMembersService } from './payment-agreement-members.serv
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
 import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
 import { AgreementTriggerService } from '@/features/agreement-triggers/agreement-triggers.service';
+import { UpdateAgreementTriggerDto } from '../agreement-triggers/dto';
 
 @Injectable()
 export class PaymentAgreementsEventHandler {
@@ -89,7 +90,6 @@ export class PaymentAgreementsEventHandler {
     const eventData = event.decodedTopics.toPlainObject();
 
     const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString()
-    let isSuccessfulCharge: boolean
 
     const agreement = await this.agreementsService
       .findOneByIdSmartContractId(eventData.agreementId);
@@ -107,15 +107,19 @@ export class PaymentAgreementsEventHandler {
 
     this.membersService.updateLastChargedAt(agreement._id)
 
+    const updateTriggerData = new UpdateAgreementTriggerDto()
+
     if(event.name === "failedAgreementCharges") {
-      isSuccessfulCharge = false
+      updateTriggerData.failedChargeAmount = totalAmount
+      updateTriggerData.failedAccountsCount = eventData.accounts.length
     } else if(event.name === "successfulAgreementCharges") {
-      isSuccessfulCharge = true
+      updateTriggerData.successfulChargeAmount = totalAmount
+      updateTriggerData.successfulAccountsCount = eventData.accounts.length
     }
     
-    const agreementTrigger = await this.agreementTriggersService.createOrUpdate(newAgreementTrigger, event.txHash, totalAmount, isSuccessfulCharge)
+    const agreementTrigger = await this.agreementTriggersService.createOrUpdate(newAgreementTrigger, updateTriggerData, event.txHash)
 
-    if(isSuccessfulCharge) {
+    if(event.name === "successfulAgreementCharges") {
       const providerOperation = await this.tokenOperationsService.create({
         sender: null,
         senderAccountsCount: eventData.accounts.length,

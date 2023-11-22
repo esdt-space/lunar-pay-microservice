@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { AgreementTriggerRepository } from "./agreement-trigger.repository";
-import { CreateAgreementTriggerDto } from "./dto";
+import { CreateAgreementTriggerDto, UpdateAgreementTriggerDto } from "./dto";
 import { AgreementTrigger } from "./agreement-trigger.schema";
 import { Types } from "mongoose";
 import PaginationParams from "@/common/models/pagination.params.model";
@@ -26,19 +26,14 @@ export class AgreementTriggerService {
     return null;
   }
 
-  async createOrUpdate(triggerData: CreateAgreementTriggerDto, hash: string, amount: string, isSuccessfulCharge: boolean) {
+  async createOrUpdate(triggerData: CreateAgreementTriggerDto, updateData: UpdateAgreementTriggerDto, hash: string) {
     let agreementTrigger = await this.findOneByTxHash(hash);
 
     if(!agreementTrigger) {
       agreementTrigger = await this.create(triggerData)
     }
 
-    const successfulCharge = { $set: { successfulChargeAmount: amount } };
-    const failedCharge = { $set: { failedChargeAmount: amount } };
-
-    const update = isSuccessfulCharge ? successfulCharge : failedCharge;
-
-    await this.repository.model.updateOne({ txHash: hash }, update)
+    await this.repository.model.updateOne({ txHash: hash }, updateData)
 
     return agreementTrigger
   }
