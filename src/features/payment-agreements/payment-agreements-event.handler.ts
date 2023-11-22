@@ -46,6 +46,7 @@ export class PaymentAgreementsEventHandler {
       sender: eventData.address,
       senderAccountsCount: null,
       receiver: agreement.owner,
+      agreementTriggerId: null,
       amount: agreement.fixedAmount,
       tokenIdentifier: agreement.tokenIdentifier,
       tokenNonce: agreement.tokenNonce,
@@ -88,7 +89,7 @@ export class PaymentAgreementsEventHandler {
     const eventData = event.decodedTopics.toPlainObject();
 
     const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString()
-    let isSuccessfulCharge: boolean | null = null
+    let isSuccessfulCharge: boolean
 
     const agreement = await this.agreementsService
       .findOneByIdSmartContractId(eventData.agreementId);
@@ -99,28 +100,27 @@ export class PaymentAgreementsEventHandler {
       return result.toString()
     }
 
-    const agreementTrigger = await this.agreementTriggersService.create({
+    const newAgreementTrigger = {
       agreement: agreement._id,
       txHash: event.txHash
-    })
+    }
 
     this.membersService.updateLastChargedAt(agreement._id)
 
     if(event.name === "failedAgreementCharges") {
       isSuccessfulCharge = false
-
-      this.agreementTriggersService.updateAgreementTrigger(agreementTrigger._id, totalAmount, isSuccessfulCharge)
-    }
-
-    if(event.name === "successfulAgreementCharges") {
+    } else if(event.name === "successfulAgreementCharges") {
       isSuccessfulCharge = true
+    }
+    
+    const agreementTrigger = await this.agreementTriggersService.createOrUpdate(newAgreementTrigger, event.txHash, totalAmount, isSuccessfulCharge)
 
-      this.agreementTriggersService.updateAgreementTrigger(agreementTrigger._id, totalAmount, isSuccessfulCharge)
-
+    if(isSuccessfulCharge) {
       const providerOperation = await this.tokenOperationsService.create({
         sender: null,
         senderAccountsCount: eventData.accounts.length,
         receiver: agreement.owner,
+        agreementTriggerId: agreementTrigger._id,
         status: TokenOperationStatus.SUCCESS,
         amount: totalAmount,
         tokenIdentifier: agreement.tokenIdentifier,
@@ -138,6 +138,7 @@ export class PaymentAgreementsEventHandler {
           sender: el,
           senderAccountsCount: null,
           receiver: null,
+          agreementTriggerId: null,
           status: TokenOperationStatus.SUCCESS,
           amount: memberAmount(index),
           tokenIdentifier: agreement.tokenIdentifier,

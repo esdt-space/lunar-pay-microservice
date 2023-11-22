@@ -15,6 +15,10 @@ export class CreateTokenOperationDto {
   receiver: string;
 
   @IsString()
+  @IsNotEmpty()
+  agreementTriggerId: Types.ObjectId;
+
+  @IsString()
   @IsOptional()
   status?: string;
 

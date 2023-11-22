@@ -13,6 +13,10 @@ export class AgreementTriggerService {
     this.logger = new Logger(this.constructor.name);
   }
 
+  async findOneByTxHash(hash: string): Promise<AgreementTrigger> {
+    return this.repository.model.findOne({ txHash: hash}).exec()
+  }
+
   async create(triggerData: CreateAgreementTriggerDto): Promise<AgreementTrigger> {
     try {
       return await this.repository.model.create(triggerData);
@@ -22,13 +26,21 @@ export class AgreementTriggerService {
     return null;
   }
 
-  async updateAgreementTrigger(id: Types.ObjectId, amount: string, isSuccessfulCharge: boolean) {
+  async createOrUpdate(triggerData: CreateAgreementTriggerDto, hash: string, amount: string, isSuccessfulCharge: boolean) {
+    let agreementTrigger = await this.findOneByTxHash(hash);
+
+    if(!agreementTrigger) {
+      agreementTrigger = await this.create(triggerData)
+    }
+
     const successfulCharge = { $set: { successfulChargeAmount: amount } };
     const failedCharge = { $set: { failedChargeAmount: amount } };
 
     const update = isSuccessfulCharge ? successfulCharge : failedCharge;
 
-    return this.repository.model.updateOne({ _id: id }, update)
+    await this.repository.model.updateOne({ txHash: hash }, update)
+
+    return agreementTrigger
   }
 
   async findAllAgreementTriggers(agreement: Types.ObjectId, pagination: PaginationParams = new PaginationParams()): Promise<AgreementTrigger[]>  {
