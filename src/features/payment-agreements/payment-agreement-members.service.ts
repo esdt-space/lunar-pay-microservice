@@ -6,6 +6,7 @@ import { PaymentAgreement } from './payment-agreement.schema';
 import { PaymentAgreementMemberRepository } from './payment-agreement-member.repository';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
 import { SignedAgreementDto } from './dto/signed-agreement.dto';
+import { PaymentAgreementMember } from './payment-agreement-member.schema';
 
 @Injectable()
 export class PaymentAgreementMembersService {
@@ -33,6 +34,10 @@ export class PaymentAgreementMembersService {
 
   async findAgreementMembers(id: Types.ObjectId): Promise<PaymentAgreement[]> {
     return this.repository.model.find({ internalAgreementId: id });
+  }
+
+  async findMembership(id: Types.ObjectId, address: string): Promise<PaymentAgreementMember> {
+    return this.repository.model.findOne({ internalAgreementId: id, member: address });
   }
 
   createMembership(dto: CreateAgreementMemberDto) {

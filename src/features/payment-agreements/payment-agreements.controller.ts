@@ -41,6 +41,15 @@ export class PaymentAgreementsController {
     return this.membersService.findAddressMemberships(address);
   }
 
+  @Get('signed/:id')
+  @UseGuards(NativeAuthGuard)
+  getMembership(
+    @NativeAuth('address') address: string, 
+    @Param('id', MongooseObjectIdPipe) id,
+    ) {
+      return this.membersService.findMembership(id, address);
+  }
+
   @Get(':id')
   async getAgreement(@Param('id', MongooseObjectIdPipe) id) {
     return this.agreementsService.findOneAgreementById(id);
