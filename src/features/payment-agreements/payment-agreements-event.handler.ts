@@ -16,6 +16,7 @@ import { TokenOperationService } from '@/features/token-operations/token-operati
 import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
 import { AgreementTriggerService } from '@/features/agreement-triggers/agreement-triggers.service';
 import { UpdateAgreementTriggerDto } from '../agreement-triggers/dto';
+import { calculateLastSuccessfulCharge } from '@/utils/time/last-successful-charge';
 
 @Injectable()
 export class PaymentAgreementsEventHandler {
@@ -105,11 +106,14 @@ export class PaymentAgreementsEventHandler {
       txHash: event.txHash
     }
 
-    this.membersService.updateLastChargedAt(agreement._id)
-
     const updateTriggerData = new UpdateAgreementTriggerDto()
 
     if(event.name === "failedAgreementCharges") {
+      eventData.accounts.forEach((el, index) => {
+        const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, agreement.frequency, eventData)
+        this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
+      })
+
       updateTriggerData.failedChargeAmount = totalAmount
       updateTriggerData.failedAccountsCount = eventData.accounts.length
     } else if(event.name === "successfulAgreementCharges") {
@@ -124,7 +128,7 @@ export class PaymentAgreementsEventHandler {
         sender: null,
         senderAccountsCount: eventData.accounts.length,
         receiver: agreement.owner,
-        agreementTriggerId: agreementTrigger._id,
+        agreementTriggerId: null,
         status: TokenOperationStatus.SUCCESS,
         amount: totalAmount,
         tokenIdentifier: agreement.tokenIdentifier,
@@ -138,11 +142,13 @@ export class PaymentAgreementsEventHandler {
       })
   
       eventData.accounts.forEach((el, index) => {
+        // TODO: Replace new Date() with the date that will come from the event
+        this.membersService.updateLastChargedAt(el, new Date()) 
         this.tokenOperationsService.create({
           sender: el,
           senderAccountsCount: null,
           receiver: null,
-          agreementTriggerId: null,
+          agreementTriggerId: agreementTrigger._id,
           status: TokenOperationStatus.SUCCESS,
           amount: memberAmount(index),
           tokenIdentifier: agreement.tokenIdentifier,
@@ -155,6 +161,10 @@ export class PaymentAgreementsEventHandler {
           isInternal: true,
         })
       })
+    }
+
+    if(event.name === "failedAgreementCharges") {
+      
     }
   }
 }
