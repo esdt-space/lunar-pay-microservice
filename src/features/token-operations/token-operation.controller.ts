@@ -4,6 +4,7 @@ import {
   Injectable,
   Query,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -27,8 +28,8 @@ export class TokenOperationController {
   })
   async list(
     @NativeAuth('address') address: string,
-    @Query('filters') filters: TokenOperationFilters,
-    @Query('pagination') pagination: PaginationParams,
+    @Query(new ValidationPipe({ transform: true })) filters: TokenOperationFilters,
+    @Query(new ValidationPipe({ transform: true })) pagination: PaginationParams,
   ) {
     return this.tokenOperationService.findAllAccountTokenOperations(address, filters, pagination);
   }
