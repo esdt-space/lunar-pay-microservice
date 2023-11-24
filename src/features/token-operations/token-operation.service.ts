@@ -59,8 +59,8 @@ export class TokenOperationService {
       ]
     };
 
-    const operationsCount = await this.repository.model.countDocuments({})
-    const itemsPerPage =  10
+    const operationsCount = await this.repository.model.find(queryFilters).countDocuments({})
+    const itemsPerPage = 10
     const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
 
     const allOperations = await this.repository.model
