@@ -25,7 +25,18 @@ export class TokenOperationService {
     return null;
   }
 
-  async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
+  async getOperationsPageNumber() {
+    const operationsCount = await this.repository.model.countDocuments({})
+    const itemsPerPage =  10
+
+    return Math.ceil(operationsCount / itemsPerPage)
+  }
+
+  async findAllAccountTokenOperations(
+    address: string, 
+    filters: TokenOperationFilters = new TokenOperationFilters(), 
+    pagination: PaginationParams = new PaginationParams()
+  ) {
     let queryFilters: FilterQuery<TokenOperation> = {};
 
     if (filters.type) {
@@ -48,12 +59,21 @@ export class TokenOperationService {
       ]
     };
 
-    return this.repository.model
-      .find(queryFilters)
-      .skip(pagination.skip)
-      .limit(pagination.limit)
-      .populate('agreement')
-      .sort({ _id: 'desc' });
+    const operationsCount = await this.repository.model.countDocuments({})
+    const itemsPerPage =  10
+    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+
+    const allOperations = await this.repository.model
+    .find(queryFilters)
+    .skip(pagination.skip)
+    .limit(pagination.limit)
+    .populate('agreement')
+    .sort({ _id: 'desc' });
+
+    return {
+      numberOfPages: numberOfPages,
+      operations: allOperations
+    }
   }
 
   async findOneById(id: string): Promise<TokenOperation> {
