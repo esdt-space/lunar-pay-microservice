@@ -27,8 +27,8 @@ export class TokenOperationController {
   })
   async list(
     @NativeAuth('address') address: string,
-    @Query('filters') filters: TokenOperationFilters,
-    @Query('pagination') pagination: PaginationParams,
+    @Query() pagination: PaginationParams,
+    @Query() filters: TokenOperationFilters,
   ) {
     return this.tokenOperationService.findAllAccountTokenOperations(address, filters, pagination);
   }
