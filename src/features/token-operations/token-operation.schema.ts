@@ -43,8 +43,8 @@ export class TokenOperation extends AbstractDocument {
   @Prop({ type: Types.ObjectId, ref: PaymentAgreement.name })
   agreement?: Types.ObjectId;
 
-  @Prop({ type: String, nullable: true })
-  parentId?: string;
+  @Prop({ type: Types.ObjectId, nullable: true })
+  parentId?: Types.ObjectId;
 
   @Prop({ type: String })
   details?: string;
