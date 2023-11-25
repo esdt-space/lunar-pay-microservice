@@ -36,10 +36,10 @@ export class PaymentAgreementMembersService {
     return this.repository.model.find({ internalAgreementId: id });
   }
 
-  async updateLastChargedAt(id: Types.ObjectId){
-    const newCharge = { $set: { lastChargedAt: new Date() }}
+  async updateLastChargedAt(member: string, date: Date){
+    const newCharge = { $set: { lastSuccessfulCharge: date }}
 
-    return this.repository.model.updateOne({ internalAgreementId: id }, newCharge);
+    return this.repository.model.updateOne({ member: member }, newCharge);
   }
   
   async findMembership(id: Types.ObjectId, address: string): Promise<PaymentAgreementMember> {
@@ -50,6 +50,7 @@ export class PaymentAgreementMembersService {
     return this.repository.model.create({
       ...dto,
       lastChargedAt: dto.createdAt,
+      lastSuccessfulCharge: dto.createdAt,
     });
   }
 }
