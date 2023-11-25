@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { FilterQuery } from 'mongoose';
 import { Injectable, Logger } from '@nestjs/common';
 
@@ -7,7 +8,6 @@ import { CreateTokenOperationDto } from './dto';
 import { TokenOperation } from './token-operation.schema';
 import { TokenOperationRepository } from './token-operation.repository';
 import TokenOperationFilters from './models/token-operation.filters.model';
-import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class TokenOperationService {
@@ -26,9 +26,8 @@ export class TokenOperationService {
     return null;
   }
 
-  async findChargeTokenOperationsByParentId(id: string, pagination: PaginationParams = new PaginationParams()) {
-    const parentId = new ObjectId(id)
-    const queryFilters = { parentId: parentId }
+  async findChargeTokenOperationsByParentId(id: ObjectId, pagination: PaginationParams = new PaginationParams()) {
+    const queryFilters = { parentId: id };
 
     return this.repository.model
       .find(queryFilters)

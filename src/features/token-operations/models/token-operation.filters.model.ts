@@ -4,10 +4,6 @@ import { IsOptional, IsString } from 'class-validator';
 import { TokenOperationType } from '../enums';
 
 export default class TokenOperationFilters {
-  constructor(init?: Partial<TokenOperationFilters>) {
-    Object.assign(this, init);
-  }
-
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
