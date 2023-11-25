@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { FilterQuery } from 'mongoose';
 import { Injectable, Logger } from '@nestjs/common';
 
@@ -23,6 +24,17 @@ export class TokenOperationService {
       this.logger.error('create_transaction', { error: e.stack });
     }
     return null;
+  }
+
+  async findChargeTokenOperationsByParentId(id: ObjectId, pagination: PaginationParams = new PaginationParams()) {
+    const queryFilters = { parentId: id };
+
+    return this.repository.model
+      .find(queryFilters)
+      .skip(pagination.skip)
+      .limit(pagination.limit)
+      .populate('agreement')
+      .sort({ _id: 'desc' });
   }
 
   async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {

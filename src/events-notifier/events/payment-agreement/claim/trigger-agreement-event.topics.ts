@@ -1,4 +1,16 @@
+import BigNumber from 'bignumber.js';
+import { AbiRegistry, List, ResultsParser } from '@multiversx/sdk-core/out';
+import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
+
+import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
+
+type ParseResult = {
+  agreement_id: BigNumber,
+  accounts: List,
+  cycles: List,
+  amounts: List,
+}
 
 export class TriggerAgreementEventTopics extends LunarPayEventTopics {
   private readonly agreementId: number;
@@ -9,10 +21,27 @@ export class TriggerAgreementEventTopics extends LunarPayEventTopics {
   constructor(rawTopics: string[]) {
     super(rawTopics);
 
-    this.agreementId = this.parseIntValue(rawTopics[1]);
-    this.accounts = Buffer.from(rawTopics[2], 'base64').toString().split(',')
-    this.amounts = Buffer.from(rawTopics[3], 'base64').toString().split(',').map((item) => Number(item))
-    this.cycles = Buffer.from(rawTopics[4], 'base64').toString().split(',').map((item) => Number(item))
+    const parser = new ResultsParser();
+    const abiRegistry = AbiRegistry.create(abi);
+    const eventDefinition = abiRegistry.getEvent(this.eventName);
+
+    const event = new TransactionEvent({
+      identifier: 'triggerAgreement',
+      topics: [
+        new TransactionEventTopic(rawTopics[0]),
+        new TransactionEventTopic(rawTopics[1]),
+        new TransactionEventTopic(rawTopics[2]),
+        new TransactionEventTopic(rawTopics[3]),
+        new TransactionEventTopic(rawTopics[4]),
+      ],
+    });
+
+    const bundle = parser.parseEvent(event, eventDefinition) as ParseResult;
+
+    this.agreementId = bundle.agreement_id.toNumber();
+    this.accounts = bundle.accounts.valueOf().map(item => item.toString());
+    this.amounts = bundle.amounts.valueOf().map(item => item.toNumber());
+    this.cycles = bundle.cycles.valueOf().map(item => item.toNumber());
   }
 
   toPlainObject() {

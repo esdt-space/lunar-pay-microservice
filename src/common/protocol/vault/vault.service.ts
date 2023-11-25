@@ -12,7 +12,7 @@ import {
 import { getContractFromAbi } from '@/libs/blockchain/mvx/contract';
 import { ContractQueryHandler } from '@/libs/blockchain/mvx/contract/contract-query.handler';
 
-import vaultAbi from '../abi/lunar-pay.abi.json';
+import vaultAbi from '../abi/lunarpay.abi.json';
 
 @Injectable()
 export class VaultService {

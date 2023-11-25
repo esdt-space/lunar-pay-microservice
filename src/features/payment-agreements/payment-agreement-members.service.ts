@@ -36,6 +36,12 @@ export class PaymentAgreementMembersService {
     return this.repository.model.find({ internalAgreementId: id });
   }
 
+  async updateLastChargedAt(id: Types.ObjectId){
+    const newCharge = { $set: { lastChargedAt: new Date() }}
+
+    return this.repository.model.updateOne({ internalAgreementId: id }, newCharge);
+  }
+  
   async findMembership(id: Types.ObjectId, address: string): Promise<PaymentAgreementMember> {
     return this.repository.model.findOne({ internalAgreementId: id, member: address });
   }
