@@ -6,9 +6,21 @@ export class CreateTokenOperationDto {
   @IsNotEmpty()
   sender: string;
 
+  @IsNumber()
+  @IsNotEmpty()
+  senderAccountsCount: number;
+
   @IsString()
   @IsNotEmpty()
   receiver: string;
+
+  @IsString()
+  @IsNotEmpty()
+  agreementTriggerId: Types.ObjectId;
+
+  @IsString()
+  @IsOptional()
+  status?: string;
 
   @IsNumber()
   @IsNotEmpty()
@@ -33,11 +45,12 @@ export class CreateTokenOperationDto {
   @IsBoolean()
   isInternal?: boolean;
 
-  @IsOptional()
   @IsNotEmpty()
   agreement: Types.ObjectId;
 
   @IsOptional()
-  @IsNotEmpty()
+  parentId?: Types.ObjectId;
+
+  @IsOptional()
   details: string;
 }

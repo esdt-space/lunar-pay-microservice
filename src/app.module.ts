@@ -24,6 +24,8 @@ import { VaultModule } from '@/common/protocol/vault/vault.module';
 import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
 import { TokenOperationController } from '@/features/token-operations/token-operation.controller';
 import { EventsNotifierModule } from '@/events-notifier';
+import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
+import { AgreementTriggersController } from './features/agreement-triggers/agreement-triggers.controller';
 
 @Module({
   imports: [
@@ -45,6 +47,7 @@ import { EventsNotifierModule } from '@/events-notifier';
     AccountModule,
     TokensModule,
 
+    AgreementTriggerModule,
     PaymentAgreementsModule,
     TokenOperationModule,
 
@@ -56,6 +59,7 @@ import { EventsNotifierModule } from '@/events-notifier';
     TokensController,
     TokenPricesController,
 
+    AgreementTriggersController,
     PaymentAgreementsController,
     TokenOperationController,
 

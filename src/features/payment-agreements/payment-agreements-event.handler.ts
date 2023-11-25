@@ -13,7 +13,10 @@ import {
 import { CreateAgreementMemberDto } from './dto/create-agreement-member.dto';
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
-import { TokenOperationType } from '@/features/token-operations/enums';
+import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
+import { AgreementTriggerService } from '@/features/agreement-triggers/agreement-triggers.service';
+import { UpdateAgreementTriggerDto } from '../agreement-triggers/dto';
+import { calculateLastSuccessfulCharge } from '@/utils/time/last-successful-charge';
 
 @Injectable()
 export class PaymentAgreementsEventHandler {
@@ -21,6 +24,7 @@ export class PaymentAgreementsEventHandler {
     public readonly agreementsService: PaymentAgreementsService,
     public readonly membersService: PaymentAgreementMembersService,
     private readonly tokenOperationsService: TokenOperationService,
+    private readonly agreementTriggersService: AgreementTriggerService,
   ) {}
 
   @OnEvent(BlockchainEventDecoded.SignPaymentAgreement)
@@ -42,7 +46,9 @@ export class PaymentAgreementsEventHandler {
     await this.agreementsService.incrementMembersCount(agreement._id);
     await this.tokenOperationsService.create({
       sender: eventData.address,
+      senderAccountsCount: null,
       receiver: agreement.owner,
+      agreementTriggerId: null,
       amount: agreement.fixedAmount,
       tokenIdentifier: agreement.tokenIdentifier,
       tokenNonce: agreement.tokenNonce,
@@ -84,6 +90,8 @@ export class PaymentAgreementsEventHandler {
   async handleTriggerAgreementEvent(event: TriggerAgreementEvent) {
     const eventData = event.decodedTopics.toPlainObject();
 
+    const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString()
+
     const agreement = await this.agreementsService
       .findOneByIdSmartContractId(eventData.agreementId);
 
@@ -93,19 +101,70 @@ export class PaymentAgreementsEventHandler {
       return result.toString()
     }
 
-    eventData.accounts.forEach((el, index) => {
-      this.tokenOperationsService.create({
-        sender: el,
+    const newAgreementTrigger = {
+      agreement: agreement._id,
+      txHash: event.txHash
+    }
+
+    const updateTriggerData = new UpdateAgreementTriggerDto()
+
+    if(event.name === "failedAgreementCharges") {
+      eventData.accounts.forEach((el, index) => {
+        const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, agreement.frequency, eventData)
+        this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
+      })
+
+      updateTriggerData.failedChargeAmount = totalAmount
+      updateTriggerData.failedAccountsCount = eventData.accounts.length
+    } else if(event.name === "successfulAgreementCharges") {
+      updateTriggerData.successfulChargeAmount = totalAmount
+      updateTriggerData.successfulAccountsCount = eventData.accounts.length
+    }
+    
+    const agreementTrigger = await this.agreementTriggersService.createOrUpdate(newAgreementTrigger, updateTriggerData, event.txHash)
+
+    if(event.name === "successfulAgreementCharges") {
+      const providerOperation = await this.tokenOperationsService.create({
+        sender: null,
+        senderAccountsCount: eventData.accounts.length,
         receiver: agreement.owner,
-        amount: memberAmount(index),
+        agreementTriggerId: null,
+        status: TokenOperationStatus.SUCCESS,
+        amount: totalAmount,
         tokenIdentifier: agreement.tokenIdentifier,
         tokenNonce: agreement.tokenNonce,
         type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
         txHash: event.txHash,
         agreement: agreement._id,
+        parentId: null,
         details: 'Recurring Charge',
         isInternal: true,
       })
-    })
+  
+      eventData.accounts.forEach((el, index) => {
+        // TODO: Replace new Date() with the date that will come from the event
+        this.membersService.updateLastChargedAt(el, new Date()) 
+        this.tokenOperationsService.create({
+          sender: el,
+          senderAccountsCount: null,
+          receiver: null,
+          agreementTriggerId: agreementTrigger._id,
+          status: TokenOperationStatus.SUCCESS,
+          amount: memberAmount(index),
+          tokenIdentifier: agreement.tokenIdentifier,
+          tokenNonce: agreement.tokenNonce,
+          type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
+          txHash: event.txHash,
+          agreement: agreement._id,
+          parentId: providerOperation._id,
+          details: 'Recurring Charge',
+          isInternal: true,
+        })
+      })
+    }
+
+    if(event.name === "failedAgreementCharges") {
+      
+    }
   }
 }

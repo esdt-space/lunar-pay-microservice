@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { FilterQuery } from 'mongoose';
 import { Injectable, Logger } from '@nestjs/common';
 
@@ -25,18 +26,18 @@ export class TokenOperationService {
     return null;
   }
 
-  async getOperationsPageNumber() {
-    const operationsCount = await this.repository.model.countDocuments({})
-    const itemsPerPage =  10
+  async findChargeTokenOperationsByParentId(id: ObjectId, pagination: PaginationParams = new PaginationParams()) {
+    const queryFilters = { parentId: id };
 
-    return Math.ceil(operationsCount / itemsPerPage)
+    return this.repository.model
+      .find(queryFilters)
+      .skip(pagination.skip)
+      .limit(pagination.limit)
+      .populate('agreement')
+      .sort({ _id: 'desc' });
   }
 
-  async findAllAccountTokenOperations(
-    address: string, 
-    filters: TokenOperationFilters = new TokenOperationFilters(), 
-    pagination: PaginationParams = new PaginationParams()
-  ) {
+  async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
     let queryFilters: FilterQuery<TokenOperation> = {};
 
     if (filters.type) {
