@@ -30,8 +30,8 @@ export class TokenOperationController {
   })
   async list(
     @NativeAuth('address') address: string,
-    @Query(new ValidationPipe({ transform: true })) filters: TokenOperationFilters,
-    @Query(new ValidationPipe({ transform: true })) pagination: PaginationParams,
+    @Query() filters: TokenOperationFilters,
+    @Query() pagination: PaginationParams,
   ) {
     return this.tokenOperationService.findAllAccountTokenOperations(address, filters, pagination);
   }
