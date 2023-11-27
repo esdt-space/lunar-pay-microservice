@@ -44,14 +44,6 @@ export class TokenOperationService {
       queryFilters.type = filters.type;
     }
 
-    if (filters.sender) {
-      queryFilters.sender = filters.sender;
-    }
-
-    if (filters.receiver) {
-      queryFilters.receiver = filters.receiver;
-    }
-
     queryFilters = {
       ...queryFilters,
       $or: [
@@ -60,16 +52,26 @@ export class TokenOperationService {
       ]
     };
 
+    if (filters.filterByAddress) {
+      queryFilters = {
+        ...queryFilters,
+        $or: [
+          { sender: filters.filterByAddress },
+          { receiver: filters.filterByAddress },
+        ]
+      };
+    }
+
     const operationsCount = await this.repository.model.find(queryFilters).countDocuments({})
     const itemsPerPage = 10
     const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
 
     const allOperations = await this.repository.model
-    .find(queryFilters)
-    .skip(pagination.skip)
-    .limit(pagination.limit)
-    .populate('agreement')
-    .sort({ _id: 'desc' });
+      .find(queryFilters)
+      .skip(pagination.skip)
+      .limit(pagination.limit)
+      .populate('agreement')
+      .sort({ _id: 'desc' });
 
     return {
       numberOfPages: numberOfPages,
