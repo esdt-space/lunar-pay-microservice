@@ -7,6 +7,7 @@ import { PaymentAgreementMemberRepository } from './payment-agreement-member.rep
 import { PaymentAgreementRepository } from './payment-agreement.repository';
 import { SignedAgreementDto } from './dto/signed-agreement.dto';
 import { PaymentAgreementMember } from './payment-agreement-member.schema';
+import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
 export class PaymentAgreementMembersService {
@@ -15,7 +16,7 @@ export class PaymentAgreementMembersService {
     private readonly agreementsRepository: PaymentAgreementRepository,
   ) {}
 
-  async findAddressMemberships(address: string): Promise<SignedAgreementDto[]> {
+  async findAddressMemberships(address: string, pagination: PaginationParams = new PaginationParams()): Promise<SignedAgreementDto[]> {
     const memberships = await this.repository.model
     .find({ member: address })
     
@@ -24,6 +25,8 @@ export class PaymentAgreementMembersService {
 
     const allSignedAgreements: PaymentAgreement[] = await this.agreementsRepository.model
       .find({ _id: { $in: aggrementIds } })
+      .skip(pagination.skip)
+      .limit(pagination.limit)
       .sort({ createdAt: 'desc' })
       .lean();
 
@@ -32,8 +35,12 @@ export class PaymentAgreementMembersService {
     })
   }
 
-  async findAgreementMembers(id: Types.ObjectId): Promise<PaymentAgreement[]> {
-    return this.repository.model.find({ internalAgreementId: id });
+  async findAgreementMembers(id: Types.ObjectId, pagination: PaginationParams = new PaginationParams()): Promise<PaymentAgreementMember[]> {
+    return this.repository.model
+      .find({ internalAgreementId: id })
+      .skip(pagination.skip)
+      .limit(pagination.limit)
+      .sort({ createdAt: 'desc' })
   }
 
   async updateLastChargedAt(member: string, date: Date){

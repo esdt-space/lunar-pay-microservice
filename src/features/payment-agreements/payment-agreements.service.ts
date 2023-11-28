@@ -5,6 +5,7 @@ import { PaymentAgreement } from './payment-agreement.schema';
 import { CreateAgreementDto, UpdateAgreementDto } from './dto';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
 import { AgreementDto } from './dto/agreement.dto';
+import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
 export class PaymentAgreementsService {
@@ -28,9 +29,12 @@ export class PaymentAgreementsService {
 
   async findAgreementsCreatedByAccount(
     address: string,
+    pagination: PaginationParams = new PaginationParams()
   ): Promise<AgreementDto[]> {
     const agreementsList: PaymentAgreement[] = await this.repository.model
       .find({ owner: address })
+      .skip(pagination.skip)
+      .limit(pagination.limit)
       .sort({ createdAt: 'desc' })
       .lean()
 
@@ -39,8 +43,15 @@ export class PaymentAgreementsService {
     })
   }
 
-  async findAccountAgreements(address: string): Promise<PaymentAgreement[]> {
-    return this.repository.model.find({ owner: address });
+  async findAccountAgreements(
+    address: string, 
+    pagination: PaginationParams = new PaginationParams()
+  ): Promise<PaymentAgreement[]> {
+    return this.repository.model
+      .find({ owner: address })
+      .skip(pagination.skip)
+      .limit(pagination.limit)
+      .sort({ createdAt: 'desc' })
   }
 
   async createAgreement(address: string, dto: any): Promise<PaymentAgreement> {
