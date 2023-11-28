@@ -11,17 +11,22 @@ import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
 export class PaymentAgreementMembersService {
+  private static readonly ITEMS_PER_PAGE = 10;
+
   constructor(
     private readonly repository: PaymentAgreementMemberRepository,
     private readonly agreementsRepository: PaymentAgreementRepository,
   ) {}
 
-  async findAddressMemberships(address: string, pagination: PaginationParams = new PaginationParams()): Promise<SignedAgreementDto[]> {
+  async findAddressMemberships(address: string, pagination: PaginationParams = new PaginationParams()) {
     const memberships = await this.repository.model
     .find({ member: address })
     
-
     const aggrementIds = memberships.map(item => item.internalAgreementId);
+
+    const operationsCount = await this.repository.model.find({ _id: { $in: aggrementIds } }).countDocuments({})
+    const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE
+    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
 
     const allSignedAgreements: PaymentAgreement[] = await this.agreementsRepository.model
       .find({ _id: { $in: aggrementIds } })
@@ -30,17 +35,29 @@ export class PaymentAgreementMembersService {
       .sort({ createdAt: 'desc' })
       .lean();
 
-    return allSignedAgreements.map((el) => {
-      return new SignedAgreementDto(el)
-    })
+    return {
+      agreements: allSignedAgreements.map((el) => {
+        return new SignedAgreementDto(el)
+      }),
+      numberOfPages: numberOfPages
+    }
   }
 
-  async findAgreementMembers(id: Types.ObjectId, pagination: PaginationParams = new PaginationParams()): Promise<PaymentAgreementMember[]> {
-    return this.repository.model
+  async findAgreementMembers(id: Types.ObjectId, pagination: PaginationParams = new PaginationParams()) {
+    const operationsCount = await this.repository.model.find({ internalAgreementId: id }).countDocuments({})
+    const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE
+    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+
+    const allMemberships = this.repository.model
       .find({ internalAgreementId: id })
       .skip(pagination.skip)
       .limit(pagination.limit)
       .sort({ createdAt: 'desc' })
+
+      return {
+        memberships: allMemberships,
+        numberOfPages: numberOfPages
+      }
   }
 
   async updateLastChargedAt(member: string, date: Date){

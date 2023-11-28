@@ -9,6 +9,8 @@ import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
 export class PaymentAgreementsService {
+  private static readonly ITEMS_PER_PAGE = 10;
+
   constructor(private readonly repository: PaymentAgreementRepository) {}
 
   async findOneAgreementById(id: Types.ObjectId): Promise<PaymentAgreement> {
@@ -30,7 +32,11 @@ export class PaymentAgreementsService {
   async findAgreementsCreatedByAccount(
     address: string,
     pagination: PaginationParams = new PaginationParams()
-  ): Promise<AgreementDto[]> {
+  ) {
+    const operationsCount = await this.repository.model.find({ owner: address }).countDocuments({})
+    const itemsPerPage = PaymentAgreementsService.ITEMS_PER_PAGE
+    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+
     const agreementsList: PaymentAgreement[] = await this.repository.model
       .find({ owner: address })
       .skip(pagination.skip)
@@ -38,20 +44,12 @@ export class PaymentAgreementsService {
       .sort({ createdAt: 'desc' })
       .lean()
 
-    return agreementsList.map((el) => {
-      return new AgreementDto(el)
-    })
-  }
-
-  async findAccountAgreements(
-    address: string, 
-    pagination: PaginationParams = new PaginationParams()
-  ): Promise<PaymentAgreement[]> {
-    return this.repository.model
-      .find({ owner: address })
-      .skip(pagination.skip)
-      .limit(pagination.limit)
-      .sort({ createdAt: 'desc' })
+    return {
+      agreements: agreementsList.map((el) => {
+          return new AgreementDto(el)
+        }),
+      numberOfPages: numberOfPages
+    }
   }
 
   async createAgreement(address: string, dto: any): Promise<PaymentAgreement> {
