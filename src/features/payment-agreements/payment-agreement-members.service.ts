@@ -47,17 +47,17 @@ export class PaymentAgreementMembersService {
     const operationsCount = await this.repository.model.find({ internalAgreementId: id }).countDocuments({})
     const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE
     const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+    
+    const allMemberships = await this.repository.model
+    .find({ internalAgreementId: id })
+    .skip(pagination.skip)
+    .limit(pagination.limit)
+    .sort({ createdAt: 'desc' })
 
-    const allMemberships = this.repository.model
-      .find({ internalAgreementId: id })
-      .skip(pagination.skip)
-      .limit(pagination.limit)
-      .sort({ createdAt: 'desc' })
-
-      return {
-        memberships: allMemberships,
-        numberOfPages: numberOfPages
-      }
+    return {
+      memberships: allMemberships,
+      numberOfPages: numberOfPages
+    }
   }
 
   async updateLastChargedAt(member: string, date: Date){

@@ -76,11 +76,11 @@ export class TokenOperationService {
     const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
 
     const allOperations = await this.repository.model
-    .find(queryFilters)
-    .skip(pagination.skip)
-    .limit(pagination.limit)
-    .populate('agreement')
-    .sort({ _id: 'desc' });
+      .find(queryFilters)
+      .skip(pagination.skip)
+      .limit(pagination.limit)
+      .populate('agreement')
+      .sort({ _id: 'desc' });
 
     return {
       numberOfPages: numberOfPages,

@@ -64,8 +64,10 @@ export class PaymentAgreementsController {
   @UseGuards(NativeAuthGuard)
   async getAgreementMembers(
     @NativeAuth('address') address: string,
-    @Param('id', MongooseObjectIdPipe) id) {
-    return this.membersService.findAgreementMembers(id);
+    @Param('id', MongooseObjectIdPipe) id,
+    @Query() pagination: PaginationParams,
+    ) {
+    return this.membersService.findAgreementMembers(id, pagination);
   }
 
   @Put(':id')
