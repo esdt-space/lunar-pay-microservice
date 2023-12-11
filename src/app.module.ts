@@ -26,6 +26,8 @@ import { TokenOperationController } from '@/features/token-operations/token-oper
 import { EventsNotifierModule } from '@/events-notifier';
 import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
 import { AgreementTriggersController } from './features/agreement-triggers/agreement-triggers.controller';
+import { EmailSeviceModule } from './features/emailing/email.module';
+import { EmailServiceController } from './features/emailing/email.controller';
 
 @Module({
   imports: [
@@ -51,6 +53,8 @@ import { AgreementTriggersController } from './features/agreement-triggers/agree
     PaymentAgreementsModule,
     TokenOperationModule,
 
+    EmailSeviceModule,
+
     VaultModule,
     EventsNotifierModule,
   ],
@@ -62,6 +66,8 @@ import { AgreementTriggersController } from './features/agreement-triggers/agree
     AgreementTriggersController,
     PaymentAgreementsController,
     TokenOperationController,
+
+    EmailServiceController,
 
     VaultController,
   ],
