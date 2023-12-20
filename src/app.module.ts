@@ -26,8 +26,8 @@ import { TokenOperationController } from '@/features/token-operations/token-oper
 import { EventsNotifierModule } from '@/events-notifier';
 import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
 import { AgreementTriggersController } from './features/agreement-triggers/agreement-triggers.controller';
-import { EmailSeviceModule } from './features/emailing/email.module';
-import { EmailServiceController } from './features/emailing/email.controller';
+import { EmailSeviceModule } from './features/email/email.module';
+import { EmailServiceController } from './features/email/email.controller';
 
 @Module({
   imports: [
