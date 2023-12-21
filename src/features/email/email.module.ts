@@ -1,14 +1,18 @@
-import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { Global, Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 
 import { EmailService } from "./email.service";
+import { APP_GUARD } from '@nestjs/core';
 
 @Global()
 @Module({
   imports: [
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 10,
+    }]),
     MailerModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
         transport: {
@@ -24,18 +28,17 @@ import { EmailService } from "./email.service";
           from: `"No Reply" <${config.get('EMAIL_FROM')}>`,
         },
         preview: true,
-        // template: {
-        //   dir: join(__dirname, '../../email/templates'),
-        //   adapter: new HandlebarsAdapter(),
-        //   options: {
-        //     strict: true,
-        //   },
-        // },
       }),
       inject: [ConfigService],
     }),
   ],
-  providers: [ EmailService ],
+  providers: [ 
+    EmailService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
+  ],
   exports: [ EmailService ],
 })
 export class EmailSeviceModule {}
