@@ -33,11 +33,11 @@ import { APP_GUARD } from '@nestjs/core';
     }),
   ],
   providers: [ 
-    EmailService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
-    }
+    },
+    EmailService
   ],
   exports: [ EmailService ],
 })
