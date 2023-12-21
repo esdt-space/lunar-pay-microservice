@@ -1,8 +1,10 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { ConfigService } from "@nestjs/config";
+import { ThrottlerGuard } from '@nestjs/throttler'
+
 import { EmailService } from "./email.service";
 import { ContactDto } from "./dto";
-import { ConfigService } from "@nestjs/config";
 
 @ApiTags('Email Service')
 @Controller('email-service')
@@ -13,6 +15,7 @@ export class EmailServiceController {
   ){}
 
   @Post('contact')
+  @UseGuards(ThrottlerGuard)
   async triggerContactEmail(@Body() dto: ContactDto,){
     const input = {
       to: this.config.get('EMAIL_FROM'),
