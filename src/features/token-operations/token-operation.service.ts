@@ -31,9 +31,8 @@ export class TokenOperationService {
   async findChargeTokenOperationsByParentId(id: ObjectId, pagination: PaginationParams = new PaginationParams()) {
     const queryFilters = { parentId: id };
 
-    const operationsCount = await this.repository.model.find(queryFilters).countDocuments({})
-    const itemsPerPage = TokenOperationService.ITEMS_PER_PAGE
-    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+    const operationsCount = await this.repository.model.find(queryFilters).countDocuments({});
+    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
 
     const allOperations = this.repository.model
       .find(queryFilters)
@@ -45,7 +44,7 @@ export class TokenOperationService {
     return {
       numberOfPages: numberOfPages,
       operations: allOperations
-    }
+    };
   }
 
   async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
@@ -73,9 +72,8 @@ export class TokenOperationService {
       };
     }
 
-    const operationsCount = await this.repository.model.find(queryFilters).countDocuments({})
-    const itemsPerPage = TokenOperationService.ITEMS_PER_PAGE
-    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+    const operationsCount = await this.repository.model.find(queryFilters).countDocuments({});
+    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
 
     const allOperations = await this.repository.model
       .find(queryFilters)
@@ -87,7 +85,7 @@ export class TokenOperationService {
     return {
       numberOfPages: numberOfPages,
       operations: allOperations
-    }
+    };
   }
 
   async findOneById(id: string): Promise<TokenOperation> {
