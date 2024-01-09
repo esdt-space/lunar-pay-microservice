@@ -33,23 +33,22 @@ export class PaymentAgreementsService {
     address: string,
     pagination: PaginationParams = new PaginationParams()
   ) {
-    const operationsCount = await this.repository.model.find({ owner: address }).countDocuments({})
-    const itemsPerPage = PaymentAgreementsService.ITEMS_PER_PAGE
-    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+    const operationsCount = await this.repository.model.find({ owner: address }).countDocuments({});
+    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
 
     const agreementsList: PaymentAgreement[] = await this.repository.model
       .find({ owner: address })
       .skip(pagination.skip)
       .limit(pagination.limit)
       .sort({ createdAt: 'desc' })
-      .lean()
+      .lean();
 
     return {
       agreements: agreementsList.map((el) => {
-          return new AgreementDto(el)
-        }),
+        return new AgreementDto(el);
+      }),
       numberOfPages: numberOfPages
-    }
+    };
   }
 
   async createAgreement(address: string, dto: any): Promise<PaymentAgreement> {
