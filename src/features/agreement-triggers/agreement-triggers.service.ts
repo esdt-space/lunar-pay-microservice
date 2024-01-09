@@ -1,14 +1,15 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { AgreementTriggerRepository } from "./agreement-trigger.repository";
-import { CreateAgreementTriggerDto, UpdateAgreementTriggerDto } from "./dto";
-import { AgreementTrigger } from "./agreement-trigger.schema";
-import { Types } from "mongoose";
-import PaginationParams from "@/common/models/pagination.params.model";
+import { Types } from 'mongoose';
+import { Injectable, Logger } from '@nestjs/common';
+
+import PaginationParams from '@/common/models/pagination.params.model';
+import { PaginatedResponse } from '@/common/models/paginated-response';
+
+import { AgreementTrigger } from './agreement-trigger.schema';
+import { AgreementTriggerRepository } from './agreement-trigger.repository';
+import { CreateAgreementTriggerDto, UpdateAgreementTriggerDto } from './dto';
 
 @Injectable()
 export class AgreementTriggerService {
-  private static readonly ITEMS_PER_PAGE = 10;
-
   logger = new Logger();
 
   constructor(private readonly repository: AgreementTriggerRepository) {
@@ -16,7 +17,7 @@ export class AgreementTriggerService {
   }
 
   async findOneByTxHash(hash: string): Promise<AgreementTrigger> {
-    return this.repository.model.findOne({ txHash: hash}).exec()
+    return this.repository.model.findOne({ txHash: hash }).exec();
   }
 
   async create(triggerData: CreateAgreementTriggerDto): Promise<AgreementTrigger> {
@@ -32,28 +33,29 @@ export class AgreementTriggerService {
     let agreementTrigger = await this.findOneByTxHash(hash);
 
     if(!agreementTrigger) {
-      agreementTrigger = await this.create(triggerData)
+      agreementTrigger = await this.create(triggerData);
     }
 
-    await this.repository.model.updateOne({ txHash: hash }, updateData)
+    await this.repository.model.updateOne({ txHash: hash }, updateData);
 
-    return agreementTrigger
+    return agreementTrigger;
   }
 
   async findAllAgreementTriggers(agreement: Types.ObjectId, pagination: PaginationParams = new PaginationParams()) {
-    const operationsCount = await this.repository.model.find({ agreement: agreement}).countDocuments({})
-    const itemsPerPage = AgreementTriggerService.ITEMS_PER_PAGE
-    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+    const operationsCount = await this.repository.model.find({ agreement: agreement }).countDocuments({});
+    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
 
     const allAgreementTriggers = await this.repository.model
-      .find({ agreement: agreement})
+      .find({ agreement: agreement })
       .skip(pagination.skip)
       .limit(pagination.limit)
       .sort({ _id: 'desc' });
 
+    // return new PaginatedResponse<AgreementTrigger>(allAgreementTriggers, operationsCount, pagination);
+
     return {
       agreementTriggers: allAgreementTriggers,
       numberOfPages: numberOfPages
-    }
+    };
   }
 }
