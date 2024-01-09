@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
@@ -14,6 +15,7 @@ import { MongooseObjectIdPipe } from '@/libs/database/mongo';
 import { UpdateAgreementDto } from './dto/update-agreement.dto';
 import { PaymentAgreementsService } from './payment-agreements.service';
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
+import PaginationParams from '@/common/models/pagination.params.model';
 
 @ApiTags('Payment Agreements')
 @Controller('payment-agreements')
@@ -25,8 +27,11 @@ export class PaymentAgreementsController {
 
   @Get('created')
   @UseGuards(NativeAuthGuard)
-  getAgreementsCreated(@NativeAuth('address') address: string) {
-    return this.agreementsService.findAgreementsCreatedByAccount(address);
+  getAgreementsCreated(
+    @NativeAuth('address') address: string,
+    @Query() pagination: PaginationParams,
+  ) {
+    return this.agreementsService.findAgreementsCreatedByAccount(address, pagination);
   }
 
   @Get('created/latest')
@@ -59,8 +64,10 @@ export class PaymentAgreementsController {
   @UseGuards(NativeAuthGuard)
   async getAgreementMembers(
     @NativeAuth('address') address: string,
-    @Param('id', MongooseObjectIdPipe) id) {
-    return this.membersService.findAgreementMembers(id);
+    @Param('id', MongooseObjectIdPipe) id,
+    @Query() pagination: PaginationParams,
+    ) {
+    return this.membersService.findAgreementMembers(id, pagination);
   }
 
   @Put(':id')

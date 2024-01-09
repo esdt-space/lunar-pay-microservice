@@ -7,6 +7,8 @@ import PaginationParams from "@/common/models/pagination.params.model";
 
 @Injectable()
 export class AgreementTriggerService {
+  private static readonly ITEMS_PER_PAGE = 10;
+
   logger = new Logger();
 
   constructor(private readonly repository: AgreementTriggerRepository) {
@@ -38,11 +40,20 @@ export class AgreementTriggerService {
     return agreementTrigger
   }
 
-  async findAllAgreementTriggers(agreement: Types.ObjectId, pagination: PaginationParams = new PaginationParams()): Promise<AgreementTrigger[]>  {
-    return await this.repository.model
+  async findAllAgreementTriggers(agreement: Types.ObjectId, pagination: PaginationParams = new PaginationParams()) {
+    const operationsCount = await this.repository.model.find({ agreement: agreement}).countDocuments({})
+    const itemsPerPage = AgreementTriggerService.ITEMS_PER_PAGE
+    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+
+    const allAgreementTriggers = await this.repository.model
       .find({ agreement: agreement})
       .skip(pagination.skip)
       .limit(pagination.limit)
       .sort({ _id: 'desc' });
+
+    return {
+      agreementTriggers: allAgreementTriggers,
+      numberOfPages: numberOfPages
+    }
   }
 }
