@@ -5,7 +5,6 @@ import {
   Param,
   Query,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';

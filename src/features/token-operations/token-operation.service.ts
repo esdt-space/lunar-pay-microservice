@@ -55,14 +55,6 @@ export class TokenOperationService {
       queryFilters.type = filters.type;
     }
 
-    if (filters.sender) {
-      queryFilters.sender = filters.sender;
-    }
-
-    if (filters.receiver) {
-      queryFilters.receiver = filters.receiver;
-    }
-
     queryFilters = {
       ...queryFilters,
       $or: [
@@ -70,6 +62,16 @@ export class TokenOperationService {
         { receiver: address },
       ]
     };
+
+    if (filters.filterByAddress) {
+      queryFilters = {
+        ...queryFilters,
+        $or: [
+          { sender: filters.filterByAddress },
+          { receiver: filters.filterByAddress },
+        ]
+      };
+    }
 
     const operationsCount = await this.repository.model.find(queryFilters).countDocuments({})
     const itemsPerPage = TokenOperationService.ITEMS_PER_PAGE
