@@ -1,8 +1,10 @@
-import { AbstractRepository } from "@/libs/database/mongo";
-import { Injectable } from "@nestjs/common";
-import { AgreementTrigger } from "./agreement-trigger.schema";
-import { InjectConnection, InjectModel } from "@nestjs/mongoose";
-import { Connection, Model } from "mongoose";
+import { Injectable } from '@nestjs/common';
+import { Connection, Model } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+
+import { AbstractRepository } from '@/libs/database/mongo';
+
+import { AgreementTrigger } from './agreement-trigger.schema';
 
 @Injectable()
 export class AgreementTriggerRepository extends AbstractRepository<AgreementTrigger> {

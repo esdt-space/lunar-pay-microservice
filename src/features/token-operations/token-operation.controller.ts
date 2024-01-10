@@ -29,8 +29,8 @@ export class TokenOperationController {
   })
   async list(
     @NativeAuth('address') address: string,
-    @Query() pagination: PaginationParams,
     @Query() filters: TokenOperationFilters,
+    @Query() pagination: PaginationParams,
   ) {
     return this.tokenOperationService.findAllAccountTokenOperations(address, filters, pagination);
   }
@@ -43,7 +43,7 @@ export class TokenOperationController {
   })
   async getOperationsByParentId(
     @Param('id', MongooseObjectIdPipe) id,
-    @Query('pagination') pagination: PaginationParams,
+    @Query() pagination: PaginationParams,
   ) {
     return this.tokenOperationService.findChargeTokenOperationsByParentId(id, pagination);
   }

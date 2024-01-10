@@ -15,6 +15,10 @@ import {
   TriggerAgreementEvent,
 } from './events';
 
+type QueuePayload = Record<string, unknown> & {
+ events: RawEvent[];
+}
+
 @Injectable()
 export class EventsNotifierService {
   private readonly logger = new Logger(EventsNotifierService.name);
@@ -27,26 +31,26 @@ export class EventsNotifierService {
   @CompetingRabbitConsumer({
     queueName: process.env.EVENTS_NOTIFIER_QUEUE_NAME,
   })
-  async consumeEvents(rawEvents: any) {
-    const events: any[] = rawEvents?.events ?? [];
-    const lunarPayEvent = events.filter(
-      (item) => item.address === this.config.get('contracts').lunarPayVault,
-    );
+  async consumeEvents(payload: QueuePayload) {
+    const { events = [] } = payload;
+    const lunarPayEvents = this.filterLunarPayEvents(events);
 
-    for (const rawEvent of lunarPayEvent) {
-      if((rawEvent as GenericEvent).identifier === 'completedTxEvent') continue;
+    for (const rawEvent of lunarPayEvents) {
+      if(rawEvent.identifier === 'completedTxEvent') continue;
 
       try {
         const event = this.decodeEvent(rawEvent);
         this.eventEmitter.emit(event.emitEventName, event);
       } catch (error) {
-        this.logger.error(
-          `An unhandled error occurred when consuming event: ${JSON.stringify(rawEvent)}`,
-        );
-
         this.logger.error(error);
       }
     }
+  }
+
+  private filterLunarPayEvents(events: RawEvent[]) {
+    return events.filter(
+      (item) => item.address === this.config.get('contracts').lunarPayVault,
+    );
   }
 
   private decodeEvent(rawEvent: RawEvent) {

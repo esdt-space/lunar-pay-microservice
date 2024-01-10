@@ -11,6 +11,8 @@ import TokenOperationFilters from './models/token-operation.filters.model';
 
 @Injectable()
 export class TokenOperationService {
+  private static readonly ITEMS_PER_PAGE = 10;
+  
   logger = new Logger();
 
   constructor(private readonly repository: TokenOperationRepository) {
@@ -29,12 +31,20 @@ export class TokenOperationService {
   async findChargeTokenOperationsByParentId(id: ObjectId, pagination: PaginationParams = new PaginationParams()) {
     const queryFilters = { parentId: id };
 
-    return this.repository.model
+    const operationsCount = await this.repository.model.find(queryFilters).countDocuments({});
+    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
+
+    const allOperations = this.repository.model
       .find(queryFilters)
       .skip(pagination.skip)
       .limit(pagination.limit)
       .populate('agreement')
       .sort({ _id: 'desc' });
+
+    return {
+      numberOfPages: numberOfPages,
+      operations: allOperations
+    };
   }
 
   async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
@@ -42,14 +52,6 @@ export class TokenOperationService {
 
     if (filters.type) {
       queryFilters.type = filters.type;
-    }
-
-    if (filters.sender) {
-      queryFilters.sender = filters.sender;
-    }
-
-    if (filters.receiver) {
-      queryFilters.receiver = filters.receiver;
     }
 
     queryFilters = {
@@ -60,12 +62,30 @@ export class TokenOperationService {
       ]
     };
 
-    return this.repository.model
+    if (filters.filterByAddress) {
+      queryFilters = {
+        ...queryFilters,
+        $or: [
+          { sender: filters.filterByAddress },
+          { receiver: filters.filterByAddress },
+        ]
+      };
+    }
+
+    const operationsCount = await this.repository.model.find(queryFilters).countDocuments({});
+    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
+
+    const allOperations = await this.repository.model
       .find(queryFilters)
       .skip(pagination.skip)
       .limit(pagination.limit)
       .populate('agreement')
       .sort({ _id: 'desc' });
+
+    return {
+      numberOfPages: numberOfPages,
+      operations: allOperations
+    };
   }
 
   async findOneById(id: string): Promise<TokenOperation> {
