@@ -17,6 +17,7 @@ import { TokenOperationStatus, TokenOperationType } from '@/features/token-opera
 import { AgreementTriggerService } from '@/features/agreement-triggers/agreement-triggers.service';
 import { UpdateAgreementTriggerDto } from '../agreement-triggers/dto';
 import { calculateLastSuccessfulCharge } from '@/utils/time/last-successful-charge';
+import { InstantPaymentNotificationService } from '../instant-payment-notification/instant-payment-notification.service';
 
 @Injectable()
 export class PaymentAgreementsEventHandler {
@@ -25,6 +26,7 @@ export class PaymentAgreementsEventHandler {
     public readonly membersService: PaymentAgreementMembersService,
     private readonly tokenOperationsService: TokenOperationService,
     private readonly agreementTriggersService: AgreementTriggerService,
+    private readonly instantPaymentNotificationService: InstantPaymentNotificationService,
   ) {}
 
   @OnEvent(BlockchainEventDecoded.SignPaymentAgreement)
@@ -41,6 +43,7 @@ export class PaymentAgreementsEventHandler {
 
       createdAt: eventData.signedAt,
       agreementType: agreement.agreementType,
+      metadata: eventData.metadata,
     } as CreateAgreementMemberDto;
 
     await this.agreementsService.incrementMembersCount(agreement._id);
@@ -59,7 +62,9 @@ export class PaymentAgreementsEventHandler {
       isInternal: true
     });
 
-    return this.membersService.createMembership(dto);
+    const membership = await this.membersService.createMembership(dto);
+    
+    return this.instantPaymentNotificationService.sendNotification(agreement.signAgreementHttpCallbackUrl, membership);
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainCreatePaymentAgreementEventDecoded)
@@ -163,8 +168,9 @@ export class PaymentAgreementsEventHandler {
       })
     }
 
-    if(event.name === "failedAgreementCharges") {
-      
-    }
+    return this.instantPaymentNotificationService.sendNotification(agreement.signAgreementHttpCallbackUrl, {
+      agreement: agreement._id,
+      amount: totalAmount,
+    });
   }
 }

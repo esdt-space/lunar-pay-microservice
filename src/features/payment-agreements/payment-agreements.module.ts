@@ -12,11 +12,13 @@ import { PaymentAgreementMember, PaymentAgreementMemberSchema } from './payment-
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
 import { PaymentAgreementMemberRepository } from './payment-agreement-member.repository';
 import { AgreementTriggerModule } from '../agreement-triggers/agreement-triggers.module';
+import { InstantPaymentNotificationModule } from '../instant-payment-notification/instant-payment-notification.module';
 
 @Module({
   imports: [
     AgreementTriggerModule,
     TokenOperationModule,
+    InstantPaymentNotificationModule,
     MongooseModule.forFeature([
       { name: PaymentAgreement.name, schema: PaymentAgreementSchema },
       { name: PaymentAgreementMember.name, schema: PaymentAgreementMemberSchema },

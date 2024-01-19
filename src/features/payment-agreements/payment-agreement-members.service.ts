@@ -22,14 +22,14 @@ export class PaymentAgreementMembersService {
     const memberships = await this.repository.model
     .find({ member: address })
     
-    const aggrementIds = memberships.map(item => item.internalAgreementId);
+    const agreementIds = memberships.map(item => item.internalAgreementId);
 
-    const operationsCount = await this.repository.model.find({ _id: { $in: aggrementIds } }).countDocuments({})
+    const operationsCount = await this.repository.model.find({ _id: { $in: agreementIds } }).countDocuments({})
     const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE
     const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
 
     const allSignedAgreements: PaymentAgreement[] = await this.agreementsRepository.model
-      .find({ _id: { $in: aggrementIds } })
+      .find({ _id: { $in: agreementIds } })
       .skip(pagination.skip)
       .limit(pagination.limit)
       .sort({ createdAt: 'desc' })
