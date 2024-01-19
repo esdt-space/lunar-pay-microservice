@@ -41,6 +41,7 @@ export class PaymentAgreementsEventHandler {
 
       createdAt: eventData.signedAt,
       agreementType: agreement.agreementType,
+      metadata: eventData.metadata,
     } as CreateAgreementMemberDto;
 
     await this.agreementsService.incrementMembersCount(agreement._id);
@@ -59,7 +60,7 @@ export class PaymentAgreementsEventHandler {
       isInternal: true
     });
 
-    return this.membersService.createMembership(dto);
+    const membership = await this.membersService.createMembership(dto);
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainCreatePaymentAgreementEventDecoded)
@@ -90,40 +91,40 @@ export class PaymentAgreementsEventHandler {
   async handleTriggerAgreementEvent(event: TriggerAgreementEvent) {
     const eventData = event.decodedTopics.toPlainObject();
 
-    const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString()
+    const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString();
 
     const agreement = await this.agreementsService
       .findOneByIdSmartContractId(eventData.agreementId);
 
     const memberAmount = (index: number) => {
-      const result = Number(eventData.cycles[index]) * Number(agreement.fixedAmount)
+      const result = Number(eventData.cycles[index]) * Number(agreement.fixedAmount);
 
-      return result.toString()
-    }
+      return result.toString();
+    };
 
     const newAgreementTrigger = {
       agreement: agreement._id,
       txHash: event.txHash
-    }
+    };
 
-    const updateTriggerData = new UpdateAgreementTriggerDto()
+    const updateTriggerData = new UpdateAgreementTriggerDto();
 
-    if(event.name === "failedAgreementCharges") {
+    if(event.name === 'failedAgreementCharges') {
       eventData.accounts.forEach((el, index) => {
-        const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, agreement.frequency, eventData)
-        this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
-      })
+        const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, agreement.frequency, eventData);
+        this.membersService.updateLastChargedAt(el, lastSuccessfulCharge);
+      });
 
-      updateTriggerData.failedChargeAmount = totalAmount
-      updateTriggerData.failedAccountsCount = eventData.accounts.length
-    } else if(event.name === "successfulAgreementCharges") {
-      updateTriggerData.successfulChargeAmount = totalAmount
-      updateTriggerData.successfulAccountsCount = eventData.accounts.length
+      updateTriggerData.failedChargeAmount = totalAmount;
+      updateTriggerData.failedAccountsCount = eventData.accounts.length;
+    } else if(event.name === 'successfulAgreementCharges') {
+      updateTriggerData.successfulChargeAmount = totalAmount;
+      updateTriggerData.successfulAccountsCount = eventData.accounts.length;
     }
     
-    const agreementTrigger = await this.agreementTriggersService.createOrUpdate(newAgreementTrigger, updateTriggerData, event.txHash)
+    const agreementTrigger = await this.agreementTriggersService.createOrUpdate(newAgreementTrigger, updateTriggerData, event.txHash);
 
-    if(event.name === "successfulAgreementCharges") {
+    if(event.name === 'successfulAgreementCharges') {
       const providerOperation = await this.tokenOperationsService.create({
         sender: null,
         senderAccountsCount: eventData.accounts.length,
@@ -139,11 +140,11 @@ export class PaymentAgreementsEventHandler {
         parentId: null,
         details: 'Recurring Charge',
         isInternal: true,
-      })
+      });
   
       eventData.accounts.forEach((el, index) => {
         // TODO: Replace new Date() with the date that will come from the event
-        this.membersService.updateLastChargedAt(el, new Date()) 
+        this.membersService.updateLastChargedAt(el, new Date()); 
         this.tokenOperationsService.create({
           sender: el,
           senderAccountsCount: null,
@@ -159,11 +160,11 @@ export class PaymentAgreementsEventHandler {
           parentId: providerOperation._id,
           details: 'Recurring Charge',
           isInternal: true,
-        })
-      })
+        });
+      });
     }
 
-    if(event.name === "failedAgreementCharges") {
+    if(event.name === 'failedAgreementCharges') {
       
     }
   }
