@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { AbstractDocument, defaultSchemaOptions } from '@/libs/database/mongo';
-import { AgreementAmountType, AgreementType, AgreementUserFriendlyType } from '@/features/payment-agreements/enums';
+
+import { RedirectAndWebhooksSettings } from './models/redirect-and-webhooks-settings';
+import { AgreementAmountType, AgreementType, AgreementUserFriendlyType } from './enums';
 
 @Schema({ ...defaultSchemaOptions, collection: 'payment-agreements' })
 export class PaymentAgreement extends AbstractDocument {
@@ -68,6 +70,9 @@ export class PaymentAgreement extends AbstractDocument {
 
   @Prop({ type: String })
   signAgreementRedirectUrl?: string;
+
+  @Prop({ type: RedirectAndWebhooksSettings })
+  redirectAndWebhookSettings: RedirectAndWebhooksSettings;
 }
 
 export const PaymentAgreementSchema = SchemaFactory.createForClass(PaymentAgreement);
