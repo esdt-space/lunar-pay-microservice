@@ -126,11 +126,8 @@ export class PaymentAgreementsEventHandler {
     }
 
     const memberInformation = eventData.accounts.map((address, index) => {
-      const totalAmount = Number(eventData.cycles[index]) * Number(agreement.fixedAmount);
-
       return ({
         address: address,
-        amount: totalAmount,
         cycles: eventData.cycles[index],
       });
     });
@@ -178,7 +175,7 @@ export class PaymentAgreementsEventHandler {
           receiver: null,
           agreementTriggerId: agreementTrigger._id,
           status: TokenOperationStatus.SUCCESS,
-          amount: member.totalAmount,
+          amount: totalAmount,
           tokenIdentifier: agreement.tokenIdentifier,
           tokenNonce: agreement.tokenNonce,
           type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
@@ -190,7 +187,5 @@ export class PaymentAgreementsEventHandler {
         });
       });
     }
-
-    if(blockchainEvent.name === 'failedAgreementCharges') {}
   }
 }
