@@ -9,7 +9,6 @@ type ParseResult = {
   agreement_id: BigNumber,
   member: Address,
   signed_at: BigNumber,
-  metadata: string,
 }
 
 export class SignPaymentAgreementEventTopics extends LunarPayEventTopics {
@@ -41,7 +40,7 @@ export class SignPaymentAgreementEventTopics extends LunarPayEventTopics {
     this.agreementId = bundle.agreement_id.toNumber();
     this.address = new Address(bundle.member);
     this.signedAt = bundle.signed_at.toNumber();
-    this.metadata = bundle.metadata;
+    this.metadata = Buffer.from(rawTopics[4], 'base64').toString();
   }
 
   toPlainObject() {
