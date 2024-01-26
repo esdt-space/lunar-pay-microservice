@@ -34,7 +34,7 @@ export class TokenOperationService {
     const operationsCount = await this.repository.model.find(queryFilters).countDocuments({});
     const numberOfPages = Math.ceil(operationsCount / pagination.limit);
 
-    const allOperations = this.repository.model
+    const allOperations = await this.repository.model
       .find(queryFilters)
       .skip(pagination.skip)
       .limit(pagination.limit)
