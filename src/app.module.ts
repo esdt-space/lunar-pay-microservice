@@ -25,7 +25,11 @@ import { TokenOperationModule } from '@/features/token-operations/token-operatio
 import { TokenOperationController } from '@/features/token-operations/token-operation.controller';
 import { EventsNotifierModule } from '@/events-notifier';
 import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
+import { SubscriptionTriggerModule } from './features/subscription-triggers/subscription-triggers.module';
+import { SubscriptionsModule } from './features/subscriptions/subscriptions.module';
 import { AgreementTriggersController } from './features/agreement-triggers/agreement-triggers.controller';
+import { SubscriptionsController } from './features/subscriptions/subscriptions.controller';
+import { SubscriptionTriggersController } from './features/subscription-triggers/subscription-triggers.controller';
 
 @Module({
   imports: [
@@ -49,6 +53,8 @@ import { AgreementTriggersController } from './features/agreement-triggers/agree
 
     AgreementTriggerModule,
     PaymentAgreementsModule,
+    SubscriptionTriggerModule,
+    SubscriptionsModule,
     TokenOperationModule,
 
     VaultModule,
@@ -61,6 +67,8 @@ import { AgreementTriggersController } from './features/agreement-triggers/agree
 
     AgreementTriggersController,
     PaymentAgreementsController,
+    SubscriptionTriggersController,
+    SubscriptionsController,
     TokenOperationController,
 
     VaultController,

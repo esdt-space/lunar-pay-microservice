@@ -109,10 +109,10 @@ export class PaymentAgreementsEventHandler {
     const updateTriggerData = new UpdateAgreementTriggerDto()
 
     if(event.name === "failedAgreementCharges") {
-      eventData.accounts.forEach((el, index) => {
-        const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, agreement.frequency, eventData)
-        this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
-      })
+      // eventData.accounts.forEach((el, index) => {
+      //   const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, agreement.frequency, eventData)
+      //   this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
+      // })
 
       updateTriggerData.failedChargeAmount = totalAmount
       updateTriggerData.failedAccountsCount = eventData.accounts.length
