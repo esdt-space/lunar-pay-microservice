@@ -81,7 +81,7 @@ export class EventsNotifierService {
       case EventIdentifier.CREATE_SUBSCRIPTION:
         return new CreateSubscriptionEvent(rawEvent);
 
-      case EventIdentifier.SIGN_SUBSCRIPTION:
+      case EventIdentifier.CREATE_SUBSCRIPTION_MEMBERSHIP:
         return new SignSubscriptionEvent(rawEvent);
 
       case EventIdentifier.TRIGGER_SUBSCRIPTION:
