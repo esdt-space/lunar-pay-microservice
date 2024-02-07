@@ -39,7 +39,7 @@ export class TokenOperationController {
   @UseGuards(NativeAuthGuard)
   @ApiOperation({
     summary: 'Token Operations list',
-    description: 'Returns a list of payment agreement charge operations.',
+    description: 'Returns a list of token operations.',
   })
   async getOperationsByParentId(
     @Param('id', MongooseObjectIdPipe) id,

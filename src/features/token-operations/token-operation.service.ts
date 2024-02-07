@@ -38,7 +38,7 @@ export class TokenOperationService {
       .find(queryFilters)
       .skip(pagination.skip)
       .limit(pagination.limit)
-      .populate('agreement')
+      .populate('subscription')
       .sort({ _id: 'desc' });
 
     return {
@@ -79,7 +79,7 @@ export class TokenOperationService {
       .find(queryFilters)
       .skip(pagination.skip)
       .limit(pagination.limit)
-      .populate('agreement')
+      .populate('subscription')
       .sort({ _id: 'desc' });
 
     return {

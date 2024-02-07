@@ -26,7 +26,7 @@ export class TriggerSubscriptionEventTopics extends LunarPayEventTopics {
     const eventDefinition = abiRegistry.getEvent(this.eventName);
 
     const event = new TransactionEvent({
-      identifier: 'triggerSubscription',
+      identifier: 'chargeSubscription',
       topics: [
         new TransactionEventTopic(rawTopics[0]),
         new TransactionEventTopic(rawTopics[1]),

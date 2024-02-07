@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { AbstractDocument, defaultSchemaOptions } from '@/libs/database/mongo';
-import { PaymentAgreement } from '../payment-agreements/payment-agreement.schema';
+import { Subscription } from '../subscriptions/subscription.schema';
 
 import { TokenOperationStatus, TokenOperationType } from './enums';
 
@@ -20,7 +20,7 @@ export class TokenOperation extends AbstractDocument {
   receiver: string;
 
   @Prop({ type: String, nullable: true })
-  agreementTriggerId: string;
+  subscriptionTriggerId: string;
 
   @Prop({ type: String })
   status?: TokenOperationStatus;
@@ -40,8 +40,8 @@ export class TokenOperation extends AbstractDocument {
   @Prop({ type: Boolean, nullable: true })
   isInternal: boolean;
 
-  @Prop({ type: Types.ObjectId, ref: PaymentAgreement.name })
-  agreement?: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: Subscription.name })
+  subscription?: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, nullable: true })
   parentId?: Types.ObjectId;

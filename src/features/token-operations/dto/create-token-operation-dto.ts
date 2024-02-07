@@ -16,7 +16,7 @@ export class CreateTokenOperationDto {
 
   @IsString()
   @IsNotEmpty()
-  agreementTriggerId: Types.ObjectId;
+  subscriptionTriggerId: Types.ObjectId;
 
   @IsString()
   @IsOptional()
@@ -46,7 +46,7 @@ export class CreateTokenOperationDto {
   isInternal?: boolean;
 
   @IsNotEmpty()
-  agreement: Types.ObjectId;
+  subscription: Types.ObjectId;
 
   @IsOptional()
   parentId?: Types.ObjectId;
