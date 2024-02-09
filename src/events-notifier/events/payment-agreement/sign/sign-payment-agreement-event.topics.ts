@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { AbiRegistry, Address, ResultsParser } from '@multiversx/sdk-core/out';
+import { AbiRegistry, Address, OptionValue, ResultsParser } from '@multiversx/sdk-core/out';
 import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
 
 import abi from '@/common/protocol/abi/lunarpay.abi.json';
@@ -9,6 +9,7 @@ type ParseResult = {
   agreement_id: BigNumber,
   member: Address,
   signed_at: BigNumber,
+  metadata: OptionValue,
 }
 
 export class SignPaymentAgreementEventTopics extends LunarPayEventTopics {
@@ -35,12 +36,12 @@ export class SignPaymentAgreementEventTopics extends LunarPayEventTopics {
       ],
     });
 
-    const bundle = parser.parseEvent(event, eventDefinition) as ParseResult;
+    const parsedEvent = parser.parseEvent(event, eventDefinition) as ParseResult;
 
-    this.agreementId = bundle.agreement_id.toNumber();
-    this.address = new Address(bundle.member);
-    this.signedAt = bundle.signed_at.toNumber();
-    this.metadata = Buffer.from(rawTopics[4], 'base64').toString();
+    this.agreementId = parsedEvent.agreement_id.toNumber();
+    this.address = new Address(parsedEvent.member);
+    this.signedAt = parsedEvent.signed_at.toNumber();
+    this.metadata = parsedEvent.metadata.toString();
   }
 
   toPlainObject() {
