@@ -36,12 +36,4 @@ export class CreateSubscriptionDto {
   @IsOptional()
   @IsString()
   fixedAmount: string | undefined;
-
-  @IsOptional()
-  @IsString()
-  minimumAmount: string | undefined;
-
-  @IsOptional()
-  @IsString()
-  maximumAmount: string | undefined;
 }

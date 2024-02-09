@@ -1,8 +1,8 @@
 import { SubscriptionAmountType } from '@/features/subscriptions/enums';
 
 const map = {
-  0: SubscriptionAmountType.AnyAmount,
-  1: SubscriptionAmountType.FixedAmount,
+  0: SubscriptionAmountType.FixedAmount,
+  1: SubscriptionAmountType.AnyAmount,
   2: SubscriptionAmountType.BoundedAmount,
   3: SubscriptionAmountType.SenderDefinedFixedAmount,
   4: SubscriptionAmountType.SenderDefinedBoundedAmount,

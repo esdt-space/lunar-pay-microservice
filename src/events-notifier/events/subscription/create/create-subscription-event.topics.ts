@@ -16,8 +16,6 @@ export class CreateSubscriptionEventTopics extends LunarPayEventTopics {
   private readonly tokenIdentifier: string;
 
   private readonly fixedAmount: string | undefined;
-  private readonly minimumAmount: string | undefined;
-  private readonly maximumAmount: string | undefined;
 
   constructor(rawTopics: string[]) {
     super(rawTopics);
@@ -31,11 +29,6 @@ export class CreateSubscriptionEventTopics extends LunarPayEventTopics {
     this.subscriptionType = this.parseIntValue(rawTopics[7]);
     this.amountType = this.parseIntValue(rawTopics[8]);
     this.fixedAmount = this.parseBigUintValue(rawTopics[9], undefined);
-
-    if (!this.fixedAmount) {
-      this.minimumAmount = this.parseBigUintValue(rawTopics[10], undefined);
-      this.maximumAmount = this.parseBigUintValue(rawTopics[11], undefined);
-    }
   }
 
   toPlainObject() {
@@ -48,8 +41,6 @@ export class CreateSubscriptionEventTopics extends LunarPayEventTopics {
       subscriptionType: this.subscriptionType,
       amountType: this.amountType,
       fixedAmount: this.fixedAmount,
-      minimumAmount: this.minimumAmount,
-      maximumAmount: this.maximumAmount,
       token: new GenericToken({
         tokenIdentifier: this.tokenIdentifier,
         nonce: new BigNumber(this.tokenNonce),

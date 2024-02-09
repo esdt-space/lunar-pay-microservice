@@ -70,6 +70,14 @@ export class SubscriptionsController {
     return this.membersService.findSubscriptionMembers(id, pagination);
   }
 
+  @Get(':id/members/all')
+  @UseGuards(NativeAuthGuard)
+  async getAllSubscriptionMemberships(
+    @Param('id', MongooseObjectIdPipe) id,
+    ) {
+    return this.membersService.findAllSubscriptionMemberships(id);
+  }
+
   @Put(':id')
   @UseGuards(NativeAuthGuard)
   async updateSubscription(

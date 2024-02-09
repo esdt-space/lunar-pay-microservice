@@ -60,6 +60,14 @@ export class SubscriptionMembersService {
     }
   }
 
+  async findAllSubscriptionMemberships(id: Types.ObjectId) {
+    const allMemberships = await this.repository.model
+      .find({ internalSubscriptionId: id })
+      .sort({ createdAt: 'desc' })
+
+    return allMemberships
+  }
+
   async updateLastChargedAt(member: string, date: Date){
     const newCharge = { $set: { lastSuccessfulCharge: date }}
 

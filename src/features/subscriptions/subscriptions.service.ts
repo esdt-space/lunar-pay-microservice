@@ -80,8 +80,6 @@ export class SubscriptionsService {
       subscriptionType: dto.subscriptionType,
 
       fixedAmount: dto.fixedAmount,
-      minimumAmount: dto.minimumAmount,
-      maximumAmount: dto.maximumAmount,
     });
   }
 

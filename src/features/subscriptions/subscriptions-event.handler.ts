@@ -77,8 +77,6 @@ export class SubscriptionsEventHandler {
       amountType: blockchainSubscriptionAmountTypeToApiType(eventData.amountType),
       frequency: eventData.frequency,
       fixedAmount: eventData.fixedAmount,
-      minimumAmount: eventData.minimumAmount,
-      maximumAmount: eventData.maximumAmount,
 
       createdAt: new Date(eventData.timeCreated * 1000),
     } as CreateSubscriptionDto;
@@ -108,58 +106,58 @@ export class SubscriptionsEventHandler {
 
     const updateTriggerData = new UpdateSubscriptionTriggerDto()
 
-    if(event.name === "failedSubscriptionCharges") {
-      eventData.accounts.forEach((el, index) => {
-        const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, subscription.frequency, eventData)
-        this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
-      })
+    // if(event.name === "failedSubscriptionCharges") {
+    //   eventData.accounts.forEach((el, index) => {
+    //     const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, subscription.frequency, eventData)
+    //     this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
+    //   })
 
-      updateTriggerData.failedChargeAmount = totalAmount
-      updateTriggerData.failedAccountsCount = eventData.accounts.length
-    } else if(event.name === "successfulSubscriptionCharges") {
-      updateTriggerData.successfulChargeAmount = totalAmount
-      updateTriggerData.successfulAccountsCount = eventData.accounts.length
-    }
+    //   updateTriggerData.failedChargeAmount = totalAmount
+    //   updateTriggerData.failedAccountsCount = eventData.accounts.length
+    // } else if(event.name === "successfulSubscriptionCharges") {
+    //   updateTriggerData.successfulChargeAmount = totalAmount
+    //   updateTriggerData.successfulAccountsCount = eventData.accounts.length
+    // }
     
-    const subscriptionTrigger = await this.subscriptionTriggersService.createOrUpdate(newSubscriptionTrigger, updateTriggerData, event.txHash)
+    // const subscriptionTrigger = await this.subscriptionTriggersService.createOrUpdate(newSubscriptionTrigger, updateTriggerData, event.txHash)
 
-    if(event.name === "successfulSubscriptionCharges") {
-      const providerOperation = await this.tokenOperationsService.create({
-        sender: null,
-        senderAccountsCount: eventData.accounts.length,
-        receiver: subscription.owner,
-        subscriptionTriggerId: null,
-        status: TokenOperationStatus.SUCCESS,
-        amount: totalAmount,
-        tokenIdentifier: subscription.tokenIdentifier,
-        tokenNonce: subscription.tokenNonce,
-        type: TokenOperationType.SUBSCRIPTION_CHARGE,
-        txHash: event.txHash,
-        subscription: subscription._id,
-        parentId: null,
-        details: 'Recurring Charge',
-        isInternal: true,
-      })
+    // if(event.name === "successfulSubscriptionCharges") {
+    //   const providerOperation = await this.tokenOperationsService.create({
+    //     sender: null,
+    //     senderAccountsCount: eventData.accounts.length,
+    //     receiver: subscription.owner,
+    //     subscriptionTriggerId: null,
+    //     status: TokenOperationStatus.SUCCESS,
+    //     amount: totalAmount,
+    //     tokenIdentifier: subscription.tokenIdentifier,
+    //     tokenNonce: subscription.tokenNonce,
+    //     type: TokenOperationType.SUBSCRIPTION_CHARGE,
+    //     txHash: event.txHash,
+    //     subscription: subscription._id,
+    //     parentId: null,
+    //     details: 'Recurring Charge',
+    //     isInternal: true,
+    //   })
   
-      eventData.accounts.forEach((el, index) => {
-        this.membersService.updateLastChargedAt(el, new Date()) 
-        this.tokenOperationsService.create({
-          sender: el,
-          senderAccountsCount: null,
-          receiver: null,
-          subscriptionTriggerId: subscriptionTrigger._id,
-          status: TokenOperationStatus.SUCCESS,
-          amount: memberAmount(index),
-          tokenIdentifier: subscription.tokenIdentifier,
-          tokenNonce: subscription.tokenNonce,
-          type: TokenOperationType.SUBSCRIPTION_CHARGE,
-          txHash: event.txHash,
-          subscription: subscription._id,
-          parentId: providerOperation._id,
-          details: 'Recurring Charge',
-          isInternal: true,
-        })
-      })
-    }
+    //   eventData.accounts.forEach((el, index) => {
+    //     this.membersService.updateLastChargedAt(el, new Date()) 
+    //     this.tokenOperationsService.create({
+    //       sender: el,
+    //       senderAccountsCount: null,
+    //       receiver: null,
+    //       subscriptionTriggerId: subscriptionTrigger._id,
+    //       status: TokenOperationStatus.SUCCESS,
+    //       amount: memberAmount(index),
+    //       tokenIdentifier: subscription.tokenIdentifier,
+    //       tokenNonce: subscription.tokenNonce,
+    //       type: TokenOperationType.SUBSCRIPTION_CHARGE,
+    //       txHash: event.txHash,
+    //       subscription: subscription._id,
+    //       parentId: providerOperation._id,
+    //       details: 'Recurring Charge',
+    //       isInternal: true,
+    //     })
+    //   })
+    // }
   }
 }
