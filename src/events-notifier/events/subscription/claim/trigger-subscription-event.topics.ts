@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { AbiRegistry, Address, List, ResultsParser } from '@multiversx/sdk-core/out';
+import { AbiRegistry, Address, ResultsParser } from '@multiversx/sdk-core/out';
 import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
 
 import abi from '@/common/protocol/abi/lunarpay.abi.json';
@@ -36,11 +36,11 @@ export class TriggerSubscriptionEventTopics extends LunarPayEventTopics {
       ],
     });
 
-    const bundle = parser.parseEvent(event, eventDefinition) as ParseResult;
+    const parsedEvent = parser.parseEvent(event, eventDefinition) as ParseResult;
 
-    this.subscriptionId = bundle.subscription_id.toNumber();
-    this.member = new Address(bundle.member);;
-    this.cycles = bundle.amounts.toNumber();
+    this.subscriptionId = parsedEvent.subscription_id.toNumber();
+    this.member = new Address(parsedEvent.member);
+    this.cycles = parsedEvent.amounts.toNumber();
     this.amounts = [];
   }
 

@@ -1,8 +1,22 @@
 import BigNumber from 'bignumber.js';
-import { Address } from '@multiversx/sdk-core/out';
+import { AbiRegistry, Address, ResultsParser } from '@multiversx/sdk-core/out';
+import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
 
+import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { GenericToken } from '@/libs/blockchain/mvx/event-decoder';
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
+
+type ParseResult = {
+  id: BigNumber,
+  owner: Address,
+  token_nonce: BigNumber,
+  token_identifier: string,
+  frequency: BigNumber,
+  time_created: BigNumber,
+  subscription_type: number,
+  amount_type: number,
+  amount: string,
+}
 
 export class CreateSubscriptionEventTopics extends LunarPayEventTopics {
   private readonly subscriptionId: number;
@@ -20,15 +34,37 @@ export class CreateSubscriptionEventTopics extends LunarPayEventTopics {
   constructor(rawTopics: string[]) {
     super(rawTopics);
 
-    this.subscriptionId = this.parseIntValue(rawTopics[1]);
-    this.address = new Address(Buffer.from(rawTopics[2], 'base64'));
-    this.tokenNonce = this.parseIntValue(rawTopics[3]);
-    this.tokenIdentifier = Buffer.from(rawTopics[4], 'base64').toString();
-    this.frequency = this.parseIntValue(rawTopics[5]);
-    this.unixTimestamp = this.parseIntValue(rawTopics[6]);
-    this.subscriptionType = this.parseIntValue(rawTopics[7]);
-    this.amountType = this.parseIntValue(rawTopics[8]);
-    this.fixedAmount = this.parseBigUintValue(rawTopics[9], undefined);
+    const parser = new ResultsParser();
+    const abiRegistry = AbiRegistry.create(abi);
+    const eventDefinition = abiRegistry.getEvent(this.eventName);
+
+    const event = new TransactionEvent({
+      identifier: 'createSubscription',
+      topics: [
+        new TransactionEventTopic(rawTopics[0]),
+        new TransactionEventTopic(rawTopics[1]),
+        new TransactionEventTopic(rawTopics[2]),
+        new TransactionEventTopic(rawTopics[3]),
+        new TransactionEventTopic(rawTopics[4]),
+        new TransactionEventTopic(rawTopics[5]),
+        new TransactionEventTopic(rawTopics[6]),
+        new TransactionEventTopic(rawTopics[7]),
+        new TransactionEventTopic(rawTopics[8]),
+        new TransactionEventTopic(rawTopics[9]),
+      ],
+    });
+
+    const parsedEvent = parser.parseEvent(event, eventDefinition) as ParseResult;
+
+    this.subscriptionId = parsedEvent.id.toNumber();
+    this.address = new Address(parsedEvent.owner);
+    this.tokenNonce = parsedEvent.token_nonce.toNumber();
+    this.tokenIdentifier = parsedEvent.token_identifier.toString();
+    this.frequency = parsedEvent.frequency.toNumber();
+    this.unixTimestamp = parsedEvent.time_created.toNumber();
+    this.subscriptionType = parsedEvent.subscription_type;
+    this.amountType = parsedEvent.amount_type;
+    this.fixedAmount = parsedEvent.amount.toString();
   }
 
   toPlainObject() {
