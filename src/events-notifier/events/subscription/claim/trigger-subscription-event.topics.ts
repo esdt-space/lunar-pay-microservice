@@ -6,17 +6,17 @@ import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
 
 type ParseResult = {
-  subscription_id: BigNumber,
+  id: BigNumber,
   member: Address,
-  cycles: BigNumber,
-  amounts: any,
+  created_at: BigNumber,
+  data: any[],
 }
 
 export class TriggerSubscriptionEventTopics extends LunarPayEventTopics {
   private readonly subscriptionId: number;
   private readonly member: Address;
-  private readonly cycles: number;
-  private readonly amounts: any;
+  private readonly createdAt: number;
+  private readonly data: any[];
 
   constructor(rawTopics: string[]) {
     super(rawTopics);
@@ -38,18 +38,18 @@ export class TriggerSubscriptionEventTopics extends LunarPayEventTopics {
 
     const parsedEvent = parser.parseEvent(event, eventDefinition) as ParseResult;
 
-    this.subscriptionId = parsedEvent.subscription_id.toNumber();
+    this.subscriptionId = parsedEvent.id.toNumber();
     this.member = new Address(parsedEvent.member);
-    this.cycles = parsedEvent.amounts.toNumber();
-    this.amounts = [];
+    this.createdAt = parsedEvent.created_at.toNumber();
+    this.data = parsedEvent.data;
   }
 
   toPlainObject() {
     return {
       subscriptionId: this.subscriptionId,
       accounts: this.member,
-      cycles: this.cycles,
-      amounts: this.amounts,
+      createdAt: this.createdAt,
+      data: this.data,
     };
   }
 }

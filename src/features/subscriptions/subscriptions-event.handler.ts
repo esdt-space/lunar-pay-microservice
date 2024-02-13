@@ -88,76 +88,92 @@ export class SubscriptionsEventHandler {
   async handleTriggerSubscriptionEvent(event: TriggerSubscriptionEvent) {
     const eventData = event.decodedTopics.toPlainObject();
 
-    const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString()
+    const chargesAmountResult = eventData.data.reduce((acc, val) => {
+      if(val.data.successful !== null) {
+        acc.successfulChargeAmount = Number(val.data.successful[1])
+        acc.successfulAccountsCount++
+      }
+
+      if(val.data.failed !== null) {
+        acc.failedChargeAmount = Number(val.data.failed[1])
+        acc.failedAccountsCount++
+      }
+
+      return acc
+    }, {
+      successfulChargeAmount: 0, 
+      failedChargeAmount: 0, 
+      successfulAccountsCount: 0, 
+      failedAccountsCount: 0
+    })
 
     const subscription = await this.subscriptionsService
       .findOneByIdSmartContractId(eventData.subscriptionId);
-
-    const memberAmount = (index: number) => {
-      const result = Number(eventData.cycles[index]) * Number(subscription.fixedAmount)
-
-      return result.toString()
-    }
 
     const newSubscriptionTrigger = {
       subscription: subscription._id,
       txHash: event.txHash
     }
 
-    const updateTriggerData = new UpdateSubscriptionTriggerDto()
+    const subscriptionTrigger = await this.subscriptionTriggersService.createOrUpdate(newSubscriptionTrigger, chargesAmountResult, event.txHash)
 
-    // if(event.name === "failedSubscriptionCharges") {
-    //   eventData.accounts.forEach((el, index) => {
-    //     const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, subscription.frequency, eventData)
-    //     this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
-    //   })
-
-    //   updateTriggerData.failedChargeAmount = totalAmount
-    //   updateTriggerData.failedAccountsCount = eventData.accounts.length
-    // } else if(event.name === "successfulSubscriptionCharges") {
-    //   updateTriggerData.successfulChargeAmount = totalAmount
-    //   updateTriggerData.successfulAccountsCount = eventData.accounts.length
-    // }
-    
-    // const subscriptionTrigger = await this.subscriptionTriggersService.createOrUpdate(newSubscriptionTrigger, updateTriggerData, event.txHash)
-
-    // if(event.name === "successfulSubscriptionCharges") {
-    //   const providerOperation = await this.tokenOperationsService.create({
-    //     sender: null,
-    //     senderAccountsCount: eventData.accounts.length,
-    //     receiver: subscription.owner,
-    //     subscriptionTriggerId: null,
-    //     status: TokenOperationStatus.SUCCESS,
-    //     amount: totalAmount,
-    //     tokenIdentifier: subscription.tokenIdentifier,
-    //     tokenNonce: subscription.tokenNonce,
-    //     type: TokenOperationType.SUBSCRIPTION_CHARGE,
-    //     txHash: event.txHash,
-    //     subscription: subscription._id,
-    //     parentId: null,
-    //     details: 'Recurring Charge',
-    //     isInternal: true,
-    //   })
+    const providerOperation = await this.tokenOperationsService.create({
+      sender: null,
+      senderAccountsCount: eventData.data.length,
+      receiver: subscription.owner,
+      subscriptionTriggerId: null,
+      status: TokenOperationStatus.SUCCESS,
+      amount: chargesAmountResult.successfulChargeAmount,
+      tokenIdentifier: subscription.tokenIdentifier,
+      tokenNonce: subscription.tokenNonce,
+      type: TokenOperationType.SUBSCRIPTION_CHARGE,
+      txHash: event.txHash,
+      subscription: subscription._id,
+      parentId: null,
+      details: 'Recurring Charge',
+      isInternal: true,
+    })
   
-    //   eventData.accounts.forEach((el, index) => {
-    //     this.membersService.updateLastChargedAt(el, new Date()) 
-    //     this.tokenOperationsService.create({
-    //       sender: el,
-    //       senderAccountsCount: null,
-    //       receiver: null,
-    //       subscriptionTriggerId: subscriptionTrigger._id,
-    //       status: TokenOperationStatus.SUCCESS,
-    //       amount: memberAmount(index),
-    //       tokenIdentifier: subscription.tokenIdentifier,
-    //       tokenNonce: subscription.tokenNonce,
-    //       type: TokenOperationType.SUBSCRIPTION_CHARGE,
-    //       txHash: event.txHash,
-    //       subscription: subscription._id,
-    //       parentId: providerOperation._id,
-    //       details: 'Recurring Charge',
-    //       isInternal: true,
-    //     })
-    //   })
-    // }
+    eventData.data.forEach((member) => {
+      if(member.data.successful !== null) {
+        this.membersService.updateLastChargedAt(member.account, new Date()) 
+        this.tokenOperationsService.create({
+          sender: member.account,
+          senderAccountsCount: null,
+          receiver: null,
+          subscriptionTriggerId: subscriptionTrigger._id,
+          status: TokenOperationStatus.SUCCESS,
+          amount: member.data.successful[0],
+          tokenIdentifier: subscription.tokenIdentifier,
+          tokenNonce: subscription.tokenNonce,
+          type: TokenOperationType.SUBSCRIPTION_CHARGE,
+          txHash: event.txHash,
+          subscription: subscription._id,
+          parentId: providerOperation._id,
+          details: 'Recurring Charge',
+          isInternal: true,
+        })
+      }
+
+      if(member.data.failed !== null) {
+        this.membersService.updateLastChargedAt(member.account, new Date()) 
+        this.tokenOperationsService.create({
+          sender: member.account,
+          senderAccountsCount: null,
+          receiver: null,
+          subscriptionTriggerId: subscriptionTrigger._id,
+          status: TokenOperationStatus.FAILED,
+          amount: member.data.failed[0],
+          tokenIdentifier: subscription.tokenIdentifier,
+          tokenNonce: subscription.tokenNonce,
+          type: TokenOperationType.SUBSCRIPTION_CHARGE,
+          txHash: event.txHash,
+          subscription: subscription._id,
+          parentId: providerOperation._id,
+          details: 'Recurring Charge',
+          isInternal: true,
+        })
+      }
+    })
   }
 }
