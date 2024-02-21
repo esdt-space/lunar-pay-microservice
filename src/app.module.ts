@@ -22,6 +22,7 @@ import { PaymentAgreementsController } from '@/features/payment-agreements/payme
 import { VaultController } from '@/common/protocol/vault/vault.controller';
 import { VaultModule } from '@/common/protocol/vault/vault.module';
 import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
+import { PaymentsModule } from './features/payment/payment.module';
 import { TokenOperationController } from '@/features/token-operations/token-operation.controller';
 import { EventsNotifierModule } from '@/events-notifier';
 import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
@@ -50,6 +51,7 @@ import { AgreementTriggersController } from './features/agreement-triggers/agree
     AgreementTriggerModule,
     PaymentAgreementsModule,
     TokenOperationModule,
+    PaymentsModule,
 
     VaultModule,
     EventsNotifierModule,

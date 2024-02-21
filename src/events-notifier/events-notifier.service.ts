@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import { GenericEvent, RawEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { RawEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { CompetingRabbitConsumer } from '@/libs/blockchain/mvx/events-notifier';
 
 import { EventIdentifier } from './enums';
@@ -13,6 +13,7 @@ import {
   CreatePaymentAgreementEvent,
   SignPaymentAgreementEvent,
   TriggerAgreementEvent,
+  PaymentEvent,
 } from './events';
 
 type QueuePayload = Record<string, unknown> & {
@@ -74,6 +75,9 @@ export class EventsNotifierService {
 
       case EventIdentifier.TRIGGER_AGREEMENT:
         return new TriggerAgreementEvent(rawEvent);
+
+      case EventIdentifier.PAYMENT:
+        return new PaymentEvent(rawEvent);
     }
   }
 }
