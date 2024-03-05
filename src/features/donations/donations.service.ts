@@ -32,7 +32,6 @@ export class DonationsService {
   }
 
   async createDonation(address: string, dto: CreateDonationDto): Promise<Donation> {
-    console.log(dto)
     return this.repository.model.create({
       ...dto,
       owner: address,
