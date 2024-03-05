@@ -8,9 +8,9 @@ export class CreateDonationDto {
   }
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
-  beneficiaryName: string;
+  beneficiaryName?: string;
 
   @IsString()
   @IsNotEmpty()
