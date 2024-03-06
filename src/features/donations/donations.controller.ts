@@ -1,12 +1,12 @@
 import { ApiTags } from '@nestjs/swagger';
 import {
   Body,
-  Controller, Get, Param, Post, UseGuards,
+  Controller, Get, Param, Post, Put, UseGuards,
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 
 import { DonationsService } from './donations.service';
-import { CreateDonationDto } from './dto';
+import { CreateDonationDto, UpdateDonationDto } from './dto';
 import { MongooseObjectIdPipe } from '@/libs/database/mongo';
 
 @ApiTags('Donations')
@@ -36,5 +36,15 @@ export class DonationsController {
     @Body() dto: CreateDonationDto,
   ) {
     return this.donationsService.createDonation(address, dto);
+  }
+
+  @Put(':id')
+  @UseGuards(NativeAuthGuard)
+  async updateDonation(
+    @NativeAuth('address') address: string,
+    @Param('id', MongooseObjectIdPipe) id,
+    @Body() dto: UpdateDonationDto,
+  ) {
+    return this.donationsService.updateDonationById(address, id, dto);
   }
 }

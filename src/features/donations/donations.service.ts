@@ -4,7 +4,7 @@ import { Types } from 'mongoose';
 import { Donation } from './donation.schema';
 import { DonationRepository } from './donation.repository';
 import { PaginatedResponse } from '@/common/models/paginated-response';
-import { CreateDonationDto } from './dto';
+import { CreateDonationDto, UpdateDonationDto } from './dto';
 import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
@@ -35,6 +35,16 @@ export class DonationsService {
     return this.repository.model.create({
       ...dto,
       owner: address,
+    });
+  }
+
+  async updateDonationById(
+    address: string,
+    id: string,
+    dto: UpdateDonationDto,
+  ): Promise<UpdateDonationDto> {
+    return this.repository.model.findOneAndUpdate({ _id: id, owner: address }, {
+      ...dto,
     });
   }
 }
