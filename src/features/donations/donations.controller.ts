@@ -6,14 +6,16 @@ import {
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 
 import { DonationsService } from './donations.service';
-import { CreateDonationDto, UpdateDonationDto } from './dto';
+import { CreateDonationDto, UpdateDonationDto, CreateDonationWidgetDto } from './dto';
 import { MongooseObjectIdPipe } from '@/libs/database/mongo';
+import { DonationWidgetsService } from './donation-widgets.service';
 
 @ApiTags('Donations')
 @Controller('donations')
 export class DonationsController {
   constructor(
     private readonly donationsService: DonationsService,
+    private readonly donationWidgetsService: DonationWidgetsService,
   ) {}
 
   @Get(':id')
@@ -46,5 +48,14 @@ export class DonationsController {
     @Body() dto: UpdateDonationDto,
   ) {
     return this.donationsService.updateDonationById(address, id, dto);
+  }
+
+  @Post('widgets')
+  @UseGuards(NativeAuthGuard)
+  async createDonationWidget(
+    @NativeAuth('address') address: string,
+    @Body() dto: CreateDonationWidgetDto,
+  ) {
+    return this.donationWidgetsService.createDonationWidget(address, dto);
   }
 }
