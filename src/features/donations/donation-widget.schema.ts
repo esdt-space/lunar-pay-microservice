@@ -11,7 +11,10 @@ export class DonationWidget extends AbstractDocument {
   receiver: string;
 
   @Prop({ type: String })
-  metadata: string;
+  donationId: string;
+
+  @Prop({ type: String })
+  metadata?: string;
 
   @Prop({ type: String })
   codeString: string;
