@@ -13,6 +13,11 @@ export class CreateDonationWidgetDto {
   receiver: string;
 
   @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  donationId: string;
+
+  @IsString()
   @IsOptional()
   @ApiProperty()
   metadata?: string;
