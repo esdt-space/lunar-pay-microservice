@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { AbstractDocument, defaultSchemaOptions } from '@/libs/database/mongo';
 import { PaymentAgreement } from '../payment-agreements/payment-agreement.schema';
+import { Donation } from '../donations/donation.schema';
 
 import { TokenOperationStatus, TokenOperationType } from './enums';
 
@@ -42,6 +43,9 @@ export class TokenOperation extends AbstractDocument {
 
   @Prop({ type: Types.ObjectId, ref: PaymentAgreement.name })
   agreement?: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: Donation.name })
+  donation?: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, nullable: true })
   parentId?: Types.ObjectId;

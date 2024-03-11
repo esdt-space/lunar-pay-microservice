@@ -8,9 +8,9 @@ export class CreateDonationWidgetDto {
   }
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
-  receiver: string;
+  receiver?: string;
 
   @IsString()
   @IsNotEmpty()

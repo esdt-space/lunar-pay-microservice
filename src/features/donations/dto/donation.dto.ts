@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsArray, IsOptional, IsNumber, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { Donation } from '../donation.schema';
 
 export class CreateDonationDto {
@@ -28,11 +28,12 @@ export class CreateDonationDto {
   backgroundImageUrl?: string;
 
   @IsString()
+  @IsOptional()
   @IsNotEmpty()
-  tokenIdentifier: string;
+  tokenIdentifier?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
-  fixedAmount: string;
+  fixedAmount?: string;
 }

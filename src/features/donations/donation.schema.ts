@@ -16,11 +16,14 @@ export class Donation extends AbstractDocument {
   @Prop({ type: String, enum: DonationTarget, index: true })
   donationTarget: DonationTarget;
 
-  @Prop({ type: String, index: true })
-  tokenIdentifier: string;
+  @Prop({ type: String })
+  tokenIdentifier?: string;
+
+  @Prop({ type: String })
+  totalAmount: string;
 
   @Prop({ type: Number, default: 0 })
-  tokenNonce: number;
+  tokenNonce?: number;
 
   @Prop({ type: String })
   beneficiaryName?: string;
