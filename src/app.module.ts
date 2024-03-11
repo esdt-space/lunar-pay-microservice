@@ -23,6 +23,7 @@ import { VaultController } from '@/common/protocol/vault/vault.controller';
 import { VaultModule } from '@/common/protocol/vault/vault.module';
 import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
 import { DonationsModule } from './features/donations/donations.module';
+import { PaymentsModule } from './features/payment/payment.module';
 import { TokenOperationController } from '@/features/token-operations/token-operation.controller';
 import { EventsNotifierModule } from '@/events-notifier';
 import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
@@ -53,6 +54,7 @@ import { DonationsController } from './features/donations/donations.controller';
     PaymentAgreementsModule,
     DonationsModule,
     TokenOperationModule,
+    PaymentsModule,
 
     VaultModule,
     EventsNotifierModule,
