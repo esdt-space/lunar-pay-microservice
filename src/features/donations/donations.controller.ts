@@ -31,6 +31,14 @@ export class DonationsController {
     return this.donationsService.findDonationsCreatedByAccount(address);
   }
 
+  @Get('event/donations-ranked')
+  @UseGuards(NativeAuthGuard)
+  async testing(
+    @NativeAuth('address') address: string,
+  ) {
+    return this.donationsService.findDonationsForEvent();
+  }
+
   @Post()
   @UseGuards(NativeAuthGuard)
   async createDonation(

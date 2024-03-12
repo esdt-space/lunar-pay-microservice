@@ -31,10 +31,41 @@ export class DonationsService {
     return new PaginatedResponse<Donation>(donationsList, donationsCount, pagination)
   }
 
+  async findDonationsForEvent() {
+    const total: Map<string, number> = new Map();
+
+    const donationsList: Donation[] = await this.repository.model.find().lean();
+
+    donationsList.forEach((item) => {
+      const amount = parseFloat(item.totalAmount);
+
+      if(!isNaN(amount)) {
+        if (total.has(item.owner)) {
+          total.set(item.owner, total.get(item.owner)! + amount)
+        } else {
+          total.set(item.owner, amount);
+        }
+      }
+    })
+
+    const result = [];
+    total.forEach((amount, owner) => {
+      result.push({owner, amount: amount.toString()})
+    })
+
+    return {
+      data: result,
+      meta: {
+        totalRecords: result.length
+      }
+    }
+  }
+
   async createDonation(address: string, dto: CreateDonationDto): Promise<Donation> {
     return this.repository.model.create({
       ...dto,
       owner: address,
+      totalAmount: '',
     });
   }
 
