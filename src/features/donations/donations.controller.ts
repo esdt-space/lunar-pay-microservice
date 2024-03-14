@@ -33,9 +33,7 @@ export class DonationsController {
 
   @Get('event/donations-ranked')
   @UseGuards(NativeAuthGuard)
-  async testing(
-    @NativeAuth('address') address: string,
-  ) {
+  async getDonationsForEvent() {
     return this.donationsService.findDonationsForEvent();
   }
 
