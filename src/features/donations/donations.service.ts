@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 import { Donation } from './donation.schema';
 import { DonationRepository } from './donation.repository';
@@ -9,7 +10,37 @@ import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
 export class DonationsService {
-  constructor(private readonly repository: DonationRepository) {}
+  constructor(
+    private readonly repository: DonationRepository,
+    @InjectModel('Donation') private readonly donationModel: Model<Donation>
+  ) {}
+
+  async countUsersDonations() {
+    const donationsCount = await this.donationModel.aggregate([
+      { 
+        $group: {
+          _id: {
+            userId: '$owner',
+            type: '$type'
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id.userId',
+          actions: {
+            $push: {
+              type: 'donation-created',
+              count: '$count',
+            },
+          },
+        },
+      },
+    ])
+
+    return donationsCount
+  }
 
   async findOneDonationById(id: Types.ObjectId): Promise<Donation> {
     return this.repository.model.findOne({ _id: id });

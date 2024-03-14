@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { Injectable, Logger } from '@nestjs/common';
 
 import PaginationParams from '@/common/models/pagination.params.model';
@@ -8,15 +8,55 @@ import { CreateTokenOperationDto } from './dto';
 import { TokenOperation } from './token-operation.schema';
 import { TokenOperationRepository } from './token-operation.repository';
 import TokenOperationFilters from './models/token-operation.filters.model';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class TokenOperationService {
-  private static readonly ITEMS_PER_PAGE = 10;
-  
   logger = new Logger();
 
-  constructor(private readonly repository: TokenOperationRepository) {
+  constructor(
+    private readonly repository: TokenOperationRepository,
+    @InjectModel('TokenOperation') private readonly tokenOperationModel: Model<TokenOperation>
+  ) {
     this.logger = new Logger(this.constructor.name);
+  }
+
+  async countUsersTokenOperations() {
+    const tokenOperationsCount = await this.tokenOperationModel.aggregate([
+      {
+        $addFields: {
+          userId: {
+            $cond: {
+              if: { $in: ['$type', ['deposit', 'transfer', 'payment']] },
+              then: '$sender',
+              else: '$receiver'
+            }
+          }
+        },
+      },
+      { 
+        $group: {
+          _id: {
+            userId: '$userId',
+            type: '$type'
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id.userId',
+          actions: {
+            $push: {
+              type: '$_id.type',
+              count: '$count',
+            },
+          },
+        },
+      },
+    ]);
+
+    return tokenOperationsCount
   }
 
   async create(transaction: CreateTokenOperationDto): Promise<TokenOperation> {

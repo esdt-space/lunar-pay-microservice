@@ -29,6 +29,8 @@ import { EventsNotifierModule } from '@/events-notifier';
 import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
 import { AgreementTriggersController } from './features/agreement-triggers/agreement-triggers.controller';
 import { DonationsController } from './features/donations/donations.controller';
+import { EventController } from './features/event/event.controller';
+import { EventModule } from './features/event/event.module';
 
 @Module({
   imports: [
@@ -58,6 +60,8 @@ import { DonationsController } from './features/donations/donations.controller';
 
     VaultModule,
     EventsNotifierModule,
+
+    EventModule,
   ],
   controllers: [
     AccountController,
@@ -70,6 +74,8 @@ import { DonationsController } from './features/donations/donations.controller';
     TokenOperationController,
 
     VaultController,
+
+    EventController,
   ],
 })
 export default class AppModule {}

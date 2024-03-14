@@ -1,5 +1,6 @@
-import { Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 
 import { PaymentAgreement } from './payment-agreement.schema';
 import { CreateAgreementDto, UpdateAgreementDto } from './dto';
@@ -9,7 +10,37 @@ import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
 export class PaymentAgreementsService {
-  constructor(private readonly repository: PaymentAgreementRepository) {}
+  constructor(
+    private readonly repository: PaymentAgreementRepository,
+    @InjectModel('PaymentAgreement') private readonly paymentAgreementModel: Model<PaymentAgreement>
+  ) {}
+
+  async countUsersAgreements() {
+    const agreementsCount = await this.paymentAgreementModel.aggregate([
+      { 
+        $group: {
+          _id: {
+            userId: '$owner',
+            type: '$type'
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id.userId',
+          actions: {
+            $push: {
+              type: 'agreement-created',
+              count: '$count',
+            },
+          },
+        },
+      },
+    ])
+
+    return agreementsCount
+  }
 
   async findOneAgreementById(id: Types.ObjectId): Promise<PaymentAgreement> {
     return this.repository.model.findOne({ _id: id });
