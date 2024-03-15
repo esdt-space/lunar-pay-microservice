@@ -27,7 +27,7 @@ export class TokenOperationService {
         $addFields: {
           userId: {
             $cond: {
-              if: { $in: ['$type', ['deposit', 'transfer', 'payment']] },
+              if: { $in: ['$type', ['deposit', 'transfer', 'payment', 'donation']] },
               then: '$sender',
               else: '$receiver'
             }

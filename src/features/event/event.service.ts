@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { DonationsService } from "../donations/donations.service";
 import { TokenOperationService } from "../token-operations/token-operation.service";
 import { PaymentAgreementsService } from "../payment-agreements/payment-agreements.service";
+import { mergeActionCounts } from "./utils";
 
 @Injectable()
 export class EventService {
@@ -17,11 +18,14 @@ export class EventService {
     const tokenOperationsCount = await this.tokenOperationsService.countUsersTokenOperations()
     const agreementsCount = await this.paymentAgreementsService.countUsersAgreements()
 
+    const result = mergeActionCounts([donationsCount, agreementsCount, tokenOperationsCount])
+    const sortedResult = result.filter(item => item._id !== null).sort((a,b) => b.allActions - a.allActions)
+    const totalRecords = sortedResult.length
+
     return {
-      data: {
-        donationsCount: donationsCount,
-        tokenOperationsCount: tokenOperationsCount,
-        agreementsCount: agreementsCount
+      data: sortedResult,
+      meta: {
+        totalRecords: totalRecords
       }
     }
   }
