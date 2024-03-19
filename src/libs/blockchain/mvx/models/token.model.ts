@@ -43,7 +43,7 @@ export class Token {
   assetImageUrl?: string;
 
   marketCap?: number;
-  price?: number;
+  price?: string;
 
   constructor(params: Partial<Token> = {}) {
     Object.assign(this, params);
