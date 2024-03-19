@@ -57,6 +57,9 @@ services:
       test: [ "CMD", "redis-cli", "ping" ]
 
 volumes:
+  pg:
+    driver: local
+    name: lunar-pay-api-pg-db-volume
   mongo:
     name: lunar-pay-api-db-volume
 
