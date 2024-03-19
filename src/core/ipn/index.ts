@@ -1,1 +1,1 @@
-export { WebhookSender } from './ipn-sender';
+export { IpnSender } from './ipn-sender';
