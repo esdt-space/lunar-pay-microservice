@@ -1,49 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+// import { Injectable } from '@nestjs/common';
+// import { Repository } from 'typeorm';
+// import { InjectRepository } from '@nestjs/typeorm';
 
-import { MvxFungibleToken } from '@/libs/blockchain/mvx/models';
+// import { MvxFungibleToken } from '@/libs/blockchain/mvx/models';
 
-/** Local Imports **/
-import { Token } from './entities';
+// /** Local Imports **/
+// import { Token } from './entities';
 
-@Injectable()
-export class TokensService {
-  constructor(
-    @InjectRepository(Token)  private tokenRepository: Repository<Token>,
-    // private readonly repository: TokenRepository
-  ) {}
+// @Injectable()
+// export class TokensService {
+//   constructor(
+//     @InjectRepository(Token)  private tokenRepository: Repository<Token>,
+//     // private readonly repository: TokenRepository
+//   ) {}
 
-  async findAll(): Promise<Token[]> {
-    return this.tokenRepository.find();
-  }
+//   async findAll(): Promise<Token[]> {
+//     return this.tokenRepository.find();
+//   }
 
-  async findOneByIdentifier(identifier: string): Promise<Token> {
-    return this.tokenRepository.findOneBy({ identifier });
-  }
+//   async findOneByIdentifier(identifier: string): Promise<Token> {
+//     return this.tokenRepository.findOneBy({ identifier });
+//   }
 
-  async saveTokens(tokens: MvxFungibleToken[]): Promise<any> {
-    const decoratedTokens = tokens.map((rawToken) => this.decorate(rawToken));
+//   async saveTokens(tokens: MvxFungibleToken[]): Promise<any> {
+//     const decoratedTokens = tokens.map((rawToken) => this.decorate(rawToken));
 
-    return this.tokenRepository.upsert(
-      decoratedTokens,
-      { conflictPaths: ['identifier'], skipUpdateIfNoValuesChanged: true }
-    );
-  }
+//     return this.tokenRepository.upsert(
+//       decoratedTokens,
+//       { conflictPaths: ['identifier'], skipUpdateIfNoValuesChanged: true }
+//     );
+//   }
 
-  private decorate(token: MvxFungibleToken) {
-    return {
-      name: token.name,
-      identifier: token.identifier,
-      ticker: token.ticker,
-      decimals: token.decimals,
-      assets: token.assets,
-      owner: token.owner,
-      balance: token.balance,
-      price: token.price,
-      verified: token.verified,
+//   private decorate(token: MvxFungibleToken) {
+//     return {
+//       name: token.name,
+//       identifier: token.identifier,
+//       ticker: token.ticker,
+//       decimals: token.decimals,
+//       assets: token.assets,
+//       owner: token.owner,
+//       balance: token.balance,
+//       price: token.price,
+//       verified: token.verified,
 
-      rawData: token,
-    } as Token;
-  }
-}
+//       rawData: token,
+//     } as Token;
+//   }
+// }

@@ -1,61 +1,62 @@
-import { Types } from 'mongoose';
 import { Injectable, Logger } from '@nestjs/common';
 
 import PaginationParams from '@/common/models/pagination.params.model';
-import { PaginatedResponse } from '@/common/models/paginated-response';
-
-import { AgreementTrigger } from './agreement-trigger.schema';
-import { AgreementTriggerRepository } from './agreement-trigger.repository';
-import { CreateAgreementTriggerDto, UpdateAgreementTriggerDto } from './dto';
+import { UpdateAgreementTriggerDto } from './dto';
+import { AgreementTrigger } from './entities';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AgreementTriggerService {
   logger = new Logger();
 
-  constructor(private readonly repository: AgreementTriggerRepository) {
+  constructor(
+    @InjectRepository(AgreementTrigger)  private repository: Repository<AgreementTrigger>
+  ) {
     this.logger = new Logger(this.constructor.name);
   }
 
   async findOneByTxHash(hash: string): Promise<AgreementTrigger> {
-    return this.repository.model.findOne({ txHash: hash }).exec();
+    return this.repository.findOneBy({ txHash: hash });
   }
 
-  async create(triggerData: CreateAgreementTriggerDto): Promise<AgreementTrigger> {
+  async create(triggerData: any) {
     try {
-      return await this.repository.model.create(triggerData);
+      const trigger = this.repository.create(triggerData);
+
+      return await this.repository.save(trigger);
     } catch (e: any) {
       this.logger.error('create_agreement_trigger', { error: e.stack });
+      return null;
     }
-    return null;
   }
 
-  async createOrUpdate(triggerData: CreateAgreementTriggerDto, updateData: UpdateAgreementTriggerDto, hash: string) {
-    let agreementTrigger = await this.findOneByTxHash(hash);
-
-    if(!agreementTrigger) {
+  async createOrUpdate(triggerData: any, updateData: UpdateAgreementTriggerDto, hash: string): Promise<AgreementTrigger> {
+    let agreementTrigger = await this.findOneByTxHash(hash)[0];
+  
+    if (!agreementTrigger) {
       agreementTrigger = await this.create(triggerData);
+    } else {
+      await this.repository.update({ txHash: hash }, updateData);
+      agreementTrigger = await this.repository.findOneBy({ txHash: hash });
     }
-
-    await this.repository.model.updateOne({ txHash: hash }, updateData);
-
+  
     return agreementTrigger;
   }
 
-  async findAllAgreementTriggers(agreement: Types.ObjectId, pagination: PaginationParams = new PaginationParams()) {
-    const operationsCount = await this.repository.model.find({ agreement: agreement }).countDocuments({});
+  async findAllAgreementTriggers(agreementId: string, pagination: PaginationParams = new PaginationParams()) {
+    const [agreementTriggers, operationsCount] = await this.repository.findAndCount({
+      where: { agreement: agreementId },
+      order: { createdAt: 'DESC' },
+      skip: pagination.skip,
+      take: pagination.limit,
+    });
+  
     const numberOfPages = Math.ceil(operationsCount / pagination.limit);
-
-    const allAgreementTriggers = await this.repository.model
-      .find({ agreement: agreement })
-      .skip(pagination.skip)
-      .limit(pagination.limit)
-      .sort({ _id: 'desc' });
-
-    // return new PaginatedResponse<AgreementTrigger>(allAgreementTriggers, operationsCount, pagination);
-
+  
     return {
-      agreementTriggers: allAgreementTriggers,
-      numberOfPages: numberOfPages
+      agreementTriggers: agreementTriggers,
+      numberOfPages: numberOfPages,
     };
   }
 }

@@ -1,5 +1,5 @@
 import { PickType } from '@nestjs/swagger';
-import { PaymentAgreementMember } from '@/features/payment-agreements/payment-agreement-member.schema';
+import { PaymentAgreementMember } from '../entities';
 
 export class CreateAgreementMemberDto extends PickType(
   PaymentAgreementMember,

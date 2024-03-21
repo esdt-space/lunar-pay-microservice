@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsArray, IsOptional, IsNumber, IsDateString } from 'class-validator';
-import { PaymentAgreement } from '../payment-agreement.schema';
+import { PaymentAgreement } from '../entities';
 
 export class SignedAgreementDto {
   constructor(params: Partial<PaymentAgreement> = {}){

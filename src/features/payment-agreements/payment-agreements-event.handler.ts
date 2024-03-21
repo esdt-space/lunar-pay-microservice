@@ -10,7 +10,6 @@ import {
   blockchainAgreementAmountTypeToApiType,
   blockchainAgreementTypeToApiType,
 } from '@/features/payment-agreements/transformers';
-import { CreateAgreementMemberDto } from './dto/create-agreement-member.dto';
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
 import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
@@ -36,14 +35,14 @@ export class PaymentAgreementsEventHandler {
 
     const dto = {
       member: eventData.address,
-      internalAgreementId: agreement._id,
+      internalAgreementId: agreement.id,
       blockchainAgreementId: eventData.agreementId,
 
       createdAt: eventData.signedAt,
       agreementType: agreement.agreementType,
-    } as CreateAgreementMemberDto;
+    } as any;
 
-    await this.agreementsService.incrementMembersCount(agreement._id);
+    await this.agreementsService.incrementMembersCount(agreement.id);
     await this.tokenOperationsService.create({
       sender: eventData.address,
       senderAccountsCount: null,
@@ -54,7 +53,7 @@ export class PaymentAgreementsEventHandler {
       tokenNonce: agreement.tokenNonce,
       type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
       txHash: event.txHash,
-      agreement: agreement._id,
+      agreement: agreement.id,
       details: 'Initial charge',
       isInternal: true
     });
@@ -102,7 +101,7 @@ export class PaymentAgreementsEventHandler {
     }
 
     const newAgreementTrigger = {
-      agreement: agreement._id,
+      agreement: agreement.id,
       txHash: event.txHash
     }
 
@@ -135,28 +134,27 @@ export class PaymentAgreementsEventHandler {
         tokenNonce: agreement.tokenNonce,
         type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
         txHash: event.txHash,
-        agreement: agreement._id,
+        agreement: agreement.id,
         parentId: null,
         details: 'Recurring Charge',
         isInternal: true,
       })
   
       eventData.accounts.forEach((el, index) => {
-        // TODO: Replace new Date() with the date that will come from the event
         this.membersService.updateLastChargedAt(el, new Date()) 
         this.tokenOperationsService.create({
           sender: el,
           senderAccountsCount: null,
           receiver: null,
-          agreementTriggerId: agreementTrigger._id,
+          agreementTriggerId: agreementTrigger.id,
           status: TokenOperationStatus.SUCCESS,
           amount: memberAmount(index),
           tokenIdentifier: agreement.tokenIdentifier,
           tokenNonce: agreement.tokenNonce,
           type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
           txHash: event.txHash,
-          agreement: agreement._id,
-          parentId: providerOperation._id,
+          agreement: agreement.id,
+          parentId: providerOperation.id,
           details: 'Recurring Charge',
           isInternal: true,
         })

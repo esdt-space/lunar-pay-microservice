@@ -5,9 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile-development
     ports:
-      - "3001:3000"
+      - "3003:3000"
     depends_on:
-      - mongo
+      - postgres
       - redis
     env_file:
       - .env
@@ -18,17 +18,17 @@ services:
       - ./config:/config
       - ./nest-cli.json:/nest-cli.json
 
-  mongo:
-    image: mongo
-    ports:
-      - '27017-27019:27017-27019'
-    restart: always
-    env_file:
-      - .env
-    networks:
-      - lunar-pay-api
-    volumes:
-      - mongo:/data/db
+  # mongo:
+  #   image: mongo
+  #   ports:
+  #     - '27017-27019:27017-27019'
+  #   restart: always
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - lunar-pay-api
+  #   volumes:
+  #     - mongo:/data/db
 
   postgres:
     image: postgres:15-alpine
@@ -60,7 +60,7 @@ volumes:
   pg:
     driver: local
     name: lunar-pay-api-pg-db-volume
-  mongo:
+  postgres:
     name: lunar-pay-api-db-volume
 
 networks:
