@@ -18,18 +18,6 @@ services:
       - ./config:/config
       - ./nest-cli.json:/nest-cli.json
 
-  # mongo:
-  #   image: mongo
-  #   ports:
-  #     - '27017-27019:27017-27019'
-  #   restart: always
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - lunar-pay-api
-  #   volumes:
-  #     - mongo:/data/db
-
   postgres:
     image: postgres:15-alpine
     restart: always
