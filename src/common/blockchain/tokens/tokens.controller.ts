@@ -19,8 +19,8 @@ export class TokensController {
   constructor(private readonly tokensService: TokensService) {}
 
   @Get('esdt')
-  // @UseInterceptors(CacheInterceptor)
-  // @CacheTTL(DurationConstants.oneMinute())
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(DurationConstants.oneMinute())
   async getEsdtTokens() {
     return this.tokensService.findAll();
   }
