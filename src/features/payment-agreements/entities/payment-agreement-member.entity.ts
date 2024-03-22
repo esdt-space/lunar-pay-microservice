@@ -1,33 +1,36 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { AgreementMemberStatus, AgreementType } from '@/features/payment-agreements/enums';
 
 @Entity()
 export class PaymentAgreementMember {
-  @Column({ primary: true })
+  @PrimaryGeneratedColumn()
+  id: string;
+
+  @Column({ type: 'varchar' })
   member: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   internalAgreementId: string;
 
-  @Column()
+  @Column({ type: 'int' })
   blockchainAgreementId: number;
 
-  @Column()
-  agreementType: AgreementType;
+  @Column({ type: 'enum', enum: AgreementType })
+  agreementType: string;
 
-  @Column({ type: String, enum: AgreementMemberStatus, default: AgreementMemberStatus.Active })
-  status: AgreementMemberStatus;
+  @Column({ type: 'enum', enum: AgreementMemberStatus, default: AgreementMemberStatus.Active })
+  status: string;
 
-  @Column({ type: Date })
-  lastChargedAt: Date;
+  @Column({ type: 'date' })
+  lastChargedAt: string;
   
-  @Column({ type: Date })
-  lastSuccessfulCharge: Date;
+  @Column({ type: 'date' })
+  lastSuccessfulCharge: string;
 
-  @Column({ type: Date })
-  canceledAt: Date;
+  @Column({ type: 'date' })
+  canceledAt: string;
 
-  @Column({ type: Date })
-  createdAt?: Date;
+  @Column({ type: 'date' })
+  createdAt?: string;
 }

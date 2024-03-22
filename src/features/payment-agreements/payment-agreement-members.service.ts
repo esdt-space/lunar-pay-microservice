@@ -53,7 +53,7 @@ export class PaymentAgreementMembersService {
 
   async updateLastChargedAt(member: string, date: Date) {
     await this.agreementMembersRepository.update({ member: member }, {
-      lastSuccessfulCharge: date
+      lastSuccessfulCharge: date.toString()
     });
   }
 

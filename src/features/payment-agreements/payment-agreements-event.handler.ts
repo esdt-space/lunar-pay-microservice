@@ -154,15 +154,11 @@ export class PaymentAgreementsEventHandler {
           type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
           txHash: event.txHash,
           agreement: agreement.id,
-          parentId: providerOperation.id,
+          parentId: providerOperation[0].id,
           details: 'Recurring Charge',
           isInternal: true,
         })
       })
-    }
-
-    if(event.name === "failedAgreementCharges") {
-      
     }
   }
 }

@@ -1,28 +1,28 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class AgreementTrigger {
-  @Column({ primary: true })
+  @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   agreement: string;
 
-  @Column({ type: String, default: '0'  })
+  @Column({ type: 'bigint', default: 0 })
   successfulChargeAmount: string;
 
-  @Column({ type: String, default: 0 })
+  @Column({ type: 'int', default: 0 })
   successfulAccountsCount: number;
 
-  @Column({ type: String, default: '0'   })
+  @Column({ type: 'bigint', default: 0 })
   failedChargeAmount: string;
 
-  @Column({ type: String, default: 0 })
+  @Column({ type: 'int' })
   failedAccountsCount: number;
   
-  @Column({ type: String })
+  @Column({ type: 'varchar' })
   txHash: string;
 
-  @Column({ type: Date })
-  createdAt: Date;
+  @Column({ type: 'date' })
+  createdAt: string;
 }

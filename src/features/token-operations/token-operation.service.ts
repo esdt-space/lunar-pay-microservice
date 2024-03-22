@@ -1,5 +1,3 @@
-import { ObjectId } from 'mongodb';
-import { FilterQuery } from 'mongoose';
 import { Injectable, Logger } from '@nestjs/common';
 
 import PaginationParams from '@/common/models/pagination.params.model';
@@ -8,6 +6,7 @@ import TokenOperationFilters from './models/token-operation.filters.model';
 import { TokenOperation } from './entities';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateTokenOperationDto } from './dto';
 
 @Injectable()
 export class TokenOperationService {
@@ -27,8 +26,9 @@ export class TokenOperationService {
   async create(transaction: any) {
     try {
       const op = this.repository.create(transaction);
+      console.log(op)
 
-      return (await this.repository.save(op)).pop();
+      return await this.repository.save(op);
     } catch (e: any) {
       this.logger.error('create_transaction', { error: e.stack });
       return null;
@@ -59,22 +59,22 @@ export class TokenOperationService {
 
   async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
     const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
-  
+
     queryBuilder.where('(tokenOperation.sender = :address OR tokenOperation.receiver = :address)', { address });
-  
+
     if (filters.type) {
       queryBuilder.andWhere('tokenOperation.type = :type', { type: filters.type });
     }
-  
-    const [allOperations, operationsCount] = await queryBuilder
-      .leftJoinAndSelect('tokenOperation.agreement', 'agreement')
-      .orderBy('tokenOperation.id', 'DESC')
-      .skip(pagination.skip)
-      .take(pagination.limit)
-      .getManyAndCount();
-  
+
+    queryBuilder.orderBy('tokenOperation.id', 'DESC');
+    
+    queryBuilder.skip(pagination.skip);
+    queryBuilder.take(pagination.limit);
+    
+    const [allOperations, operationsCount] = await queryBuilder.getManyAndCount();
+
     const numberOfPages = Math.ceil(operationsCount / pagination.limit);
-  
+
     return {
       numberOfPages,
       operations: allOperations,

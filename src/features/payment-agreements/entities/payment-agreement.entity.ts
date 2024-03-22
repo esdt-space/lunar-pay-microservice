@@ -1,68 +1,68 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { AgreementType, AgreementAmountType, AgreementUserFriendlyType } from '../enums';
 import { RedirectAndWebhooksSettings } from '../models/redirect-and-webhooks-settings';
 
 @Entity()
 export class PaymentAgreement {
-  @Column({primary: true})
+  @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   owner: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'int' })
   agreementIdentifier: number;
 
-  @Column()
-  agreementType: AgreementType;
+  @Column({type: 'enum', enum: AgreementType})
+  agreementType: string;
 
-  @Column()
-  amountType: AgreementAmountType;
+  @Column({type: 'enum', enum: AgreementAmountType})
+  amountType: string;
 
-  @Column({ type: String, enum: AgreementUserFriendlyType })
-  userFriendlyType: AgreementUserFriendlyType;
+  @Column({ type: 'enum', enum: AgreementUserFriendlyType })
+  userFriendlyType: string;
 
-  @Column()
+  @Column({ type: 'int' })
   frequency: number;
 
-  @Column({ type: Number, default: 0 })
+  @Column({ type: 'int', default: 0 })
   tokenNonce: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   tokenIdentifier: string;
 
-  @Column({ type: Number, default: 0 })
+  @Column({ type: 'int', default: 0 })
   accountsCount: number;
 
-  @Column({ type: Number, default: 0 })
+  @Column({ type: 'int', default: 0 })
   activeAccountsCount: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   ownerName?: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   itemName?: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   description?: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   content: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   fixedAmount?: string;
 
-  @Column({ type: Date })
-  createdAt?: Date;
+  @Column({ type: 'date' })
+  createdAt?: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   signAgreementHttpCallbackUrl?: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   cancelAgreementHttpCallbackUrl?: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   signAgreementRedirectUrl?: string;
 
   // @Column({})

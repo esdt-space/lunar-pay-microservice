@@ -1,50 +1,50 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { TokenOperationStatus, TokenOperationType } from "../enums";
 
 @Entity()
 export class TokenOperation {
-  @Column({ primary: true})
+  @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ type: String, enum: Object.values(TokenOperationType) })
-  type: TokenOperationType;
+  @Column({ type: 'enum', enum: TokenOperationType })
+  type: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar' })
   sender: string;
 
-  @Column({ type: Number, nullable: true })
+  @Column({ type: 'int' })
   senderAccountsCount: number;
 
-  @Column({ nullable: true  })
+  @Column({ type: 'varchar' })
   receiver: string;
 
-  @Column({ type: String, nullable: true })
+  @Column({ type: 'varchar' })
   agreementTriggerId: string;
 
-  @Column({ type: String })
-  status?: TokenOperationStatus;
+  @Column({ type: 'enum', enum: TokenOperationStatus })
+  status?: string;
 
-  @Column({ type: Number })
-  amount: number;
+  @Column({ type: 'bigint' })
+  amount: string;
 
-  @Column({ type: Number })
+  @Column({ type: 'int' })
   tokenNonce: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   tokenIdentifier: string;
 
-  @Column({ type: String, nullable: true })
+  @Column({ type: 'varchar' })
   txHash: string;
 
-  @Column({ type: Boolean, nullable: true })
+  @Column({ type: 'boolean' })
   isInternal: boolean;
 
-  @Column()
+  @Column({ type: 'varchar' })
   agreement?: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar' })
   parentId?: string;
 
-  @Column({ type: String })
+  @Column({ type: 'varchar' })
   details?: string;
 }
