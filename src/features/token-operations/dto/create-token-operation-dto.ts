@@ -1,13 +1,25 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTokenOperationDto {
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  sender: string;
+  amount: string;
 
   @IsNumber()
   @IsNotEmpty()
-  senderAccountsCount: number;
+  tokenNonce: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  tokenIdentifier: string;
+
+  @IsString()
+  @IsNotEmpty()
+  txHash: string;
+
+  @IsString()
+  @IsNotEmpty()
+  sender: string;
 
   @IsString()
   @IsNotEmpty()
@@ -15,41 +27,33 @@ export class CreateTokenOperationDto {
 
   @IsString()
   @IsNotEmpty()
-  agreementTriggerId: string;
+  type: string;
+
+  @IsNumber()
+  @IsOptional()
+  senderAccountsCount?: number;
+
+  @IsString()
+  @IsOptional()
+  agreementTriggerId?: string;
 
   @IsString()
   @IsOptional()
   status?: string;
 
-  @IsNumber()
-  @IsNotEmpty()
-  amount: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  tokenIdentifier: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  tokenNonce: number;
-
-  @IsString()
-  @IsNotEmpty()
-  type: string;
-
-  @IsString()
-  @IsNotEmpty()
-  txHash: string;
-
   @IsBoolean()
+  @IsOptional()
   isInternal?: boolean;
 
-  @IsNotEmpty()
-  agreement: string;
+  @IsString()
+  @IsOptional()
+  agreement?: string;
 
+  @IsString()
   @IsOptional()
   parentId?: string;
 
+  @IsString()
   @IsOptional()
   details: string;
 }

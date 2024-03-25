@@ -6,24 +6,6 @@ export class TokenOperation {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ type: 'enum', enum: TokenOperationType })
-  type: string;
-
-  @Column({ type: 'varchar' })
-  sender: string;
-
-  @Column({ type: 'int' })
-  senderAccountsCount: number;
-
-  @Column({ type: 'varchar' })
-  receiver: string;
-
-  @Column({ type: 'varchar' })
-  agreementTriggerId: string;
-
-  @Column({ type: 'enum', enum: TokenOperationStatus })
-  status?: string;
-
   @Column({ type: 'bigint' })
   amount: string;
 
@@ -32,19 +14,37 @@ export class TokenOperation {
 
   @Column({ type: 'varchar' })
   tokenIdentifier: string;
-
+  
   @Column({ type: 'varchar' })
   txHash: string;
 
-  @Column({ type: 'boolean' })
+  @Column({ type: 'varchar' })
+  sender: string;
+
+  @Column({ type: 'varchar' })
+  receiver: string;
+
+  @Column({ type: 'enum', enum: TokenOperationType })
+  type: string;
+
+  @Column({ type: 'int', nullable: true })
+  senderAccountsCount: number;
+
+  @Column({ type: 'varchar', nullable: true })
+  agreementTriggerId: string;
+  
+  @Column({ type: 'enum', nullable: true, enum: TokenOperationStatus })
+  status?: string;
+
+  @Column({ type: 'boolean', nullable: true })
   isInternal: boolean;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   agreement?: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   parentId?: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   details?: string;
 }
