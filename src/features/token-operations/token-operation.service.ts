@@ -14,7 +14,7 @@ export class TokenOperationService {
   logger = new Logger();
 
   constructor(
-    @InjectRepository(TokenOperation)  private repository: Repository<TokenOperation>
+    @InjectRepository(TokenOperation)  private readonly repository: Repository<TokenOperation>
   ) {
     this.logger = new Logger(this.constructor.name);
   }
@@ -23,13 +23,12 @@ export class TokenOperationService {
     return this.repository.findOneBy({ id });
   }
 
-  async create(transaction: any) {
+  async create(transaction: CreateTokenOperationDto) {
     try {
       const op = this.repository.create(transaction);
-      console.log(op)
 
       return await this.repository.save(op);
-    } catch (e: any) {
+    } catch (e) {
       this.logger.error('create_transaction', { error: e.stack });
       return null;
     }

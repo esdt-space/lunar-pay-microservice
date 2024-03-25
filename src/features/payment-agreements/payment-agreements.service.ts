@@ -10,7 +10,7 @@ import { PaymentAgreement } from './entities';
 @Injectable()
 export class PaymentAgreementsService {
   constructor(
-    @InjectRepository(PaymentAgreement)  private repository: Repository<PaymentAgreement>
+    @InjectRepository(PaymentAgreement)  private readonly repository: Repository<PaymentAgreement>
   ) {}
 
   async findOneAgreementById(id: string): Promise<PaymentAgreement> {

@@ -12,8 +12,8 @@ export class PaymentAgreementMembersService {
   private static readonly ITEMS_PER_PAGE = 10;
 
   constructor(
-    @InjectRepository(PaymentAgreementMember) private agreementMembersRepository: Repository<PaymentAgreementMember>,
-    @InjectRepository(PaymentAgreement) private agreementsRepository: Repository<PaymentAgreement>
+    @InjectRepository(PaymentAgreementMember) private readonly agreementMembersRepository: Repository<PaymentAgreementMember>,
+    @InjectRepository(PaymentAgreement) private readonly agreementsRepository: Repository<PaymentAgreement>
   ) {}
 
   async findAddressMemberships(address: string, pagination: PaginationParams = new PaginationParams()) {

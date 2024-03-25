@@ -11,7 +11,7 @@ export class AgreementTriggerService {
   logger = new Logger();
 
   constructor(
-    @InjectRepository(AgreementTrigger)  private repository: Repository<AgreementTrigger>
+    @InjectRepository(AgreementTrigger)  private readonly repository: Repository<AgreementTrigger>
   ) {
     this.logger = new Logger(this.constructor.name);
   }
