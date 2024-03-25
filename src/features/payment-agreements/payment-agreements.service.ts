@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { UpdateAgreementDto } from './dto';
+import { CreateAgreementDto, UpdateAgreementDto } from './dto';
 import { AgreementDto } from './dto/agreement.dto';
 import PaginationParams from '@/common/models/pagination.params.model';
 import { PaymentAgreement } from './entities';
@@ -42,7 +42,7 @@ export class PaymentAgreementsService {
     };
   }
 
-  async createAgreement(address: string, dto: any){
+  async createAgreement(address: string, dto: CreateAgreementDto){
     const agreement = this.repository.create({
       ...dto,
       owner: address,
@@ -60,7 +60,7 @@ export class PaymentAgreementsService {
     return null;
   }
 
-  create(dto: any) {
+  create(dto: CreateAgreementDto) {
     const agreement = this.repository.create({
       ...dto,
     });

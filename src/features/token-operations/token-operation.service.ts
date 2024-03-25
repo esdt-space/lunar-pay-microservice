@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import PaginationParams from '@/common/models/pagination.params.model';
 
 import TokenOperationFilters from './models/token-operation.filters.model';
 import { TokenOperation } from './entities';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTokenOperationDto } from './dto';
 
 @Injectable()
@@ -38,11 +38,8 @@ export class TokenOperationService {
     const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
   
     queryBuilder.where('tokenOperation.parentId = :parentId', { parentId: id });
-  
     queryBuilder.leftJoinAndSelect('tokenOperation.agreement', 'agreement');
-  
     queryBuilder.orderBy('tokenOperation.id', 'DESC');
-  
     queryBuilder.skip(pagination.skip);
     queryBuilder.take(pagination.limit);
   
@@ -66,7 +63,6 @@ export class TokenOperationService {
     }
 
     queryBuilder.orderBy('tokenOperation.id', 'DESC');
-    
     queryBuilder.skip(pagination.skip);
     queryBuilder.take(pagination.limit);
     

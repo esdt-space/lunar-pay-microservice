@@ -1,7 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { AgreementType, AgreementAmountType, AgreementUserFriendlyType } from '../enums';
-import { RedirectAndWebhooksSettings } from '../models/redirect-and-webhooks-settings';
 
 @Entity()
 export class PaymentAgreement {
@@ -14,57 +13,66 @@ export class PaymentAgreement {
   @Column({ type: 'int' })
   agreementIdentifier: number;
 
-  @Column({type: 'enum', enum: AgreementType})
-  agreementType: string;
-
-  @Column({type: 'enum', enum: AgreementAmountType})
-  amountType: string;
-
-  @Column({ type: 'enum', enum: AgreementUserFriendlyType })
-  userFriendlyType: string;
-
-  @Column({ type: 'int' })
-  frequency: number;
-
   @Column({ type: 'int', default: 0 })
   tokenNonce: number;
 
   @Column({ type: 'varchar' })
   tokenIdentifier: string;
 
-  @Column({ type: 'int', default: 0 })
-  accountsCount: number;
+  @Column({type: 'enum', enum: AgreementType, nullable: true})
+  agreementType: string;
 
-  @Column({ type: 'int', default: 0 })
-  activeAccountsCount: number;
+  @Column({type: 'enum', enum: AgreementAmountType})
+  amountType: string;
 
-  @Column({ type: 'varchar' })
-  ownerName?: string;
+  @Column({ type: 'int' })
+  frequency: number;
 
-  @Column({ type: 'varchar' })
-  itemName?: string;
-
-  @Column({ type: 'varchar' })
-  description?: string;
-
-  @Column({ type: 'varchar' })
-  content: string;
-
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   fixedAmount?: string;
 
-  @Column({ type: 'date' })
-  createdAt?: string;
+  @Column({ type: 'varchar', nullable: true })
+  minimumAmount?: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
+  maximumAmount?: string;
+
+  @Column({ type: 'date' })
+  createdAt?: Date;
+
+  @Column({ type: 'enum', enum: AgreementUserFriendlyType, nullable: true })
+  userFriendlyType: string;
+
+  @Column({ type: 'int', default: 0, nullable: true })
+  accountsCount: number;
+
+  @Column({ type: 'int', default: 0, nullable: true })
+  activeAccountsCount: number;
+
+  @Column({ type: 'varchar', nullable: true })
+  ownerName?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  itemName?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  description?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  content: string;
+
+  @Column({ type: 'varchar', nullable: true })
   signAgreementHttpCallbackUrl?: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   cancelAgreementHttpCallbackUrl?: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   signAgreementRedirectUrl?: string;
 
-  // @Column({})
-  // redirectAndWebhookSettings: RedirectAndWebhooksSettings;
+  @Column({ type: 'varchar', nullable: true })
+  httpWebhookUrl?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  httpWebhookSecret?: string;
 }

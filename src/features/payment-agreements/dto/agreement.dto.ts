@@ -22,6 +22,7 @@ export class AgreementDto {
   tokenIdentifier: string;
 
   @IsArray()
+  @IsOptional()
   @ApiProperty()
   benefits: string[];
 
