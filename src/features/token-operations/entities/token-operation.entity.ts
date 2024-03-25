@@ -3,7 +3,7 @@ import { TokenOperationStatus, TokenOperationType } from "../enums";
 
 @Entity()
 export class TokenOperation {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'bigint' })

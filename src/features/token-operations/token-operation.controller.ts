@@ -13,7 +13,6 @@ import PaginationParams from '@/common/models/pagination.params.model';
 
 import { TokenOperationService } from './token-operation.service';
 import TokenOperationFilters from './models/token-operation.filters.model';
-import { MongooseObjectIdPipe } from '@/libs/database/mongo';
 
 @Injectable()
 @ApiTags('Token Operations')
@@ -42,7 +41,7 @@ export class TokenOperationController {
     description: 'Returns a list of payment agreement charge operations.',
   })
   async getOperationsByParentId(
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     @Query() pagination: PaginationParams,
   ) {
     return this.tokenOperationService.findChargeTokenOperationsByParentId(id, pagination);

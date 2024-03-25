@@ -4,7 +4,7 @@ import { AgreementType, AgreementAmountType, AgreementUserFriendlyType } from '.
 
 @Entity()
 export class PaymentAgreement {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'varchar' })

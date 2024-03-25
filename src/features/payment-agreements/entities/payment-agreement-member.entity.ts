@@ -4,7 +4,7 @@ import { AgreementMemberStatus, AgreementType } from '@/features/payment-agreeme
 
 @Entity()
 export class PaymentAgreementMember {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'varchar' })

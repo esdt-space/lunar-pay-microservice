@@ -10,8 +10,6 @@ import {
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 
-import { MongooseObjectIdPipe } from '@/libs/database/mongo';
-
 import { UpdateAgreementDto } from './dto/update-agreement.dto';
 import { PaymentAgreementsService } from './payment-agreements.service';
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
@@ -50,13 +48,13 @@ export class PaymentAgreementsController {
   @UseGuards(NativeAuthGuard)
   getMembership(
     @NativeAuth('address') address: string, 
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     ) {
       return this.membersService.findMembership(id, address);
   }
 
   @Get(':id')
-  async getAgreement(@Param('id', MongooseObjectIdPipe) id) {
+  async getAgreement(@Param('id') id: string) {
     return this.agreementsService.findOneAgreementById(id);
   }
 
@@ -64,7 +62,7 @@ export class PaymentAgreementsController {
   @UseGuards(NativeAuthGuard)
   async getAgreementMembers(
     @NativeAuth('address') address: string,
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     @Query() pagination: PaginationParams,
     ) {
     return this.membersService.findAgreementMembers(id, pagination);
@@ -74,7 +72,7 @@ export class PaymentAgreementsController {
   @UseGuards(NativeAuthGuard)
   async updateAgreement(
     @NativeAuth('address') address: string,
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     @Body() dto: UpdateAgreementDto,
   ) {
     return this.agreementsService.updateAgreementById(address, id, dto);
