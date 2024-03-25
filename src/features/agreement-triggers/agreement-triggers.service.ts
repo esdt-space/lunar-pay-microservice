@@ -5,6 +5,7 @@ import { CreateAgreementTriggerDto, UpdateAgreementTriggerDto } from './dto';
 import { AgreementTrigger } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { PaginatedResponse } from '@/common/models/paginated-response';
 
 @Injectable()
 export class AgreementTriggerService {
@@ -51,12 +52,7 @@ export class AgreementTriggerService {
       skip: pagination.skip,
       take: pagination.limit,
     });
-  
-    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
-  
-    return {
-      agreementTriggers: agreementTriggers,
-      numberOfPages: numberOfPages,
-    };
+    
+    return new PaginatedResponse<AgreementTrigger>(agreementTriggers, operationsCount, pagination)
   }
 }

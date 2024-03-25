@@ -3,9 +3,9 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateAgreementDto, UpdateAgreementDto } from './dto';
-import { AgreementDto } from './dto/agreement.dto';
 import PaginationParams from '@/common/models/pagination.params.model';
 import { PaymentAgreement } from './entities';
+import { PaginatedResponse } from '@/common/models/paginated-response';
 
 @Injectable()
 export class PaymentAgreementsService {
@@ -36,10 +36,7 @@ export class PaymentAgreementsService {
       take: pagination.limit,
     });
   
-    return {
-      agreements: result.map(el => new AgreementDto(el)),
-      numberOfPages: Math.ceil(total / pagination.limit),
-    };
+    return new PaginatedResponse<PaymentAgreement>(result, total, pagination)
   }
 
   async createAgreement(address: string, dto: CreateAgreementDto){

@@ -7,6 +7,7 @@ import PaginationParams from '@/common/models/pagination.params.model';
 import TokenOperationFilters from './models/token-operation.filters.model';
 import { TokenOperation } from './entities';
 import { CreateTokenOperationDto } from './dto';
+import { PaginatedResponse } from '@/common/models/paginated-response';
 
 @Injectable()
 export class TokenOperationService {
@@ -44,13 +45,8 @@ export class TokenOperationService {
     queryBuilder.take(pagination.limit);
   
     const [operations, total] = await queryBuilder.getManyAndCount();
-  
-    const numberOfPages = Math.ceil(total / pagination.limit);
-  
-    return {
-      numberOfPages: numberOfPages,
-      operations: operations,
-    };
+    
+    return new PaginatedResponse<TokenOperation>(operations, total, pagination)
   }
 
   async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
@@ -68,11 +64,6 @@ export class TokenOperationService {
     
     const [allOperations, operationsCount] = await queryBuilder.getManyAndCount();
 
-    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
-
-    return {
-      numberOfPages,
-      operations: allOperations,
-    };
+    return new PaginatedResponse<TokenOperation>(allOperations, operationsCount, pagination)
   }
 }

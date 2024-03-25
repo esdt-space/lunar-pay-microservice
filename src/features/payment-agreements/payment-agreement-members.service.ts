@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common';
-
-import { CreateAgreementMemberDto } from './dto';
-import { SignedAgreementDto } from './dto/signed-agreement.dto';
-import PaginationParams from '@/common/models/pagination.params.model';
-import { PaymentAgreement, PaymentAgreementMember } from './entities';
 import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { CreateAgreementMemberDto } from './dto';
+import PaginationParams from '@/common/models/pagination.params.model';
+import { PaymentAgreement, PaymentAgreementMember } from './entities';
+import { PaginatedResponse } from '@/common/models/paginated-response';
+
 @Injectable()
 export class PaymentAgreementMembersService {
-  private static readonly ITEMS_PER_PAGE = 10;
-
   constructor(
     @InjectRepository(PaymentAgreementMember) private readonly agreementMembersRepository: Repository<PaymentAgreementMember>,
     @InjectRepository(PaymentAgreement) private readonly agreementsRepository: Repository<PaymentAgreement>
@@ -27,12 +25,7 @@ export class PaymentAgreementMembersService {
       id: In(agreementIds) 
     });
 
-    const numberOfPages = Math.ceil(operationsCount / PaymentAgreementMembersService.ITEMS_PER_PAGE);
-
-    return {
-      agreements: allSignedAgreements.map(el => new SignedAgreementDto(el)),
-      numberOfPages: numberOfPages
-    };
+    return new PaginatedResponse<PaymentAgreement>(allSignedAgreements, operationsCount, pagination)
   }
 
   async findAgreementMembers(id: string, pagination: PaginationParams = new PaginationParams()) {
@@ -43,12 +36,7 @@ export class PaymentAgreementMembersService {
       order: { createdAt: 'DESC' }
     });
 
-    const numberOfPages = Math.ceil(operationsCount / PaymentAgreementMembersService.ITEMS_PER_PAGE);
-
-    return {
-      memberships: allMemberships,
-      numberOfPages: numberOfPages
-    };
+    return new PaginatedResponse<PaymentAgreementMember>(allMemberships, operationsCount, pagination)
   }
 
   async updateLastChargedAt(member: string, date: Date) {
