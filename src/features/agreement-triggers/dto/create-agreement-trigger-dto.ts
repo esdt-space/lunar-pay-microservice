@@ -1,6 +1,12 @@
-import { Types } from 'mongoose';
+import { IsNotEmpty, IsString } from "class-validator";
+
 
 export class CreateAgreementTriggerDto {
-  agreement: Types.ObjectId;
-  txHash?: string
+  @IsString()
+  @IsNotEmpty()
+  agreement: string;
+
+  @IsString()
+  @IsNotEmpty()
+  txHash: string
 }

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 
 import PaginationParams from '@/common/models/pagination.params.model';
-import { UpdateAgreementTriggerDto } from './dto';
+import { CreateAgreementTriggerDto, UpdateAgreementTriggerDto } from './dto';
 import { AgreementTrigger } from './entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -20,7 +20,7 @@ export class AgreementTriggerService {
     return this.repository.findOneBy({ txHash: hash });
   }
 
-  async create(triggerData: any) {
+  async create(triggerData: CreateAgreementTriggerDto) {
     try {
       const trigger = this.repository.create(triggerData);
 
@@ -31,7 +31,7 @@ export class AgreementTriggerService {
     }
   }
 
-  async createOrUpdate(triggerData: any, updateData: UpdateAgreementTriggerDto, hash: string): Promise<AgreementTrigger> {
+  async createOrUpdate(triggerData: CreateAgreementTriggerDto, updateData: UpdateAgreementTriggerDto, hash: string): Promise<AgreementTrigger> {
     let agreementTrigger = await this.findOneByTxHash(hash)[0];
   
     if (!agreementTrigger) {

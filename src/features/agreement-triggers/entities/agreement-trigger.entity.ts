@@ -17,12 +17,12 @@ export class AgreementTrigger {
   @Column({ type: 'bigint', default: 0 })
   failedChargeAmount: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   failedAccountsCount: number;
   
   @Column({ type: 'varchar' })
   txHash: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   createdAt: string;
 }
