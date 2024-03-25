@@ -22,13 +22,13 @@ export class PaymentAgreementMember {
   @Column({ type: 'enum', enum: AgreementMemberStatus, default: AgreementMemberStatus.Active })
   status: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   lastChargedAt: string;
   
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   lastSuccessfulCharge: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   canceledAt: string;
 
   @Column({ type: 'date' })
