@@ -35,7 +35,7 @@ export class CreateTokenOperationDto {
 
   @IsString()
   @IsOptional()
-  agreementTriggerId?: string;
+  subscriptionTriggerId?: string;
 
   @IsString()
   @IsOptional()
@@ -47,7 +47,7 @@ export class CreateTokenOperationDto {
 
   @IsString()
   @IsOptional()
-  agreement?: string;
+  subscription?: string;
 
   @IsString()
   @IsOptional()

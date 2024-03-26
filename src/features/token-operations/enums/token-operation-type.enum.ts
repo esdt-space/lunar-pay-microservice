@@ -5,4 +5,5 @@ export enum TokenOperationType {
   PAYMENT_AGREEMENT_CHARGE = 'payment-agreement-charge',
   PAYMENT = 'payment',
   DONATION = 'donation',
+  SUBSCRIPTION_CHARGE = 'subscription-charge',
 }

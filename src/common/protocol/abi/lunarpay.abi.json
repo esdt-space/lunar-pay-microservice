@@ -23,56 +23,15 @@
     },
     "endpoints": [
         {
-            "docs": [
-                "Protocol Storage "
-            ],
-            "name": "getWhitelistedTokenIds",
-            "mutability": "readonly",
+            "name": "upgrade",
+            "mutability": "mutable",
             "inputs": [],
-            "outputs": [
-                {
-                    "type": "variadic<EgldOrEsdtTokenIdentifier>",
-                    "multi_result": true
-                }
-            ]
-        },
-        {
-            "name": "getUsedTokenIds",
-            "mutability": "readonly",
-            "inputs": [],
-            "outputs": [
-                {
-                    "type": "variadic<EgldOrEsdtTokenIdentifier>",
-                    "multi_result": true
-                }
-            ]
-        },
-        {
-            "name": "getWhitelistedAddresses",
-            "mutability": "readonly",
-            "inputs": [],
-            "outputs": [
-                {
-                    "type": "variadic<Address>",
-                    "multi_result": true
-                }
-            ]
+            "outputs": []
         },
         {
             "docs": [
-                "Agreement Storage ",
-                "Stores the last ID assigned to an agreement *"
+                "TODO: Delete everything below *"
             ],
-            "name": "getLastAgreementId",
-            "mutability": "readonly",
-            "inputs": [],
-            "outputs": [
-                {
-                    "type": "u64"
-                }
-            ]
-        },
-        {
             "name": "getAgreementIds",
             "mutability": "readonly",
             "inputs": [],
@@ -138,64 +97,49 @@
             ]
         },
         {
-            "name": "depositEgld",
-            "mutability": "mutable",
-            "payableInTokens": [
-                "EGLD"
-            ],
-            "inputs": [],
-            "outputs": []
-        },
-        {
-            "name": "withdrawEgld",
-            "mutability": "mutable",
-            "inputs": [
-                {
-                    "name": "amount",
-                    "type": "BigUint"
-                }
-            ],
-            "outputs": []
-        },
-        {
-            "name": "depositEsdt",
-            "mutability": "mutable",
-            "payableInTokens": [
-                "*"
-            ],
-            "inputs": [],
-            "outputs": []
-        },
-        {
-            "name": "withdrawEsdt",
-            "mutability": "mutable",
-            "inputs": [
-                {
-                    "name": "token",
-                    "type": "EgldOrEsdtTokenIdentifier"
-                },
-                {
-                    "name": "amount",
-                    "type": "BigUint"
-                }
-            ],
-            "outputs": []
-        },
-        {
-            "docs": [
-                "\\n     * It returns the total account balances\\n     "
-            ],
-            "name": "getAccountBalances",
+            "name": "isUserAdmin",
             "mutability": "readonly",
             "inputs": [
                 {
-                    "name": "address",
+                    "name": "account",
                     "type": "Address"
                 }
             ],
             "outputs": [
                 {
-                    "type": "variadic<tuple<EgldOrEsdtTokenIdentifier,BigUint>>",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "getWhitelistedTokenIds",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<EgldOrEsdtTokenIdentifier>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getUsedTokenIds",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<EgldOrEsdtTokenIdentifier>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getWhitelistedAddresses",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<Address>",
                     "multi_result": true
                 }
             ]
@@ -249,6 +193,106 @@
             "outputs": []
         },
         {
+            "name": "setAdmin",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "account",
+                    "type": "Address"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "removeAdmin",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "account",
+                    "type": "Address"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "\\n     * It returns the total account balances\\n     "
+            ],
+            "name": "getAccountBalances",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<tuple<EgldOrEsdtTokenIdentifier,BigUint>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "depositEgld",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "EGLD"
+            ],
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "withdrawEgld",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "amount",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "depositEsdt",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "*"
+            ],
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "withdrawEsdt",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "token",
+                    "type": "EgldOrEsdtTokenIdentifier"
+                },
+                {
+                    "name": "amount",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "Stores the last ID assigned to an agreement *"
+            ],
+            "name": "getLastAgreementId",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        },
+        {
             "name": "transferTokens",
             "mutability": "mutable",
             "inputs": [
@@ -263,6 +307,168 @@
                 {
                     "name": "receiver",
                     "type": "Address"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "pay",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "token",
+                    "type": "EgldOrEsdtTokenIdentifier"
+                },
+                {
+                    "name": "amount",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "receiver",
+                    "type": "Address"
+                },
+                {
+                    "name": "metadata",
+                    "type": "Option<bytes>"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getSubscriptionIds",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<u64>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Stores the IDs for all the subscriptions created by an account *"
+            ],
+            "name": "getAccountSubscriptionsCreatedList",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<u64>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Stores the IDs for all subscription signed by an account *"
+            ],
+            "name": "getAccountSubscriptionsMembershipList",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<u64>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "createSubscription",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "token_identifier",
+                    "type": "EgldOrEsdtTokenIdentifier"
+                },
+                {
+                    "name": "frequency",
+                    "type": "u64"
+                },
+                {
+                    "name": "subscription_type",
+                    "type": "SubscriptionType"
+                },
+                {
+                    "name": "amount_type",
+                    "type": "SubscriptionAmountType"
+                },
+                {
+                    "name": "amount",
+                    "type": "Option<BigUint>"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "addSubscriptionMember",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64"
+                },
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "cancelSubscriptionMembership",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64"
+                },
+                {
+                    "name": "address",
+                    "type": "Option<Address>"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "\\n     * Subscribe to a subscription\\n     "
+            ],
+            "name": "createSubscriptionMembership",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64"
+                },
+                {
+                    "name": "amount",
+                    "type": "Option<BigUint>"
+                },
+                {
+                    "name": "metadata",
+                    "type": "Option<bytes>"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "triggerSubscription",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64"
                 }
             ],
             "outputs": []
@@ -304,6 +510,10 @@
                 {
                     "name": "agreement_id",
                     "type": "u64"
+                },
+                {
+                    "name": "metadata",
+                    "type": "Option<bytes>"
                 }
             ],
             "outputs": []
@@ -321,6 +531,145 @@
         }
     ],
     "events": [
+        {
+            "identifier": "createPaymentAgreement",
+            "inputs": [
+                {
+                    "name": "agreement_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "owner",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "token_nonce",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "token_identifier",
+                    "type": "EgldOrEsdtTokenIdentifier",
+                    "indexed": true
+                },
+                {
+                    "name": "frequency",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "time_created",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "agreement_type",
+                    "type": "AgreementType",
+                    "indexed": true
+                },
+                {
+                    "name": "amount_type",
+                    "type": "AgreementAmountType",
+                    "indexed": true
+                },
+                {
+                    "name": "fixed_amount",
+                    "type": "BigUint",
+                    "indexed": true
+                },
+                {
+                    "name": "minimum_amount",
+                    "type": "BigUint",
+                    "indexed": true
+                },
+                {
+                    "name": "maximum_amount",
+                    "type": "BigUint",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "signPaymentAgreement",
+            "inputs": [
+                {
+                    "name": "agreement_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "member",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "signed_at",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "metadata",
+                    "type": "Option<bytes>",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "cancelPaymentAgreement",
+            "inputs": []
+        },
+        {
+            "identifier": "successfulAgreementCharges",
+            "inputs": [
+                {
+                    "name": "agreement_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "accounts",
+                    "type": "List<Address>",
+                    "indexed": true
+                },
+                {
+                    "name": "amounts",
+                    "type": "List<BigUint>",
+                    "indexed": true
+                },
+                {
+                    "name": "cycles",
+                    "type": "List<u64>",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "failedAgreementCharges",
+            "inputs": [
+                {
+                    "name": "agreement_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "accounts",
+                    "type": "List<Address>",
+                    "indexed": true
+                },
+                {
+                    "name": "amounts",
+                    "type": "List<BigUint>",
+                    "indexed": true
+                },
+                {
+                    "name": "cycles",
+                    "type": "List<u64>",
+                    "indexed": true
+                }
+            ]
+        },
         {
             "identifier": "deposit",
             "inputs": [
@@ -407,10 +756,45 @@
             ]
         },
         {
-            "identifier": "createPaymentAgreement",
+            "identifier": "payment",
             "inputs": [
                 {
-                    "name": "agreement_id",
+                    "name": "sender",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "receiver",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "token_identifier",
+                    "type": "EgldOrEsdtTokenIdentifier",
+                    "indexed": true
+                },
+                {
+                    "name": "token_nonce",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "amount",
+                    "type": "BigUint",
+                    "indexed": true
+                },
+                {
+                    "name": "metadata",
+                    "type": "Option<bytes>",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "createSubscription",
+            "inputs": [
+                {
+                    "name": "id",
                     "type": "u64",
                     "indexed": true
                 },
@@ -440,37 +824,27 @@
                     "indexed": true
                 },
                 {
-                    "name": "agreement_type",
-                    "type": "AgreementType",
+                    "name": "subscription_type",
+                    "type": "SubscriptionType",
                     "indexed": true
                 },
                 {
                     "name": "amount_type",
-                    "type": "AgreementAmountType",
+                    "type": "SubscriptionAmountType",
                     "indexed": true
                 },
                 {
-                    "name": "fixed_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "minimum_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "maximum_amount",
-                    "type": "BigUint",
+                    "name": "amount",
+                    "type": "Option<BigUint>",
                     "indexed": true
                 }
             ]
         },
         {
-            "identifier": "signPaymentAgreement",
+            "identifier": "createSubscriptionMembership",
             "inputs": [
                 {
-                    "name": "agreement_id",
+                    "name": "id",
                     "type": "u64",
                     "indexed": true
                 },
@@ -480,62 +854,38 @@
                     "indexed": true
                 },
                 {
-                    "name": "signed_at",
+                    "name": "created_at",
                     "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "metadata",
+                    "type": "Option<bytes>",
                     "indexed": true
                 }
             ]
         },
         {
-            "identifier": "cancelPaymentAgreement",
-            "inputs": []
-        },
-        {
-            "identifier": "successfulAgreementCharges",
+            "identifier": "chargeSubscription",
             "inputs": [
                 {
-                    "name": "agreement_id",
+                    "name": "id",
                     "type": "u64",
                     "indexed": true
                 },
                 {
-                    "name": "accounts",
-                    "type": "List<Address>",
+                    "name": "member",
+                    "type": "Address",
                     "indexed": true
                 },
                 {
-                    "name": "amounts",
-                    "type": "List<BigUint>",
-                    "indexed": true
-                },
-                {
-                    "name": "cycles",
-                    "type": "List<u64>",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "failedAgreementCharges",
-            "inputs": [
-                {
-                    "name": "agreement_id",
+                    "name": "timestamp",
                     "type": "u64",
                     "indexed": true
                 },
                 {
-                    "name": "accounts",
-                    "type": "List<Address>",
-                    "indexed": true
-                },
-                {
-                    "name": "amounts",
-                    "type": "List<BigUint>",
-                    "indexed": true
-                },
-                {
-                    "name": "cycles",
-                    "type": "List<u64>",
+                    "name": "data",
+                    "type": "SubscriptionChargeData",
                     "indexed": true
                 }
             ]
@@ -611,6 +961,57 @@
                 {
                     "name": "maximum_amount",
                     "type": "Option<BigUint>"
+                }
+            ]
+        },
+        "SubscriptionAmountType": {
+            "type": "enum",
+            "variants": [
+                {
+                    "name": "FixedAmount",
+                    "discriminant": 0
+                },
+                {
+                    "name": "MemberDefinedAmount",
+                    "discriminant": 1
+                },
+                {
+                    "name": "OwnerDefinedAmountPerMember",
+                    "discriminant": 2
+                }
+            ]
+        },
+        "SubscriptionChargeData": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "successful",
+                    "type": "Option<tuple<BigUint,u64>>"
+                },
+                {
+                    "name": "failed",
+                    "type": "Option<tuple<BigUint,u64>>"
+                }
+            ]
+        },
+        "SubscriptionType": {
+            "type": "enum",
+            "variants": [
+                {
+                    "name": "RecurringPayoutToSend",
+                    "discriminant": 0
+                },
+                {
+                    "name": "RecurringPayoutToReceive",
+                    "discriminant": 1
+                },
+                {
+                    "name": "TermRestrictedPayoutToSend",
+                    "discriminant": 2
+                },
+                {
+                    "name": "TermRestrictedPayoutToReceive",
+                    "discriminant": 3
                 }
             ]
         }

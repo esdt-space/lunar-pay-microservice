@@ -10,4 +10,7 @@ export enum EventIdentifier {
   SUCCESSFUL_AGREEMENT_CHARGES = 'successfulAgreementCharges',
   FAILED_AGREEMENT_CHARGES = 'failedAgreementCharges',
   PAYMENT = 'pay',
+  CREATE_SUBSCRIPTION = 'createSubscription',
+  CREATE_SUBSCRIPTION_MEMBERSHIP = 'createSubscriptionMembership',
+  TRIGGER_SUBSCRIPTION = 'chargeSubscription',
 }

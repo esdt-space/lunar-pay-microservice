@@ -5,3 +5,6 @@ export * from './payment-agreement/create/create-payment-agreement.event';
 export * from './payment-agreement/sign/sign-payment-agreement.event';
 export * from './payment-agreement/claim/trigger-agreement-event'
 export * from './payment/payment-event'
+export * from './subscription/create/create-subscription.event';
+export * from './subscription/sign/sign-subscription.event';
+export * from './subscription/claim/trigger-subscription-event'

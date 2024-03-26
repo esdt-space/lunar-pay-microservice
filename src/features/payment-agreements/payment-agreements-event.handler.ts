@@ -47,13 +47,13 @@ export class PaymentAgreementsEventHandler {
       sender: eventData.address,
       senderAccountsCount: null,
       receiver: agreement.owner,
-      agreementTriggerId: null,
+      subscriptionTriggerId: null,
       amount: agreement.fixedAmount,
       tokenIdentifier: agreement.tokenIdentifier,
       tokenNonce: agreement.tokenNonce,
-      type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
+      type: TokenOperationType.SUBSCRIPTION_CHARGE,
       txHash: event.txHash,
-      agreement: agreement.id,
+      subscription: agreement.id,
       details: 'Initial charge',
       isInternal: true
     });
@@ -108,10 +108,10 @@ export class PaymentAgreementsEventHandler {
     const updateTriggerData = new UpdateAgreementTriggerDto()
 
     if(event.name === "failedAgreementCharges") {
-      eventData.accounts.forEach((el, index) => {
-        const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, agreement.frequency, eventData)
-        this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
-      })
+      // eventData.accounts.forEach((el, index) => {
+      //   const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, agreement.frequency, eventData)
+      //   this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
+      // })
 
       updateTriggerData.failedChargeAmount = totalAmount
       updateTriggerData.failedAccountsCount = eventData.accounts.length
@@ -127,14 +127,14 @@ export class PaymentAgreementsEventHandler {
         sender: null,
         senderAccountsCount: eventData.accounts.length,
         receiver: agreement.owner,
-        agreementTriggerId: null,
+        subscriptionTriggerId: null,
         status: TokenOperationStatus.SUCCESS,
         amount: totalAmount,
         tokenIdentifier: agreement.tokenIdentifier,
         tokenNonce: agreement.tokenNonce,
-        type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
+        type: TokenOperationType.SUBSCRIPTION_CHARGE,
         txHash: event.txHash,
-        agreement: agreement.id,
+        subscription: agreement.id,
         parentId: null,
         details: 'Recurring Charge',
         isInternal: true,
@@ -146,14 +146,14 @@ export class PaymentAgreementsEventHandler {
           sender: el,
           senderAccountsCount: null,
           receiver: null,
-          agreementTriggerId: agreementTrigger.id,
+          subscriptionTriggerId: agreementTrigger.id,
           status: TokenOperationStatus.SUCCESS,
           amount: memberAmount(index),
           tokenIdentifier: agreement.tokenIdentifier,
           tokenNonce: agreement.tokenNonce,
-          type: TokenOperationType.PAYMENT_AGREEMENT_CHARGE,
+          type: TokenOperationType.SUBSCRIPTION_CHARGE,
           txHash: event.txHash,
-          agreement: agreement.id,
+          subscription: agreement.id,
           parentId: providerOperation[0].id,
           details: 'Recurring Charge',
           isInternal: true,

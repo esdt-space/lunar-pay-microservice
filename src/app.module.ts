@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { validate } from '@/config/validation';
 import { CachingModule } from '@/libs/caching';
@@ -28,10 +27,14 @@ import { PaymentsModule } from './features/payment/payment.module';
 import { TokenOperationController } from '@/features/token-operations/token-operation.controller';
 import { EventsNotifierModule } from '@/events-notifier';
 import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
+import { SubscriptionTriggerModule } from './features/subscription-triggers/subscription-triggers.module';
+import { SubscriptionsModule } from './features/subscriptions/subscriptions.module';
 import { AgreementTriggersController } from './features/agreement-triggers/agreement-triggers.controller';
 import { DonationsController } from './features/donations/donations.controller';
 import { EventController } from './features/event/event.controller';
 import { EventModule } from './features/event/event.module';
+import { SubscriptionsController } from './features/subscriptions/subscriptions.controller';
+import { SubscriptionTriggersController } from './features/subscription-triggers/subscription-triggers.controller';
 
 @Module({
   imports: [
@@ -56,6 +59,8 @@ import { EventModule } from './features/event/event.module';
     AgreementTriggerModule,
     PaymentAgreementsModule,
     DonationsModule,
+    SubscriptionTriggerModule,
+    SubscriptionsModule,
     TokenOperationModule,
     PaymentsModule,
 
@@ -72,6 +77,8 @@ import { EventModule } from './features/event/event.module';
     AgreementTriggersController,
     PaymentAgreementsController,
     DonationsController,
+    SubscriptionTriggersController,
+    SubscriptionsController,
     TokenOperationController,
 
     VaultController,
