@@ -16,12 +16,13 @@ export class PaymentAgreementsService {
   async countUsersAgreements() {
     const agreementsCount = await this.repository.query(`
       SELECT
-        owner AS userId,
-        JSON_AGG(JSON_BUILD_OBJECT('type', 'agreement-created', 'count', count)) AS actions
+        owner AS "userId",
+        JSON_AGG(JSON_BUILD_OBJECT('type', 'agreement-created', 'count', count)) AS actions,
+        SUM(count) AS "allActions"
       FROM (
         SELECT
           owner,
-          'agreement-created' AS type, -- Assuming every agreement is considered as 'agreement-created'
+          'agreement-created' AS type,
           COUNT(*) AS count
         FROM
           payment_agreement
@@ -32,8 +33,12 @@ export class PaymentAgreementsService {
         owner
     `);
   
-    return agreementsCount;
-  }
+    return agreementsCount.map(row => ({
+      userId: row.userId,
+      actions: row.actions,
+      allActions: parseInt(row.allActions, 10)
+    }));
+  };
 
   async findOneAgreementById(id: string): Promise<PaymentAgreement> {
     return this.repository.findOneBy({ id });

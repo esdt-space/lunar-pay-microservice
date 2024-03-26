@@ -4,7 +4,7 @@ export type UserAction = {
 }
 
 export type UserActionsCount = {
-  _id: string;
+  userId: string;
   allActions: number;
   actions: UserAction[];
 }

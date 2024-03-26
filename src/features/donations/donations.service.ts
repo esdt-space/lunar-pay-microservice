@@ -16,12 +16,13 @@ export class DonationsService {
   async countUsersDonations() {
     const donationsCount = await this.repository.query(`
       SELECT
-        owner AS userId,
-        JSON_AGG(JSON_BUILD_OBJECT('type', 'donation-created', 'count', count)) AS actions
+        owner AS "userId",
+        JSON_AGG(JSON_BUILD_OBJECT('type', 'donation-created', 'count', count)) AS actions,
+        SUM(count) AS "allActions"
       FROM (
         SELECT
           owner,
-          'donation-created' AS type, -- Assuming every donation is considered as 'donation-created'
+          'donation-created' AS type,
           COUNT(*) AS count
         FROM
           donation
@@ -32,8 +33,12 @@ export class DonationsService {
         owner
     `);
   
-    return donationsCount;
-  }
+    return donationsCount.map(row => ({
+      userId: row.userId,
+      actions: row.actions,
+      allActions: parseInt(row.allActions, 10)
+    }));
+  };
 
   async findOneDonationById(id: string) {
     return this.repository.findOneBy({ id });
@@ -47,7 +52,6 @@ export class DonationsService {
       where: { owner: address },
       take: pagination.limit,
       skip: pagination.skip,
-      order: { createdAt: 'DESC' }
     });
 
     return new PaginatedResponse<Donation>(donationsList, donationsCount, pagination);
@@ -93,7 +97,6 @@ export class DonationsService {
       ...dto,
       owner: address,
       totalAmount: '',
-      createdAt: Date.now()
     });
 
     return this.repository.save(donation);

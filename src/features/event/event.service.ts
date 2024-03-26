@@ -13,13 +13,13 @@ export class EventService {
     private readonly paymentAgreementsService: PaymentAgreementsService,
   ) {}
 
-  async findUsersActions() {
-    const donationsCount = await this.donationsService.countUsersDonations()
-    const tokenOperationsCount = await this.tokenOperationsService.countUsersTokenOperations()
-    const agreementsCount = await this.paymentAgreementsService.countUsersAgreements()
+  async findUsersActions(){
+    const donationsCount = await this.donationsService.countUsersDonations();
+    const tokenOperationsCount = await this.tokenOperationsService.countUsersTokenOperations();
+    const agreementsCount = await this.paymentAgreementsService.countUsersAgreements();
 
     const result = mergeActionCounts([donationsCount, agreementsCount, tokenOperationsCount])
-    const sortedResult = result.filter(item => item._id !== null).sort((a,b) => b.allActions - a.allActions)
+    const sortedResult = result.filter(item => item.userId !== null).sort((a,b) => b.allActions - a.allActions)
     const totalRecords = sortedResult.length
 
     return {

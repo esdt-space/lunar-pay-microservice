@@ -23,7 +23,8 @@ export class TokenOperationService {
     const tokenOperationsCount = await this.repository.query(`
       SELECT
         userId,
-        JSON_AGG(JSON_BUILD_OBJECT('type', type, 'count', count)) AS actions
+        JSON_AGG(JSON_BUILD_OBJECT('type', type, 'count', count)) AS actions,
+        SUM(count) AS "allActions"
       FROM (
         SELECT
           CASE
@@ -41,8 +42,12 @@ export class TokenOperationService {
         userId
     `);
   
-    return tokenOperationsCount;
-  }
+    return tokenOperationsCount.map(row => ({
+      userId: row.userId,
+      actions: row.actions,
+      allActions: parseInt(row.allActions, 10)
+    }));
+  };
 
   async findOneById(id: string): Promise<TokenOperation> {
     return this.repository.findOneBy({ id });
