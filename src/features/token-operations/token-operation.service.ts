@@ -22,7 +22,7 @@ export class TokenOperationService {
   async countUsersTokenOperations() {
     const tokenOperationsCount = await this.repository.query(`
       SELECT
-        userId,
+        "userId",
         JSON_AGG(JSON_BUILD_OBJECT('type', type, 'count', count)) AS actions,
         SUM(count) AS "allActions"
       FROM (
@@ -30,16 +30,19 @@ export class TokenOperationService {
           CASE
             WHEN type IN ('deposit', 'transfer', 'payment', 'donation') THEN sender
             ELSE receiver
-          END AS userId,
+          END AS "userId",
           type,
           COUNT(*) AS count
         FROM
           token_operation
         GROUP BY
-          userId, type
+          CASE
+            WHEN type IN ('deposit', 'transfer', 'payment', 'donation') THEN sender
+            ELSE receiver
+          END, type
       ) AS grouped_operations
       GROUP BY
-        userId
+        "userId"
     `);
   
     return tokenOperationsCount.map(row => ({
