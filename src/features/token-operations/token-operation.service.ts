@@ -11,13 +11,37 @@ import { PaginatedResponse } from '@/common/models/paginated-response';
 
 @Injectable()
 export class TokenOperationService {
-  
   logger = new Logger();
 
   constructor(
     @InjectRepository(TokenOperation)  private readonly repository: Repository<TokenOperation>
   ) {
     this.logger = new Logger(this.constructor.name);
+  }
+
+  async countUsersTokenOperations() {
+    const tokenOperationsCount = await this.repository.query(`
+      SELECT
+        userId,
+        JSON_AGG(JSON_BUILD_OBJECT('type', type, 'count', count)) AS actions
+      FROM (
+        SELECT
+          CASE
+            WHEN type IN ('deposit', 'transfer', 'payment', 'donation') THEN sender
+            ELSE receiver
+          END AS userId,
+          type,
+          COUNT(*) AS count
+        FROM
+          token_operation
+        GROUP BY
+          userId, type
+      ) AS grouped_operations
+      GROUP BY
+        userId
+    `);
+  
+    return tokenOperationsCount;
   }
 
   async findOneById(id: string): Promise<TokenOperation> {

@@ -13,6 +13,7 @@ import {
   CreatePaymentAgreementEvent,
   SignPaymentAgreementEvent,
   TriggerAgreementEvent,
+  PaymentEvent,
 } from './events';
 
 type QueuePayload = Record<string, unknown> & {
@@ -74,6 +75,9 @@ export class EventsNotifierService {
 
       case EventIdentifier.TRIGGER_AGREEMENT:
         return new TriggerAgreementEvent(rawEvent);
+
+      case EventIdentifier.PAYMENT:
+        return new PaymentEvent(rawEvent);
     }
   }
 }

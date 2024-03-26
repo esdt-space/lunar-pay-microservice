@@ -13,6 +13,28 @@ export class PaymentAgreementsService {
     @InjectRepository(PaymentAgreement)  private readonly repository: Repository<PaymentAgreement>
   ) {}
 
+  async countUsersAgreements() {
+    const agreementsCount = await this.repository.query(`
+      SELECT
+        owner AS userId,
+        JSON_AGG(JSON_BUILD_OBJECT('type', 'agreement-created', 'count', count)) AS actions
+      FROM (
+        SELECT
+          owner,
+          'agreement-created' AS type, -- Assuming every agreement is considered as 'agreement-created'
+          COUNT(*) AS count
+        FROM
+          payment_agreement
+        GROUP BY
+          owner
+      ) AS grouped_agreements
+      GROUP BY
+        owner
+    `);
+  
+    return agreementsCount;
+  }
+
   async findOneAgreementById(id: string): Promise<PaymentAgreement> {
     return this.repository.findOneBy({ id });
   }

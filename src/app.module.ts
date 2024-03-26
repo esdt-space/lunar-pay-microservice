@@ -23,10 +23,15 @@ import { PaymentAgreementsController } from '@/features/payment-agreements/payme
 import { VaultController } from '@/common/protocol/vault/vault.controller';
 import { VaultModule } from '@/common/protocol/vault/vault.module';
 import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
+import { DonationsModule } from './features/donations/donations.module';
+import { PaymentsModule } from './features/payment/payment.module';
 import { TokenOperationController } from '@/features/token-operations/token-operation.controller';
 import { EventsNotifierModule } from '@/events-notifier';
 import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
 import { AgreementTriggersController } from './features/agreement-triggers/agreement-triggers.controller';
+import { DonationsController } from './features/donations/donations.controller';
+import { EventController } from './features/event/event.controller';
+import { EventModule } from './features/event/event.module';
 
 @Module({
   imports: [
@@ -50,10 +55,14 @@ import { AgreementTriggersController } from './features/agreement-triggers/agree
 
     AgreementTriggerModule,
     PaymentAgreementsModule,
+    DonationsModule,
     TokenOperationModule,
+    PaymentsModule,
 
     VaultModule,
     EventsNotifierModule,
+
+    EventModule,
   ],
   controllers: [
     AccountController,
@@ -62,9 +71,12 @@ import { AgreementTriggersController } from './features/agreement-triggers/agree
 
     AgreementTriggersController,
     PaymentAgreementsController,
+    DonationsController,
     TokenOperationController,
 
     VaultController,
+
+    EventController,
   ],
 })
 export default class AppModule {}
