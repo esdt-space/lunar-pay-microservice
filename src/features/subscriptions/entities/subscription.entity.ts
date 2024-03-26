@@ -19,10 +19,10 @@ export class Subscription {
   @Column({ type: 'varchar' })
   tokenIdentifier: string;
 
-  @Column({ type: 'enum', enum: SubscriptionType })
+  @Column({ type: 'enum', enum: SubscriptionType, default: SubscriptionType.RecurringPayoutToReceive })
   subscriptionType: string;
 
-  @Column({ type: 'enum', enum: SubscriptionAmountType })
+  @Column({ type: 'enum', enum: SubscriptionAmountType, default: SubscriptionAmountType.FixedAmount })
   amountType: string;
 
   @Column({ type: 'int' })
