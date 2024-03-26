@@ -9,31 +9,31 @@ export class CreateSubscriptionDto {
   @IsNotEmpty()
   subscriptionIdentifier: number;
 
-  @IsString()
-  @IsNotEmpty()
-  tokenIdentifier: string;
-
   @IsNumber()
   @IsNotEmpty()
   tokenNonce: number;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  subscriptionType: number;
+  tokenIdentifier: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  amountType: number;
+  subscriptionType: string;
+
+  @IsString()
+  @IsNotEmpty()
+  amountType: string;
 
   @IsNumber()
   @IsNotEmpty()
   frequency: number;
 
-  @IsDate()
-  @IsNotEmpty()
-  createdAt: Date;
-
   @IsOptional()
   @IsString()
   fixedAmount: string | undefined;
+
+  @IsDate()
+  @IsNotEmpty()
+  createdAt: Date;
 }

@@ -1,59 +1,83 @@
-import { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-import { Subscription } from './subscription.schema';
 import { CreateSubscriptionDto, UpdateSubscriptionDto } from './dto';
-import { SubscriptionRepository } from './subscription.repository';
-import { SubscriptionDto } from './dto/subscription.dto';
 import PaginationParams from '@/common/models/pagination.params.model';
+import { Subscription } from './entities';
+import { PaginatedResponse } from '@/common/models/paginated-response';
 
 @Injectable()
 export class SubscriptionsService {
-  constructor(private readonly repository: SubscriptionRepository) {}
+  constructor(
+    @InjectRepository(Subscription)  private readonly repository: Repository<Subscription>
+  ) {}
 
-  async findOneSubscriptionById(id: Types.ObjectId): Promise<Subscription> {
-    return this.repository.model.findOne({ _id: id });
+  async countUsersSubscriptions() {
+    const subscriptionsCount = await this.repository.query(`
+      SELECT
+        owner AS "userId",
+        JSON_AGG(JSON_BUILD_OBJECT('type', 'subscription-created', 'count', count)) AS actions,
+        SUM(count) AS "allActions"
+      FROM (
+        SELECT
+          owner,
+          'subscription-created' AS type,
+          COUNT(*) AS count
+        FROM
+          subscription
+        GROUP BY
+          owner
+      ) AS grouped_subscriptions
+      GROUP BY
+        owner
+    `);
+  
+    return subscriptionsCount.map(row => ({
+      userId: row.userId,
+      actions: row.actions,
+      allActions: parseInt(row.allActions, 10)
+    }));
+  };
+
+  async findOneSubscriptionById(id: string): Promise<Subscription> {
+    return this.repository.findOneBy({ id });
   }
 
   async findOneByIdSmartContractId(id: number): Promise<Subscription> {
-    return this.repository.model.findOne({ subscriptionIdentifier: id });
+    return this.repository.findOneBy({ subscriptionIdentifier: id });
   }
 
   async findLatestSubscriptionCreatedByAccount(
     address: string,
   ): Promise<Subscription> {
-    return this.repository.model
-      .findOne({ owner: address })
-      .sort({ _id: 'desc' });
+    return this.repository.findOne({
+      where: { owner: address },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async findSubscriptionsCreatedByAccount(
     address: string,
     pagination: PaginationParams = new PaginationParams()
   ) {
-    const operationsCount = await this.repository.model.find({ owner: address }).countDocuments({});
-    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
-
-    const subscriptionsList: Subscription[] = await this.repository.model
-      .find({ owner: address })
-      .skip(pagination.skip)
-      .limit(pagination.limit)
-      .sort({ createdAt: 'desc' })
-      .lean();
-
-    return {
-      subscriptions: subscriptionsList.map((el) => {
-        return new SubscriptionDto(el);
-      }),
-      numberOfPages: numberOfPages
-    };
+    const [result, total] = await this.repository.findAndCount({
+      where: { owner: address },
+      order: { createdAt: 'DESC' },
+      skip: pagination.skip,
+      take: pagination.limit,
+    });
+  
+    return new PaginatedResponse<Subscription>(result, total, pagination)
   }
 
-  async createSubscription(address: string, dto: any): Promise<Subscription> {
-    return this.repository.model.create({
+  async createSubscription(address: string, dto: any) {
+    const agreement = this.repository.create({
       ...dto,
       owner: address,
     });
+  
+    return await this.repository.save(agreement);
   }
 
   async updateSubscriptionById(
@@ -61,32 +85,25 @@ export class SubscriptionsService {
     id: string,
     dto: UpdateSubscriptionDto,
   ): Promise<Subscription> {
-    return this.repository.model.findOneAndUpdate({ _id: id, owner: address }, {
-      ...dto,
-    });
+    let agreement = await this.repository.findOneBy({ id, owner: address });
+
+    if (agreement) {
+      agreement = { ...agreement, ...dto };
+      return this.repository.save(agreement);
+    }
+
+    return null;
   }
 
   create(dto: CreateSubscriptionDto) {
-    return this.repository.model.create({
-      owner: dto.owner,
-      createdAt: dto.createdAt,
-      subscriptionIdentifier: dto.subscriptionIdentifier,
-
-      tokenNonce: dto.tokenNonce,
-      tokenIdentifier: dto.tokenIdentifier,
-
-      frequency: dto.frequency,
-      amountType: dto.amountType,
-      subscriptionType: dto.subscriptionType,
-
-      fixedAmount: dto.fixedAmount,
+    const agreement = this.repository.create({
+      ...dto,
     });
+
+    return this.repository.save(agreement);
   }
 
-  async incrementMembersCount(id: Types.ObjectId): Promise<void> {
-    await this.repository.model.findOneAndUpdate(
-      { _id: id },
-      { $inc: { accountsCount: 1 } },
-    );
+  async incrementMembersCount(id: string): Promise<void> {
+    await this.repository.increment({ id }, 'accountsCount', 1);
   }
 }

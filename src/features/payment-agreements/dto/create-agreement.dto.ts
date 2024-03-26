@@ -21,7 +21,7 @@ export class CreateAgreementDto {
   @IsNotEmpty()
   agreementType: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   amountType: string;
 

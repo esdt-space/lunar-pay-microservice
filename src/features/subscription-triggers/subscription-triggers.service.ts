@@ -1,28 +1,31 @@
-import { Types } from 'mongoose';
 import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import PaginationParams from '@/common/models/pagination.params.model';
-import { PaginatedResponse } from '@/common/models/paginated-response';
-
-import { SubscriptionTrigger } from './subscription-trigger.schema';
-import { SubscriptionTriggerRepository } from './subscription-trigger.repository';
 import { CreateSubscriptionTriggerDto, UpdateSubscriptionTriggerDto } from './dto';
+import { SubscriptionTrigger } from './entities';
+import { PaginatedResponse } from '@/common/models/paginated-response';
 
 @Injectable()
 export class SubscriptionTriggerService {
   logger = new Logger();
 
-  constructor(private readonly repository: SubscriptionTriggerRepository) {
+  constructor(
+    @InjectRepository(SubscriptionTrigger)  private readonly repository: Repository<SubscriptionTrigger>
+  ) {
     this.logger = new Logger(this.constructor.name);
   }
 
   async findOneByTxHash(hash: string): Promise<SubscriptionTrigger> {
-    return this.repository.model.findOne({ txHash: hash }).exec();
+    return this.repository.findOneBy({ txHash: hash });
   }
 
   async create(triggerData: CreateSubscriptionTriggerDto): Promise<SubscriptionTrigger> {
     try {
-      return await this.repository.model.create(triggerData);
+      const subscriptionTrigger = this.repository.create(triggerData);
+
+      return await this.repository.save(subscriptionTrigger);
     } catch (e: any) {
       this.logger.error('create_subscription_trigger', { error: e.stack });
     }
@@ -34,27 +37,24 @@ export class SubscriptionTriggerService {
     let subscriptionTrigger = await this.findOneByTxHash(hash);
 
     if(!subscriptionTrigger) {
-      subscriptionTrigger = await this.create(triggerData);
+      const subscriptionTrigger = await this.create(triggerData);
+
+      return this.repository.save(subscriptionTrigger);
+    } else {
+      subscriptionTrigger = { ...subscriptionTrigger, ...updateData };
+
+      return this.repository.save(subscriptionTrigger);
     }
-
-    await this.repository.model.updateOne({ txHash: hash }, updateData);
-
-    return subscriptionTrigger;
   }
 
-  async findAllSubscriptionTriggers(subscription: Types.ObjectId, pagination: PaginationParams = new PaginationParams()) {
-    const operationsCount = await this.repository.model.find({ subscription: subscription }).countDocuments({});
-    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
-
-    const allSubscriptionTriggers = await this.repository.model
-      .find({ subscription: subscription })
-      .skip(pagination.skip)
-      .limit(pagination.limit)
-      .sort({ _id: 'desc' });
-
-    return {
-      subscriptionTriggers: allSubscriptionTriggers,
-      numberOfPages: numberOfPages
-    };
+  async findAllSubscriptionTriggers(subscription: string, pagination: PaginationParams = new PaginationParams()) {
+    const [result, total] = await this.repository.findAndCount({
+      where: { subscription: subscription },
+      order: { id: 'DESC' },
+      skip: pagination.skip,
+      take: pagination.limit,
+    });
+  
+    return new PaginatedResponse<SubscriptionTrigger>(result, total, pagination)
   }
 }

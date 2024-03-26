@@ -15,8 +15,6 @@ import { SubscriptionMembersService } from './subscription-members.service';
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
 import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
 import { SubscriptionTriggerService } from '@/features/subscription-triggers/subscription-triggers.service';
-import { UpdateSubscriptionTriggerDto } from '../subscription-triggers/dto';
-import { calculateLastSuccessfulCharge } from '@/utils/time/last-successful-charge';
 
 @Injectable()
 export class SubscriptionsEventHandler {
@@ -36,14 +34,14 @@ export class SubscriptionsEventHandler {
 
     const dto = {
       member: eventData.address,
-      internalSubscriptionId: subscription._id,
+      internalSubscriptionId: subscription.id,
       blockchainSubscriptionId: eventData.subscriptionId,
 
       createdAt: eventData.signedAt,
       subscriptionType: subscription.subscriptionType,
     } as CreateSubscriptionMemberDto;
 
-    await this.subscriptionsService.incrementMembersCount(subscription._id);
+    await this.subscriptionsService.incrementMembersCount(subscription.id);
     await this.tokenOperationsService.create({
       sender: eventData.address,
       senderAccountsCount: null,
@@ -54,7 +52,7 @@ export class SubscriptionsEventHandler {
       tokenNonce: subscription.tokenNonce,
       type: TokenOperationType.SUBSCRIPTION_CHARGE,
       txHash: event.txHash,
-      subscription: subscription._id,
+      subscription: subscription.id,
       details: 'Initial charge',
       isInternal: true
     });
@@ -111,7 +109,7 @@ export class SubscriptionsEventHandler {
       .findOneByIdSmartContractId(eventData.subscriptionId);
 
     const newSubscriptionTrigger = {
-      subscription: subscription._id,
+      subscription: subscription.id,
       txHash: event.txHash
     }
 
@@ -128,7 +126,7 @@ export class SubscriptionsEventHandler {
       tokenNonce: subscription.tokenNonce,
       type: TokenOperationType.SUBSCRIPTION_CHARGE,
       txHash: event.txHash,
-      subscription: subscription._id,
+      subscription: subscription.id,
       parentId: null,
       details: 'Recurring Charge',
       isInternal: true,
@@ -141,15 +139,15 @@ export class SubscriptionsEventHandler {
           sender: member.account,
           senderAccountsCount: null,
           receiver: null,
-          subscriptionTriggerId: subscriptionTrigger._id,
+          subscriptionTriggerId: subscriptionTrigger.id,
           status: TokenOperationStatus.SUCCESS,
           amount: member.data.successful[0],
           tokenIdentifier: subscription.tokenIdentifier,
           tokenNonce: subscription.tokenNonce,
           type: TokenOperationType.SUBSCRIPTION_CHARGE,
           txHash: event.txHash,
-          subscription: subscription._id,
-          parentId: providerOperation._id,
+          subscription: subscription.id,
+          parentId: providerOperation.id,
           details: 'Recurring Charge',
           isInternal: true,
         })
@@ -161,15 +159,15 @@ export class SubscriptionsEventHandler {
           sender: member.account,
           senderAccountsCount: null,
           receiver: null,
-          subscriptionTriggerId: subscriptionTrigger._id,
+          subscriptionTriggerId: subscriptionTrigger.id,
           status: TokenOperationStatus.FAILED,
           amount: member.data.failed[0],
           tokenIdentifier: subscription.tokenIdentifier,
           tokenNonce: subscription.tokenNonce,
           type: TokenOperationType.SUBSCRIPTION_CHARGE,
           txHash: event.txHash,
-          subscription: subscription._id,
-          parentId: providerOperation._id,
+          subscription: subscription.id,
+          parentId: providerOperation.id,
           details: 'Recurring Charge',
           isInternal: true,
         })

@@ -10,8 +10,6 @@ import {
 } from '@nestjs/common';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 
-import { MongooseObjectIdPipe } from '@/libs/database/mongo';
-
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { SubscriptionsService } from './subscriptions.service';
 import { SubscriptionMembersService } from './subscription-members.service';
@@ -50,13 +48,13 @@ export class SubscriptionsController {
   @UseGuards(NativeAuthGuard)
   getMembership(
     @NativeAuth('address') address: string, 
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     ) {
       return this.membersService.findMembership(id, address);
   }
 
   @Get(':id')
-  async getSubscription(@Param('id', MongooseObjectIdPipe) id) {
+  async getSubscription(@Param('id') id: string) {
     return this.subscriptionsService.findOneSubscriptionById(id);
   }
 
@@ -64,7 +62,7 @@ export class SubscriptionsController {
   @UseGuards(NativeAuthGuard)
   async getSubscriptionMembers(
     @NativeAuth('address') address: string,
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     @Query() pagination: PaginationParams,
     ) {
     return this.membersService.findSubscriptionMembers(id, pagination);
@@ -73,7 +71,7 @@ export class SubscriptionsController {
   @Get(':id/members/all')
   @UseGuards(NativeAuthGuard)
   async getAllSubscriptionMemberships(
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     ) {
     return this.membersService.findAllSubscriptionMemberships(id);
   }
@@ -82,7 +80,7 @@ export class SubscriptionsController {
   @UseGuards(NativeAuthGuard)
   async updateSubscription(
     @NativeAuth('address') address: string,
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     @Body() dto: UpdateSubscriptionDto,
   ) {
     return this.subscriptionsService.updateSubscriptionById(address, id, dto);

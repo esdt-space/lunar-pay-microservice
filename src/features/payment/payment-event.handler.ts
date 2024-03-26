@@ -21,13 +21,13 @@ export class PaymentEventHandler {
       sender: eventData.sender.toString(),
       senderAccountsCount: null,
       receiver: eventData.receiver.toString(),
-      agreementTriggerId: null,
+      subscriptionTriggerId: null,
       amount: eventData.amount.toString(),
       tokenIdentifier: eventData.tokenIdentifier.toString(),
       tokenNonce: eventData.tokenNonce,
       type: TokenOperationType.PAYMENT,
       txHash: event.txHash,
-      agreement: null,
+      subscription: null,
       details: 'Payment',
       isInternal: false
     });

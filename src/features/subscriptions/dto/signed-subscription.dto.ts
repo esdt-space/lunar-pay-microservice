@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsArray, IsOptional, IsNumber, IsDateString } from 'class-validator';
-import { Subscription } from '../subscription.schema';
+import { Subscription } from '../entities';
+
 
 export class SignedSubscriptionDto {
   constructor(params: Partial<Subscription> = {}){
