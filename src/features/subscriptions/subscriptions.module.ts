@@ -8,8 +8,7 @@ import { SubscriptionsEventHandler } from './subscriptions-event.handler';
 
 import { SubscriptionMembersService } from './subscription-members.service';
 import { SubscriptionTriggerModule } from '../subscription-triggers/subscription-triggers.module';
-import { Subscription } from 'rxjs';
-import { SubscriptionMember } from './entities';
+import { Subscription, SubscriptionMember } from './entities';
 
 @Module({
   imports: [
