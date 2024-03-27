@@ -20,6 +20,18 @@ import TokenOperationFilters from './models/token-operation.filters.model';
 export class TokenOperationController {
   constructor(private readonly tokenOperationService: TokenOperationService) {}
 
+  @Get('all/operations')
+  @ApiOperation({
+    summary: 'Token Operations list',
+    description: 'Returns a list of all token-operations.',
+  })
+  async listAll(
+    @Query() filters: TokenOperationFilters,
+    @Query() pagination: PaginationParams,
+  ) {
+    return this.tokenOperationService.findAllTokenOperations(filters, pagination);
+  }
+
   @Get()
   @UseGuards(NativeAuthGuard)
   @ApiOperation({

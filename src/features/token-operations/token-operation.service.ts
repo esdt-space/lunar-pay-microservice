@@ -98,4 +98,20 @@ export class TokenOperationService {
 
     return new PaginatedResponse<TokenOperation>(allOperations, operationsCount, pagination)
   }
+
+  async findAllTokenOperations(filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
+    const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
+
+    if (filters.type) {
+      queryBuilder.andWhere('tokenOperation.type = :type', { type: filters.type });
+    }
+
+    queryBuilder.orderBy('tokenOperation.id', 'DESC');
+    queryBuilder.skip(pagination.skip);
+    queryBuilder.take(pagination.limit);
+    
+    const [allOperations, operationsCount] = await queryBuilder.getManyAndCount();
+
+    return new PaginatedResponse<TokenOperation>(allOperations, operationsCount, pagination)
+  }
 }

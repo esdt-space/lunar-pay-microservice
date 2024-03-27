@@ -31,7 +31,7 @@ export class TokenOperation {
   senderAccountsCount: number;
 
   @Column({ type: 'varchar', nullable: true })
-  agreementTriggerId: string;
+  subscriptionTriggerId: string;
   
   @Column({ type: 'enum', nullable: true, enum: TokenOperationStatus })
   status?: string;
@@ -40,7 +40,7 @@ export class TokenOperation {
   isInternal: boolean;
 
   @Column({ type: 'varchar', nullable: true })
-  agreement?: string;
+  subscription?: string;
 
   @Column({ type: 'varchar', nullable: true })
   parentId?: string;
