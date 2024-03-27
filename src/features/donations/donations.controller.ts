@@ -1,13 +1,16 @@
 import { ApiTags } from '@nestjs/swagger';
 import {
   Body,
-  Controller, Get, Param, Post, Put, UseGuards,
+  CacheTTL,
+  Controller, Get, Param, Post, Put, UseGuards, UseInterceptors,
 } from '@nestjs/common';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 
 import { DonationsService } from './donations.service';
 import { CreateDonationDto, UpdateDonationDto, CreateDonationWidgetDto } from './dto';
 import { DonationWidgetsService } from './donation-widgets.service';
+import { DurationConstants } from '@/utils/time/duration-constants';
 
 @ApiTags('Donations')
 @Controller('donations')
@@ -31,6 +34,8 @@ export class DonationsController {
   }
 
   @Get('event/donations-ranked')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(DurationConstants.oneSecond() * 10)
   async getDonationsForEvent() {
     return this.donationsService.findDonationsForEvent();
   }
