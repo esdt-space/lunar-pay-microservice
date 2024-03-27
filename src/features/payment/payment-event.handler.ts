@@ -24,8 +24,8 @@ export class PaymentEventHandler {
       subscriptionTriggerId: null,
       amount: eventData.amount.toString(),
       tokenIdentifier: eventData.tokenIdentifier.toString(),
-      tokenNonce: eventData.tokenNonce,
-      type: TokenOperationType.PAYMENT,
+      tokenNonce: Number(eventData.tokenNonce),
+      type: TokenOperationType.DONATION, // TODO: Change afeter the donation SC implementation
       txHash: event.txHash,
       subscription: null,
       details: 'Payment',

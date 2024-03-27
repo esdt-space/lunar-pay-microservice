@@ -50,7 +50,7 @@ export class PaymentEventTopics extends LunarPayEventTopics {
     this.tokenIdentifier = parsedEvent.token_identifier;
     this.tokenNonce = parsedEvent.token_nonce;
     this.amount = parsedEvent.amount.toNumber();
-    this.metadata = parsedEvent.metadata.toString();
+    this.metadata = parsedEvent.metadata !== null ? parsedEvent.metadata.toString() : '';
   }
 
   toPlainObject() {

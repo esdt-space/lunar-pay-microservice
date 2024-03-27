@@ -81,7 +81,7 @@ export class EventsNotifierService {
 
       case EventIdentifier.PAYMENT:
         return new PaymentEvent(rawEvent);
-        
+
       case EventIdentifier.CREATE_SUBSCRIPTION:
         return new CreateSubscriptionEvent(rawEvent);
 

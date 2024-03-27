@@ -1,7 +1,7 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTokenOperationDto {
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   amount: string;
 
