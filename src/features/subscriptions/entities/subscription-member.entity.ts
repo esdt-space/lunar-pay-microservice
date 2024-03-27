@@ -13,7 +13,7 @@ export class SubscriptionMember {
   @Column({ type: 'varchar' })
   internalSubscriptionId: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   blockchainSubscriptiontId: number;
 
   @Column({ type: 'enum', enum: SubscriptionType })
