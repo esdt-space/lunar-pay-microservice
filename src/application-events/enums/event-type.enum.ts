@@ -5,16 +5,18 @@ export enum EventType {
   SubscriptionCanceled = 'subscription.canceled',
   AllSubscriptionChargeEvents = 'subscription.charge.*',
   SubscriptionChargeFailed = 'subscription.charge.failed',
-  SubscriptionChargeSuccessful = 'subscription.charge.successful',
+  SubscriptionChargeCreated = 'subscription.charge.created',
+  SubscriptionMembershipCreated = 'subscription.membership.created',
+  SubscriptionMembershipCanceled = 'subscription.membership.canceled',
 
   /** Payment Events */
   AllPaymentsEvents = 'payment.*',
-  PaymentSuccessful = 'payment.successful',
-  PaymentFailedEvent = 'payment.failed',
+  PaymentCreated = 'payment.created',
+  PaymentFailedEvent = 'payment.created',
 
   /** Deposit, Withdraw and Transfer Events */
   AllTokensEvents = 'tokens.*',
-  DepositSuccessful = 'tokens.deposit.successful',
-  WithdrawSuccessful = 'tokens.withdraw.successful',
-  TransferSuccessful = 'tokens.transfer.successful',
+  DepositCreated = 'tokens.deposit.created',
+  WithdrawCreated = 'tokens.withdraw.created',
+  TransferCreated = 'tokens.transfer.created',
 }

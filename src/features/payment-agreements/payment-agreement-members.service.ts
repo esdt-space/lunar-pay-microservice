@@ -20,16 +20,16 @@ export class PaymentAgreementMembersService {
 
   async findAddressMemberships(address: string, pagination: PaginationParams = new PaginationParams()) {
     const memberships = await this.repository.model
-    .find({ member: address })
+      .find({ member: address });
     
-    const aggrementIds = memberships.map(item => item.internalAgreementId);
+    const agreementIds = memberships.map(item => item.internalAgreementId);
 
-    const operationsCount = await this.repository.model.find({ _id: { $in: aggrementIds } }).countDocuments({})
-    const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE
-    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+    const operationsCount = await this.repository.model.find({ _id: { $in: agreementIds } }).countDocuments({});
+    const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE;
+    const numberOfPages = Math.ceil(operationsCount / itemsPerPage);
 
     const allSignedAgreements: PaymentAgreement[] = await this.agreementsRepository.model
-      .find({ _id: { $in: aggrementIds } })
+      .find({ _id: { $in: agreementIds } })
       .skip(pagination.skip)
       .limit(pagination.limit)
       .sort({ createdAt: 'desc' })
@@ -37,31 +37,31 @@ export class PaymentAgreementMembersService {
 
     return {
       agreements: allSignedAgreements.map((el) => {
-        return new SignedAgreementDto(el)
+        return new SignedAgreementDto(el);
       }),
       numberOfPages: numberOfPages
-    }
+    };
   }
 
   async findAgreementMembers(id: Types.ObjectId, pagination: PaginationParams = new PaginationParams()) {
-    const operationsCount = await this.repository.model.find({ internalAgreementId: id }).countDocuments({})
-    const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE
-    const numberOfPages = Math.ceil(operationsCount / itemsPerPage)
+    const operationsCount = await this.repository.model.find({ internalAgreementId: id }).countDocuments({});
+    const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE;
+    const numberOfPages = Math.ceil(operationsCount / itemsPerPage);
     
     const allMemberships = await this.repository.model
-    .find({ internalAgreementId: id })
-    .skip(pagination.skip)
-    .limit(pagination.limit)
-    .sort({ createdAt: 'desc' })
+      .find({ internalAgreementId: id })
+      .skip(pagination.skip)
+      .limit(pagination.limit)
+      .sort({ createdAt: 'desc' });
 
     return {
       memberships: allMemberships,
       numberOfPages: numberOfPages
-    }
+    };
   }
 
   async updateLastChargedAt(member: string, date: Date){
-    const newCharge = { $set: { lastSuccessfulCharge: date }}
+    const newCharge = { $set: { lastSuccessfulCharge: date } };
 
     return this.repository.model.updateOne({ member: member }, newCharge);
   }
