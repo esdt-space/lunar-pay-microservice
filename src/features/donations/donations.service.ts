@@ -44,6 +44,10 @@ export class DonationsService {
     return this.repository.findOneBy({ id });
   }
 
+  async findOneDonationByAccount(owner: string) {
+    return this.repository.findOneBy({ owner });
+  }
+
   async findDonationsCreatedByAccount(
     address: string,
     pagination: PaginationParams = new PaginationParams()
