@@ -15,9 +15,6 @@ export class Donation {
   @Column({ type: 'enum', enum: DonationTarget, default: DonationTarget.ContentCreator })
   donationTarget: string;
 
-  @Column({ type: 'varchar' })
-  tokenIdentifier?: string;
-
   @Column({ type: 'int', default: 0 })
   tokenNonce?: number;
 

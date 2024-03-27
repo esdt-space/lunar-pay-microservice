@@ -64,18 +64,18 @@ export class DonationsService {
   async findDonationsForEvent() {
     const donationsList = await this.repository.find();
 
-    const total: Map<string, {amount: number; tokenIdentifier: string}> = new Map();
+    const total: Map<string, {amount: number}> = new Map();
 
     donationsList.forEach((item) => {
-      const key = `${item.owner}-${item.tokenIdentifier}`;
+      const key = `${item.owner}`;
       const amount = Number(item.totalAmount);
 
       if (!isNaN(amount)) {
         if (total.has(key)) {
           const existing = total.get(key);
-          total.set(key, { amount: existing.amount + amount, tokenIdentifier: item.tokenIdentifier });
+          total.set(key, { amount: existing.amount + amount});
         } else {
-          total.set(key, { amount: amount, tokenIdentifier: item.tokenIdentifier });
+          total.set(key, { amount: amount});
         }
       }
     });
@@ -83,7 +83,7 @@ export class DonationsService {
     const result = [];
     total.forEach((value, key) => {
       const [owner] = key.split('-');
-      result.push({ owner, amount: value.amount.toString(), tokenIdentifier: value.tokenIdentifier });
+      result.push({ owner, amount: value.amount.toString() });
     });
 
     const sortedDonations = result.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
