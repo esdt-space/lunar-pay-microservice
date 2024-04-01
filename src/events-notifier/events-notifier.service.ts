@@ -43,6 +43,7 @@ export class EventsNotifierService {
       if(rawEvent.identifier === 'completedTxEvent') continue;
 
       try {
+        console.log(rawEvent)
         const event = this.decodeEvent(rawEvent);
         this.eventEmitter.emit(event.emitEventName, event);
       } catch (error) {

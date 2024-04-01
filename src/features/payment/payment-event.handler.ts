@@ -34,7 +34,8 @@ export class PaymentEventHandler {
       txHash: event.txHash,
       subscription: null,
       details: 'Donation',
-      isInternal: false
+      isInternal: false,
+      createdAt: new Date(Date.now())
     });
   }
 }

@@ -55,7 +55,8 @@ export class PaymentAgreementsEventHandler {
       txHash: event.txHash,
       subscription: agreement.id,
       details: 'Initial charge',
-      isInternal: true
+      isInternal: true,
+      createdAt: new Date(Date.now())
     });
 
     return this.membersService.createMembership(dto);
@@ -138,6 +139,7 @@ export class PaymentAgreementsEventHandler {
         parentId: null,
         details: 'Recurring Charge',
         isInternal: true,
+        createdAt: new Date(Date.now())
       })
   
       eventData.accounts.forEach((el, index) => {
@@ -157,6 +159,7 @@ export class PaymentAgreementsEventHandler {
           parentId: providerOperation[0].id,
           details: 'Recurring Charge',
           isInternal: true,
+          createdAt: new Date(Date.now())
         })
       })
     }

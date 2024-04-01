@@ -47,4 +47,7 @@ export class TokenOperation {
 
   @Column({ type: 'varchar', nullable: true })
   details?: string;
+
+  @Column({ type: 'date', nullable: true })
+  createdAt?: Date;
 }

@@ -12,5 +12,5 @@ export enum EventIdentifier {
   PAYMENT = 'pay',
   CREATE_SUBSCRIPTION = 'createSubscription',
   CREATE_SUBSCRIPTION_MEMBERSHIP = 'createSubscriptionMembership',
-  TRIGGER_SUBSCRIPTION = 'chargeSubscription',
+  TRIGGER_SUBSCRIPTION = 'triggerSubscription',
 }
