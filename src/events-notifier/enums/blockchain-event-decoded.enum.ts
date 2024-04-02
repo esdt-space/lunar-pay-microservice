@@ -7,6 +7,7 @@ export enum BlockchainEventDecoded {
   CancelPaymentAgreement = 'blockchain.cancel-payment-agreement.decoded',
   TriggerPaymentAgreement = 'blockchain.trigger-payment-agreement.decoded',
   Payment = 'blockchain.pay.decoded',
+  Donation = 'blockchain.donate.decoded',
   CreateSubscription = 'blockchain.create-subscription.decoded',
   SignSubscription = 'blockchain.sign-subscription.decoded',
   CancelSubscription = 'blockchain.cancel-subscription.decoded',

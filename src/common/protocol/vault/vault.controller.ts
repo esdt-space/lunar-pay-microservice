@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Injectable,
+  Param,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
@@ -42,5 +43,13 @@ export class VaultController {
   @UseGuards(NativeAuthGuard)
   async getAccountBalances(@NativeAuth('address') address: string) {
     return this.vaultService.getAccountBalances(address);
+  }
+
+  @Get('subscription-charge-amount')
+  @UseInterceptors(HttpCacheInterpreter)
+  @CacheTTL(DurationConstants.oneSecond() * 10)
+  @UseGuards(NativeAuthGuard)
+  async getSubscriptionsChargeAmounts(@NativeAuth('address') address: string) {
+    return this.vaultService.getSubscriptionsChargeAmounts(address);
   }
 }

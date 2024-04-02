@@ -18,6 +18,7 @@ import {
   SignSubscriptionEvent,
   TriggerSubscriptionEvent,
 } from './events';
+import { DonationEvent } from './events/donation/donation-event';
 
 type QueuePayload = Record<string, unknown> & {
  events: RawEvent[];
@@ -82,6 +83,9 @@ export class EventsNotifierService {
 
       case EventIdentifier.PAYMENT:
         return new PaymentEvent(rawEvent);
+
+      case EventIdentifier.DONATE:
+        return new DonationEvent(rawEvent);
 
       case EventIdentifier.CREATE_SUBSCRIPTION:
         return new CreateSubscriptionEvent(rawEvent);
