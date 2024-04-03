@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
@@ -11,8 +11,8 @@ export class IpnSender {
     return this.httpService.get(url);
   }
 
-  sendPostWebhook(url: string, data: unknown): Observable<AxiosResponse<unknown>> {
-    return this.httpService.post(url, data);
+  sendPostWebhook(url: string, data: unknown): Promise<AxiosResponse<unknown>> {
+    return axios.post(url, data);
   }
 
   sendPutWebhook(url: string, data?: unknown): Observable<AxiosResponse<unknown>> {

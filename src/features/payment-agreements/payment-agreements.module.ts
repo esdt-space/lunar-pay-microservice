@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { IpnModule } from '@/core/ipn/ipn.module';
 import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
 
 import { PaymentAgreementsService } from './payment-agreements.service';
 import { PaymentAgreementRepository } from './payment-agreement.repository';
-import { PaymentAgreementsEventHandler } from './payment-agreements-event.handler';
 import { PaymentAgreement, PaymentAgreementSchema } from './payment-agreement.schema';
 import { PaymentAgreementMember, PaymentAgreementMemberSchema } from './payment-agreement-member.schema';
 
@@ -13,8 +13,12 @@ import { PaymentAgreementMembersService } from './payment-agreement-members.serv
 import { PaymentAgreementMemberRepository } from './payment-agreement-member.repository';
 import { AgreementTriggerModule } from '../agreement-triggers/agreement-triggers.module';
 
+import { PaymentAgreementsEventHandler } from './payment-agreements-event.handler';
+import { PaymentAgreementsIpnNotificationsHandler } from './payment-agreements-ipn-notifications.handler';
+
 @Module({
   imports: [
+    IpnModule,
     AgreementTriggerModule,
     TokenOperationModule,
     MongooseModule.forFeature([
@@ -25,7 +29,7 @@ import { AgreementTriggerModule } from '../agreement-triggers/agreement-triggers
   providers: [
     PaymentAgreementsService, PaymentAgreementRepository,
     PaymentAgreementMembersService, PaymentAgreementMemberRepository,
-    PaymentAgreementsEventHandler
+    PaymentAgreementsEventHandler, PaymentAgreementsIpnNotificationsHandler
   ],
   exports: [
     PaymentAgreementsService, PaymentAgreementRepository,
