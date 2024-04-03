@@ -9,12 +9,15 @@ export class SubscriptionMember {
 
   @Column({ type: 'varchar' })
   member: string;
+  
+  @Column({ type: 'varchar', nullable: true  })
+  metadata: string;
 
   @Column({ type: 'varchar' })
   internalSubscriptionId: string;
 
   @Column({ type: 'int', nullable: true })
-  blockchainSubscriptiontId: number;
+  blockchainSubscriptionId: number;
 
   @Column({ type: 'enum', enum: SubscriptionType })
   subscriptionType: string;

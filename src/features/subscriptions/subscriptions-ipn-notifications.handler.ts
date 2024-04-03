@@ -7,7 +7,7 @@ import { EventType } from '@/application-events/enums/event-type.enum';
 import { SubscriptionChargeCreatedEventPayload, SubscriptionMembershipCreatedEventPayload } from '@/application-events/enums/types/subscription-charge-created-payload.type';
 
 @Injectable()
-export class PaymentAgreementsIpnNotificationsHandler {
+export class SubscriptionsIpnNotificationsHandler {
   constructor(public readonly ipnSender: IpnSender) {}
 
   @OnEvent(EventType.SubscriptionMembershipCreated)
@@ -20,7 +20,7 @@ export class PaymentAgreementsIpnNotificationsHandler {
       eventName: EventType.SubscriptionMembershipCreated,
       subscriptionId: agreement.id,
       walletAddress: membership.member,
-      // metadata: membership.metadata,
+      metadata: membership.metadata,
     });
   }
 

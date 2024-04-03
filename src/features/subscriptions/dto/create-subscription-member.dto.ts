@@ -1,11 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { IsDate, IsOptional, IsString } from "class-validator";
 
 export class CreateSubscriptionMemberDto {
   @IsString()
   @IsOptional()
   @ApiProperty()
   member: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  metadata: string;
 
   @IsString()
   @IsOptional()
@@ -42,7 +47,7 @@ export class CreateSubscriptionMemberDto {
   @ApiProperty()
   canceledAt: string;
   
-  @IsString()
+  @IsDate()
   @IsOptional()
   @ApiProperty()
   createdAt: Date;

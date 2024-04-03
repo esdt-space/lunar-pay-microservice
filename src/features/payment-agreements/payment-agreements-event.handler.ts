@@ -150,7 +150,7 @@ export class PaymentAgreementsEventHandler {
     if(blockchainEvent.name === 'successfulAgreementCharges') {
       const providerOperation = await this.tokenOperationsService.create({
         sender: null,
-        senderAccountsCount: eventData.accounts.length,
+        senderAccountsCount: eventData.data.length,
         receiver: agreement.owner,
         subscriptionTriggerId: null,
         status: TokenOperationStatus.SUCCESS,
@@ -166,7 +166,7 @@ export class PaymentAgreementsEventHandler {
         createdAt: new Date(Date.now())
       })
   
-      eventData.accounts.forEach((el, index) => {
+      eventData.data.forEach((el, index) => {
         this.membersService.updateLastChargedAt(el, new Date()) 
         this.tokenOperationsService.create({
           sender: el,

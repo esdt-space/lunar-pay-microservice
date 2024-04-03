@@ -67,6 +67,7 @@ export class SubscriptionMembersService {
       ...dto,
       lastChargedAt: dto.createdAt,
       lastSuccessfulCharge: dto.createdAt,
+      metadata: dto.metadata,
     });
     
     return this.subscriptionMembersRepository.save(membership);
