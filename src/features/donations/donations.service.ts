@@ -6,6 +6,7 @@ import { PaginatedResponse } from '@/common/models/paginated-response';
 import PaginationParams from '@/common/models/pagination.params.model';
 import { Donation } from './entities';
 import { CreateDonationDto, UpdateDonationDto } from './dto';
+import { getSortedDonations } from '../event/utils';
 
 @Injectable()
 export class DonationsService {
@@ -43,34 +44,12 @@ export class DonationsService {
   async findDonationsForEvent() {
     const donationsList = await this.repository.find();
 
-    const total: Map<string, {amount: number}> = new Map();
-
-    donationsList.forEach((item) => {
-      const key = `${item.owner}`;
-      const amount = Number(item.totalAmount);
-
-      if (!isNaN(amount)) {
-        if (total.has(key)) {
-          const existing = total.get(key);
-          total.set(key, { amount: existing.amount + amount});
-        } else {
-          total.set(key, { amount: amount});
-        }
-      }
-    });
-
-    const result = [];
-    total.forEach((value, key) => {
-      const [owner] = key.split('-');
-      result.push({ owner, amount: value.amount.toString() });
-    });
-
-    const sortedDonations = result.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
+    const sortedDonations = getSortedDonations(donationsList)
 
     return {
       data: sortedDonations,
       meta: {
-        totalRecords: result.length
+        totalRecords: sortedDonations.length
       }
     };
   }

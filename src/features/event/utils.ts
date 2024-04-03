@@ -1,3 +1,4 @@
+import { Donation } from "../donations/entities";
 import { UserActionsCount } from "./types";
 
 export const mergeActionCounts = (arrays: UserActionsCount[][]) => {
@@ -34,4 +35,31 @@ export const mergeActionCounts = (arrays: UserActionsCount[][]) => {
   });
 
   return Object.values(userActionsMap);
+}
+
+export const getSortedDonations = (donationsList: Donation[]) => {
+  const total: Map<string, {amount: number}> = new Map();
+
+  donationsList.forEach((item) => {
+    const key = `${item.owner}`;
+    const amount = Number(item.totalAmount);
+
+    if (!isNaN(amount)) {
+      if (total.has(key)) {
+        const existing = total.get(key);
+        total.set(key, { amount: existing.amount + amount});
+      } else {
+        total.set(key, { amount: amount});
+      }
+    }
+  });
+
+  const result = [];
+  
+  total.forEach((value, key) => {
+    const [owner] = key.split('-');
+    result.push({ owner, amount: value.amount.toString() });
+  });
+
+  return result.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount));
 }
