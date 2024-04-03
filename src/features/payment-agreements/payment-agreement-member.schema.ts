@@ -23,7 +23,10 @@ export class PaymentAgreementMember extends AbstractDocument {
 
   @Prop({ type: Date })
   lastChargedAt: Date;
-  
+
+  @Prop({ type: String })
+  metadata: string;
+
   @Prop({ type: Date })
   lastSuccessfulCharge: Date;
 
