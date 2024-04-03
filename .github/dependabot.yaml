@@ -3,9 +3,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     assignees:
-      - "Developers"
+      - "esdt-space/developers"
     reviewers:
-      - "Developers"
+      - "esdt-space/developers"
     pull-request-branch-name:
       separator: "-"
     schedule:
@@ -14,9 +14,9 @@ updates:
   package-ecosystem: "docker"
     directory: "/"
     assignees:
-      - "Developers"
+      - "esdt-space/developers"
     reviewers:
-      - "Developers"
+      - "esdt-space/developers"
     pull-request-branch-name:
       separator: "-"
     schedule:
@@ -25,9 +25,9 @@ updates:
   package-ecosystem: "github-actions"
     directory: "/"
     assignees:
-      - "Developers"
+      - "esdt-space/developers"
     reviewers:
-      - "Developers"
+      - "esdt-space/developers"
     pull-request-branch-name:
       separator: "-"
     schedule:
