@@ -105,7 +105,8 @@ export class PaymentAgreementsEventHandler {
 
     const newAgreementTrigger = {
       agreement: agreement.id,
-      txHash: payload.txHash
+      txHash: payload.txHash,
+      createdAt: new Date()
     }
 
     const updateTriggerData = new UpdateAgreementTriggerDto();

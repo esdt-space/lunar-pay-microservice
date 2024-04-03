@@ -98,6 +98,7 @@ export class SubscriptionsService {
   create(dto: CreateSubscriptionDto) {
     const agreement = this.repository.create({
       ...dto,
+      createdAt: new Date()
     });
 
     return this.repository.save(agreement);

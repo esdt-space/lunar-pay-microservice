@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTokenOperationDto {
@@ -58,6 +59,6 @@ export class CreateTokenOperationDto {
   details: string;
 
   @IsDate()
-  @IsNotEmpty()
+  @ApiProperty()
   createdAt: Date;
 }

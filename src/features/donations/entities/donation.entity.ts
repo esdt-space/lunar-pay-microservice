@@ -18,6 +18,9 @@ export class Donation {
   @Column({ type: 'int', default: 0 })
   tokenNonce?: number;
 
+  @Column({ type: 'timestamp with time zone' })
+  createdAt: Date;
+
   @Column({ type: 'varchar', nullable: true })
   totalAmount: string;
 

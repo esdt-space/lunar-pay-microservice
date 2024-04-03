@@ -16,7 +16,8 @@ export class SubscriptionMembersService {
 
   async findAddressMemberships(address: string, pagination: PaginationParams = new PaginationParams()) {
     const [memberships, operationsCount] = await this.subscriptionMembersRepository.findAndCount({
-      where: { member: address }
+      where: { member: address },
+      order: { createdAt: 'DESC' }
     });
 
     const agreementIds = memberships.map(item => item.internalSubscriptionId);
@@ -68,6 +69,7 @@ export class SubscriptionMembersService {
       lastChargedAt: dto.createdAt,
       lastSuccessfulCharge: dto.createdAt,
       metadata: dto.metadata,
+      createdAt: new Date()
     });
     
     return this.subscriptionMembersRepository.save(membership);

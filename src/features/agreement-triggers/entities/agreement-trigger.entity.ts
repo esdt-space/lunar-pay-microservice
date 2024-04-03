@@ -23,6 +23,6 @@ export class AgreementTrigger {
   @Column({ type: 'varchar' })
   txHash: string;
 
-  @Column({ type: 'date', nullable: true })
-  createdAt: string;
+  @Column({ type: 'timestamp with time zone' })
+  createdAt: Date;
 }

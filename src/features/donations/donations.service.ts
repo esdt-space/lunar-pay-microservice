@@ -40,27 +40,6 @@ export class DonationsService {
     }));
   };
 
-  async findOneDonationById(id: string) {
-    return this.repository.findOneBy({ id });
-  }
-
-  async findOneDonationByAccount(owner: string) {
-    return this.repository.findOneBy({ owner });
-  }
-
-  async findDonationsCreatedByAccount(
-    address: string,
-    pagination: PaginationParams = new PaginationParams()
-  ) {
-    const [donationsList, donationsCount] = await this.repository.findAndCount({
-      where: { owner: address },
-      take: pagination.limit,
-      skip: pagination.skip,
-    });
-
-    return new PaginatedResponse<Donation>(donationsList, donationsCount, pagination);
-  }
-
   async findDonationsForEvent() {
     const donationsList = await this.repository.find();
 
@@ -96,12 +75,36 @@ export class DonationsService {
     };
   }
 
+  async findOneDonationById(id: string) {
+    return this.repository.findOneBy({ id });
+  }
+
+  async findOneDonationByAccount(owner: string) {
+    return this.repository.findOneBy({ owner });
+  }
+
+  async findDonationsCreatedByAccount(
+    address: string,
+    pagination: PaginationParams = new PaginationParams()
+  ) {
+    const [donationsList, donationsCount] = await this.repository.findAndCount({
+      where: { owner: address },
+      take: pagination.limit,
+      skip: pagination.skip,
+      order: { createdAt: 'DESC' },
+    });
+
+    return new PaginatedResponse<Donation>(donationsList, donationsCount, pagination);
+  }
+
+
   async createDonation(address: string, dto: CreateDonationDto) {
     const donation = this.repository.create({
       ...dto,
       owner: address,
-      totalAmount: '',
     });
+
+    donation.createdAt = new Date()
 
     return this.repository.save(donation);
   }

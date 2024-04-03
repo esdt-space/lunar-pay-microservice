@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsDate, IsNotEmpty, IsString } from "class-validator";
 
 
 export class CreateAgreementTriggerDto {
@@ -8,5 +9,9 @@ export class CreateAgreementTriggerDto {
 
   @IsString()
   @IsNotEmpty()
-  txHash: string
+  txHash: string;
+
+  @IsDate()
+  @ApiProperty()
+  createdAt: Date;
 }

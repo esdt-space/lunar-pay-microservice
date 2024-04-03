@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateSubscriptionTriggerDto {
   @IsString()
@@ -11,4 +11,8 @@ export class CreateSubscriptionTriggerDto {
   @IsOptional()
   @ApiProperty()
   txHash?: string
+
+  @IsDate()
+  @ApiProperty()
+  createdAt: Date;
 }

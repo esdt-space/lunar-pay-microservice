@@ -48,7 +48,6 @@ export class CreateSubscriptionMemberDto {
   canceledAt: string;
   
   @IsDate()
-  @IsOptional()
   @ApiProperty()
   createdAt: Date;
 }

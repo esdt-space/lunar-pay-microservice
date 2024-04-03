@@ -111,7 +111,8 @@ export class SubscriptionsEventHandler {
 
     const newSubscriptionTrigger = {
       subscription: subscription.id,
-      txHash: event.txHash
+      txHash: event.txHash,
+      createdAt: new Date()
     }
 
     const subscriptionTrigger = await this.subscriptionTriggersService.createOrUpdate(newSubscriptionTrigger, chargesAmountResult, event.txHash)

@@ -37,8 +37,8 @@ export class Subscription {
   @Column({ type: 'varchar', nullable: true })
   maximumAmount?: string;
 
-  @Column({ type: 'date' })
-  createdAt?: Date;
+  @Column({ type: 'timestamp with time zone' })
+  createdAt: Date;
 
   @Column({ type: 'int', default: 0, nullable: true })
   accountsCount: number;

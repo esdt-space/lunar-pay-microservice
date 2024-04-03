@@ -20,6 +20,6 @@ export class DonationWidget {
   @Column({ type: 'varchar' })
   codeString: string;
 
-  @Column({ type: 'date' })
-  createdAt?: Date;
+  @Column({ type: 'timestamp with time zone' })
+  createdAt: Date;
 }

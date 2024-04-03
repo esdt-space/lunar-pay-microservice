@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional} from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsDate} from 'class-validator';
 import { DonationWidget } from '../entities';
 
 export class CreateDonationWidgetDto {
@@ -26,4 +26,8 @@ export class CreateDonationWidgetDto {
   @IsNotEmpty()
   @ApiProperty()
   codeString: string;
+
+  @IsDate()
+  @ApiProperty()
+  createdAt: Date;
 }

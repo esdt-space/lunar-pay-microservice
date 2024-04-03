@@ -22,4 +22,7 @@ export class SubscriptionTrigger {
   
   @Column({ type: 'varchar' })
   txHash: string;
+
+  @Column({ type: 'timestamp with time zone' })
+  createdAt: Date;
 }

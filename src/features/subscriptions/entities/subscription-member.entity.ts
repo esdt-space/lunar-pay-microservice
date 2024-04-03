@@ -34,6 +34,6 @@ export class SubscriptionMember {
   @Column({ type: 'date', nullable: true })
   canceledAt: string;
 
-  @Column({ type: 'date' })
-  createdAt?: string;
+  @Column({ type: 'timestamp with time zone' })
+  createdAt: Date;
 }

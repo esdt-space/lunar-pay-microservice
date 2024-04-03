@@ -58,9 +58,11 @@ export class TokenOperationService {
 
   async create(transaction: CreateTokenOperationDto) {
     try {
-      const op = this.repository.create(transaction);
+      const operation = this.repository.create(transaction);
 
-      return await this.repository.save(op);
+      operation.createdAt = new Date()
+
+      return await this.repository.save(operation);
     } catch (e) {
       this.logger.error('create_transaction', { error: e.stack });
       return null;
@@ -72,7 +74,7 @@ export class TokenOperationService {
   
     queryBuilder.where('tokenOperation.parentId = :parentId', { parentId: id });
     queryBuilder.leftJoinAndSelect('tokenOperation.agreement', 'agreement');
-    queryBuilder.orderBy('tokenOperation.id', 'DESC');
+    queryBuilder.orderBy('tokenOperation.createdAt', 'DESC');
     queryBuilder.skip(pagination.skip);
     queryBuilder.take(pagination.limit);
   
@@ -90,7 +92,7 @@ export class TokenOperationService {
       queryBuilder.andWhere('tokenOperation.type = :type', { type: filters.type });
     }
 
-    queryBuilder.orderBy('tokenOperation.id', 'DESC');
+    queryBuilder.orderBy('tokenOperation.createdAt', 'DESC');
     queryBuilder.skip(pagination.skip);
     queryBuilder.take(pagination.limit);
     
@@ -106,7 +108,7 @@ export class TokenOperationService {
       queryBuilder.andWhere('tokenOperation.type = :type', { type: filters.type });
     }
 
-    queryBuilder.orderBy('tokenOperation.id', 'DESC');
+    queryBuilder.orderBy('tokenOperation.createdAt', 'DESC');
     queryBuilder.skip(pagination.skip);
     queryBuilder.take(pagination.limit);
     

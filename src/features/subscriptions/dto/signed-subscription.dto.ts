@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsArray, IsOptional, IsNumber, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray, IsOptional, IsNumber, IsDateString, IsDate } from 'class-validator';
 import { Subscription } from '../entities';
 
 
@@ -51,7 +51,7 @@ export class SignedSubscriptionDto {
   @ApiProperty()
   fixedAmount: string;
 
-  @IsDateString()
+  @IsDate()
   @IsNotEmpty()
   @ApiProperty()
   createdAt: Date;
