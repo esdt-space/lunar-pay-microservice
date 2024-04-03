@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
 import { CreatePaymentAgreementEvent, SignPaymentAgreementEvent, TriggerAgreementEvent } from '@/events-notifier/events';
@@ -15,7 +15,8 @@ import { TokenOperationService } from '@/features/token-operations/token-operati
 import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
 import { AgreementTriggerService } from '@/features/agreement-triggers/agreement-triggers.service';
 import { UpdateAgreementTriggerDto } from '../agreement-triggers/dto';
-import { calculateLastSuccessfulCharge } from '@/utils/time/last-successful-charge';
+import { EventType } from '@/application-events/enums/event-type.enum';
+import { SubscriptionChargeCreatedEventPayload } from '@/application-events/enums/types/subscription-charge-created-payload.type';
 
 @Injectable()
 export class PaymentAgreementsEventHandler {
@@ -24,6 +25,7 @@ export class PaymentAgreementsEventHandler {
     public readonly membersService: PaymentAgreementMembersService,
     private readonly tokenOperationsService: TokenOperationService,
     private readonly agreementTriggersService: AgreementTriggerService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   @OnEvent(BlockchainEventDecoded.SignPaymentAgreement)
@@ -59,7 +61,11 @@ export class PaymentAgreementsEventHandler {
       createdAt: new Date(Date.now())
     });
 
-    return this.membersService.createMembership(dto);
+    const membership = await this.membersService.createMembership(dto);
+
+    this.eventEmitter.emit(EventType.SubscriptionMembershipCreated, {
+      agreement, membership
+    });
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainCreatePaymentAgreementEventDecoded)
@@ -83,47 +89,65 @@ export class PaymentAgreementsEventHandler {
       createdAt: new Date(eventData.timeCreated * 1000),
     } as CreateAgreementDto;
 
-    return this.agreementsService.create(dto);
+    const agreement = await this.agreementsService.create(dto);
+
+    this.eventEmitter.emit(EventType.SubscriptionCreated, { agreement });
   }
 
   @OnEvent(BlockchainEventDecoded.TriggerPaymentAgreement)
-  async handleTriggerAgreementEvent(event: TriggerAgreementEvent) {
-    const eventData = event.decodedTopics.toPlainObject();
+  async handleTriggerAgreementEvent(payload: TriggerAgreementEvent) {
+    const eventData = payload.decodedTopics.toPlainObject();
 
-    const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString()
+    const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString();
 
     const agreement = await this.agreementsService
       .findOneByIdSmartContractId(eventData.agreementId);
 
-    const memberAmount = (index: number) => {
-      const result = Number(eventData.cycles[index]) * Number(agreement.fixedAmount)
-
-      return result.toString()
-    }
-
     const newAgreementTrigger = {
       agreement: agreement.id,
-      txHash: event.txHash
+      txHash: payload.txHash
     }
 
-    const updateTriggerData = new UpdateAgreementTriggerDto()
+    const updateTriggerData = new UpdateAgreementTriggerDto();
 
-    if(event.name === "failedAgreementCharges") {
+    if(payload.name === "failedAgreementCharges") {
       // eventData.accounts.forEach((el, index) => {
       //   const lastSuccessfulCharge = calculateLastSuccessfulCharge(index, agreement.frequency, eventData)
       //   this.membersService.updateLastChargedAt(el, lastSuccessfulCharge)
       // })
 
-      updateTriggerData.failedChargeAmount = totalAmount
-      updateTriggerData.failedAccountsCount = eventData.accounts.length
-    } else if(event.name === "successfulAgreementCharges") {
-      updateTriggerData.successfulChargeAmount = totalAmount
-      updateTriggerData.successfulAccountsCount = eventData.accounts.length
+      updateTriggerData.failedChargeAmount = totalAmount;
+      updateTriggerData.failedAccountsCount = eventData.accounts.length;
+    } else if(payload.name === 'successfulAgreementCharges') {
+      updateTriggerData.successfulChargeAmount = totalAmount;
+      updateTriggerData.successfulAccountsCount = eventData.accounts.length;
     }
-    
-    const agreementTrigger = await this.agreementTriggersService.createOrUpdate(newAgreementTrigger, updateTriggerData, event.txHash)
 
-    if(event.name === "successfulAgreementCharges") {
+    const memberInformation = eventData.accounts.map((address, index) => {
+      return ({
+        address: address,
+        cycles: eventData.cycles[index],
+      });
+    });
+    
+    const agreementTrigger = await this.agreementTriggersService.createOrUpdate(newAgreementTrigger, updateTriggerData, payload.txHash);
+
+    this.eventEmitter.emit(EventType.SubscriptionChargeCreated, { agreement, agreementTrigger, totalAmount, blockchainEvent: payload, memberInformation });
+  }
+
+  @OnEvent(EventType.SubscriptionChargeCreated)
+  async createSubscriptionChargeTokenOperations(payload: SubscriptionChargeCreatedEventPayload) {
+    const {
+      memberInformation,
+      agreement,
+      agreementTrigger,
+      blockchainEvent,
+      totalAmount
+    } = payload;
+
+    const eventData = blockchainEvent.decodedTopics.toPlainObject();
+
+    if(blockchainEvent.name === 'successfulAgreementCharges') {
       const providerOperation = await this.tokenOperationsService.create({
         sender: null,
         senderAccountsCount: eventData.accounts.length,
@@ -134,7 +158,7 @@ export class PaymentAgreementsEventHandler {
         tokenIdentifier: agreement.tokenIdentifier,
         tokenNonce: agreement.tokenNonce,
         type: TokenOperationType.SUBSCRIPTION_CHARGE,
-        txHash: event.txHash,
+        txHash: blockchainEvent.txHash,
         subscription: agreement.id,
         parentId: null,
         details: 'Recurring Charge',
@@ -150,13 +174,13 @@ export class PaymentAgreementsEventHandler {
           receiver: null,
           subscriptionTriggerId: agreementTrigger.id,
           status: TokenOperationStatus.SUCCESS,
-          amount: memberAmount(index),
+          amount: totalAmount,
           tokenIdentifier: agreement.tokenIdentifier,
           tokenNonce: agreement.tokenNonce,
           type: TokenOperationType.SUBSCRIPTION_CHARGE,
-          txHash: event.txHash,
+          txHash: blockchainEvent.txHash,
           subscription: agreement.id,
-          parentId: providerOperation[0].id,
+          parentId: providerOperation.id,
           details: 'Recurring Charge',
           isInternal: true,
           createdAt: new Date(Date.now())
