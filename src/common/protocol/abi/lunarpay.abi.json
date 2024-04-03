@@ -47,7 +47,34 @@
             "name": "getWhitelistedTokenIds",
             "mutability": "readonly",
             "inputs": [],
-            "outputs": []
+            "outputs": [
+                {
+                    "type": "variadic<EgldOrEsdtTokenIdentifier>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getUsedTokenIds",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<EgldOrEsdtTokenIdentifier>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getWhitelistedAddresses",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<Address>",
+                    "multi_result": true
+                }
+            ]
         },
         {
             "name": "whitelistToken",
@@ -433,145 +460,6 @@
         }
     ],
     "events": [
-        {
-            "identifier": "createPaymentAgreement",
-            "inputs": [
-                {
-                    "name": "agreement_id",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "owner",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "token_nonce",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "token_identifier",
-                    "type": "EgldOrEsdtTokenIdentifier",
-                    "indexed": true
-                },
-                {
-                    "name": "frequency",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "time_created",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "agreement_type",
-                    "type": "AgreementType",
-                    "indexed": true
-                },
-                {
-                    "name": "amount_type",
-                    "type": "AgreementAmountType",
-                    "indexed": true
-                },
-                {
-                    "name": "fixed_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "minimum_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "maximum_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "signPaymentAgreement",
-            "inputs": [
-                {
-                    "name": "agreement_id",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "member",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "signed_at",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "metadata",
-                    "type": "Option<bytes>",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "cancelPaymentAgreement",
-            "inputs": []
-        },
-        {
-            "identifier": "successfulAgreementCharges",
-            "inputs": [
-                {
-                    "name": "agreement_id",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "accounts",
-                    "type": "List<Address>",
-                    "indexed": true
-                },
-                {
-                    "name": "amounts",
-                    "type": "List<BigUint>",
-                    "indexed": true
-                },
-                {
-                    "name": "cycles",
-                    "type": "List<u64>",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "failedAgreementCharges",
-            "inputs": [
-                {
-                    "name": "agreement_id",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "accounts",
-                    "type": "List<Address>",
-                    "indexed": true
-                },
-                {
-                    "name": "amounts",
-                    "type": "List<BigUint>",
-                    "indexed": true
-                },
-                {
-                    "name": "cycles",
-                    "type": "List<u64>",
-                    "indexed": true
-                }
-            ]
-        },
         {
             "identifier": "deposit",
             "inputs": [
