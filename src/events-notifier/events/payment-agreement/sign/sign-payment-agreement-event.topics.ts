@@ -25,8 +25,10 @@ export class SignPaymentAgreementEventTopics extends LunarPayEventTopics {
     const abiRegistry = AbiRegistry.create(abi);
     const eventDefinition = abiRegistry.getEvent(this.eventName);
 
+    const eventIdentifier = 'signPaymentAgreement';
+
     const event = new TransactionEvent({
-      identifier: 'signPaymentAgreement',
+      identifier: eventIdentifier,
       topics: [
         new TransactionEventTopic(rawTopics[0]),
         new TransactionEventTopic(rawTopics[1]),
