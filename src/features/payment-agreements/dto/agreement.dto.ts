@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsArray, IsOptional, IsNumber, IsDateString } from 'class-validator';
-import { PaymentAgreement } from '../payment-agreement.schema';
+import { PaymentAgreement } from '../entities';
 
 export class AgreementDto {
   constructor(params: Partial<PaymentAgreement> = {}){
@@ -22,6 +22,7 @@ export class AgreementDto {
   tokenIdentifier: string;
 
   @IsArray()
+  @IsOptional()
   @ApiProperty()
   benefits: string[];
 

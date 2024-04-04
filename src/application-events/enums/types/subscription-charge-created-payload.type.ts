@@ -1,7 +1,6 @@
-import { TriggerAgreementEvent } from '@/events-notifier/events';
-import { PaymentAgreement } from '@/features/payment-agreements/payment-agreement.schema';
-import { AgreementTrigger } from '@/features/agreement-triggers/agreement-trigger.schema';
-import { PaymentAgreementMember } from '@/features/payment-agreements/payment-agreement-member.schema';
+import { TriggerSubscriptionEvent } from '@/events-notifier/events';
+import { SubscriptionTrigger } from '@/features/subscription-triggers/entities';
+import { Subscription, SubscriptionMember } from '@/features/subscriptions/entities';
 
 type MemberInformation = {
   address: string, 
@@ -9,14 +8,14 @@ type MemberInformation = {
 }
 
 export type SubscriptionChargeCreatedEventPayload = {
-  agreement: PaymentAgreement,
-  agreementTrigger: AgreementTrigger,
-  blockchainEvent: TriggerAgreementEvent,
+  agreement: Subscription,
+  agreementTrigger: SubscriptionTrigger,
+  blockchainEvent: TriggerSubscriptionEvent,
   totalAmount: string,
   memberInformation: MemberInformation[]
 }
 
 export type SubscriptionMembershipCreatedEventPayload = {
-  agreement: PaymentAgreement,
-  membership: PaymentAgreementMember
+  agreement: Subscription,
+  membership: SubscriptionMember
 }

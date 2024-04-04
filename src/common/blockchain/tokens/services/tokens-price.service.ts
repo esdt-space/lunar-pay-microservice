@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
 /** Local Imports **/
-import { TokenPriceEntity } from '../schemas/token.price.entity';
-import { TokenPricesRepository } from '../repositories/token.prices.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { TokenPrice } from '../entities';
 
 @Injectable()
 export class TokensPriceService {
-  constructor(private readonly repository: TokenPricesRepository) {}
+  constructor(
+    @InjectRepository(TokenPrice)  private repository: Repository<TokenPrice>
+  ) {}
 
-  async findAll(): Promise<TokenPriceEntity[]> {
-    return this.repository.model.find();
+  async findAll(): Promise<TokenPrice[]> {
+    return this.repository.find();
   }
 }

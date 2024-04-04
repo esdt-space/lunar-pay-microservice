@@ -1,54 +1,63 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { MvxFungibleToken } from '@/libs/blockchain/mvx/models';
 
 /** Local Imports **/
-import { VerifiedBy } from '../enums';
-import { TokenEntity } from '../schemas/token.entity';
-import { TokenRepository } from '../repositories/token.repository';
+import { Repository } from 'typeorm';
+import { Token } from '../entities';
 
 @Injectable()
 export class TokensService {
-  constructor(private readonly repository: TokenRepository) {}
+  constructor(
+    @InjectRepository(Token)  private repository: Repository<Token>
+  ) {}
 
-  async findAll(): Promise<TokenEntity[]> {
-    return this.repository.model.find();
+  async findAll(): Promise<Token[]> {
+    return this.repository.find();
   }
 
-  async findOneByIdentifier(identifier: string): Promise<TokenEntity> {
-    return this.repository.model.findOne({ identifier: identifier });
+  async findOneByIdentifier(identifier: string): Promise<Token> {
+    return this.repository.findOneBy({ identifier });
   }
 
   private setVerifiedByProps(token: MvxFungibleToken) {
     const tokenDocument = {
       ...token,
-    } as Partial<TokenEntity>;
+    } as Partial<Token>;
 
     if (this.isVerifiedByMultiversX(token)) {
       tokenDocument.verified = true;
-      tokenDocument.verifiedBy = VerifiedBy.MultiversX;
     } else {
       tokenDocument.verified = false;
-      tokenDocument.verifiedBy = VerifiedBy.NotVerified;
     }
 
     return tokenDocument;
   }
 
-  saveTokens(tokens: MvxFungibleToken[]) {
-    const updates = tokens.map((document) => {
-      const decoratedToken = this.setVerifiedByProps(document);
+  async saveTokens(tokens: MvxFungibleToken[]): Promise<any> {
+    const decoratedTokens = tokens.map((rawToken) => this.decorate(rawToken));
 
-      return {
-        updateOne: {
-          filter: { identifier: decoratedToken.identifier },
-          update: decoratedToken,
-          upsert: true,
-        },
-      };
-    });
+    return this.repository.upsert(
+      decoratedTokens,
+      { conflictPaths: ['identifier'], skipUpdateIfNoValuesChanged: true }
+    );
+  }
 
-    return this.repository.model.bulkWrite(updates);
+  private decorate(token: MvxFungibleToken) {
+    return {
+      name: token.name,
+      identifier: token.identifier,
+      ticker: token.ticker,
+      decimals: token.decimals,
+      assets: token.assets,
+      owner: token.owner,
+      balance: token.balance,
+      price: token.price,
+      verified: token.verified,
+
+      rawData: token,
+    } as Token;
   }
 
   private isVerifiedByMultiversX(token: MvxFungibleToken) {

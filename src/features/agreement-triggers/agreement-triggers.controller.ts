@@ -2,8 +2,6 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common";
 import { NativeAuthGuard } from "@multiversx/sdk-nestjs-auth";
 
-import { MongooseObjectIdPipe } from "@/libs/database/mongo";
-
 import { AgreementTriggerService } from "./agreement-triggers.service";
 import PaginationParams from "@/common/models/pagination.params.model";
 
@@ -19,7 +17,7 @@ export class AgreementTriggersController {
     description: 'Returns a list of triggers for a specific agreement',
   })
   async list(
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     @Query('pagination') pagination: PaginationParams,
   ) {
     return this.agreementTriggersService.findAllAgreementTriggers(id, pagination);

@@ -1,94 +1,98 @@
-import { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { PaymentAgreement } from './payment-agreement.schema';
 import { CreateAgreementDto, UpdateAgreementDto } from './dto';
-import { PaymentAgreementRepository } from './payment-agreement.repository';
-import { AgreementDto } from './dto/agreement.dto';
 import PaginationParams from '@/common/models/pagination.params.model';
+import { PaymentAgreement } from './entities';
+import { PaginatedResponse } from '@/common/models/paginated-response';
 
 @Injectable()
 export class PaymentAgreementsService {
-  constructor(private readonly repository: PaymentAgreementRepository) {}
+  constructor(
+    @InjectRepository(PaymentAgreement)  private readonly repository: Repository<PaymentAgreement>
+  ) {}
 
-  async findOneAgreementById(id: Types.ObjectId): Promise<PaymentAgreement> {
-    return this.repository.model.findOne({ _id: id });
+  async countUsersAgreements() {
+    const agreementsCount = await this.repository.query(`
+      SELECT
+        owner AS "userId",
+        JSON_AGG(JSON_BUILD_OBJECT('type', 'agreement-created', 'count', count)) AS actions,
+        SUM(count) AS "allActions"
+      FROM (
+        SELECT
+          owner,
+          'agreement-created' AS type,
+          COUNT(*) AS count
+        FROM
+          payment_agreement
+        GROUP BY
+          owner
+      ) AS grouped_agreements
+      GROUP BY
+        owner
+    `);
+  
+    return agreementsCount.map(row => ({
+      userId: row.userId,
+      actions: row.actions,
+      allActions: parseInt(row.allActions, 10)
+    }));
+  };
+
+  async findOneAgreementById(id: string): Promise<PaymentAgreement> {
+    return this.repository.findOneBy({ id });
   }
 
   async findOneByIdSmartContractId(id: number): Promise<PaymentAgreement> {
-    return this.repository.model.findOne({ agreementIdentifier: id });
+    return this.repository.findOneBy({ agreementIdentifier: id });
   }
 
-  async findLatestAgreementCreatedByAccount(
-    address: string,
-  ): Promise<PaymentAgreement> {
-    return this.repository.model
-      .findOne({ owner: address })
-      .sort({ _id: 'desc' });
+  async findLatestAgreementCreatedByAccount(address: string): Promise<PaymentAgreement> {
+    return this.repository.findOne({
+      where: { owner: address },
+      order: { createdAt: 'DESC' },
+    });
   }
 
-  async findAgreementsCreatedByAccount(
-    address: string,
-    pagination: PaginationParams = new PaginationParams()
-  ) {
-    const operationsCount = await this.repository.model.find({ owner: address }).countDocuments({});
-    const numberOfPages = Math.ceil(operationsCount / pagination.limit);
-
-    const agreementsList: PaymentAgreement[] = await this.repository.model
-      .find({ owner: address })
-      .skip(pagination.skip)
-      .limit(pagination.limit)
-      .sort({ createdAt: 'desc' })
-      .lean();
-
-    return {
-      agreements: agreementsList.map((el) => {
-        return new AgreementDto(el);
-      }),
-      numberOfPages: numberOfPages
-    };
+  async findAgreementsCreatedByAccount(address: string, pagination: PaginationParams = new PaginationParams()) {
+    const [result, total] = await this.repository.findAndCount({
+      where: { owner: address },
+      order: { createdAt: 'DESC' },
+      skip: pagination.skip,
+      take: pagination.limit,
+    });
+  
+    return new PaginatedResponse<PaymentAgreement>(result, total, pagination)
   }
 
-  async createAgreement(address: string, dto: any): Promise<PaymentAgreement> {
-    return this.repository.model.create({
+  async createAgreement(address: string, dto: CreateAgreementDto){
+    const agreement = this.repository.create({
       ...dto,
       owner: address,
     });
+  
+    return await this.repository.save(agreement);
   }
 
-  async updateAgreementById(
-    address: string,
-    id: string,
-    dto: UpdateAgreementDto,
-  ): Promise<PaymentAgreement> {
-    return this.repository.model.findOneAndUpdate({ _id: id, owner: address }, {
-      ...dto,
-    });
+  async updateAgreementById(address: string, id: string, dto: UpdateAgreementDto): Promise<PaymentAgreement> {
+    let agreement = await this.repository.findOneBy({ id, owner: address });
+    if (agreement) {
+      agreement = { ...agreement, ...dto };
+      return this.repository.save(agreement);
+    }
+    return null;
   }
 
   create(dto: CreateAgreementDto) {
-    return this.repository.model.create({
-      owner: dto.owner,
-      createdAt: dto.createdAt,
-      agreementIdentifier: dto.agreementIdentifier,
-
-      tokenNonce: dto.tokenNonce,
-      tokenIdentifier: dto.tokenIdentifier,
-
-      frequency: dto.frequency,
-      amountType: dto.amountType,
-      agreementType: dto.agreementType,
-
-      fixedAmount: dto.fixedAmount,
-      minimumAmount: dto.minimumAmount,
-      maximumAmount: dto.maximumAmount,
+    const agreement = this.repository.create({
+      ...dto,
     });
+
+    return this.repository.save(agreement);
   }
 
-  async incrementMembersCount(id: Types.ObjectId): Promise<void> {
-    await this.repository.model.findOneAndUpdate(
-      { _id: id },
-      { $inc: { accountsCount: 1 } },
-    );
+  async incrementMembersCount(id: string): Promise<void> {
+    await this.repository.increment({ id }, 'accountsCount', 1);
   }
 }

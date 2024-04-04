@@ -40,7 +40,6 @@ export class TokenOperationEventHandler {
     } as CreateTokenOperationDto;
 
     return this.tokenOperationService.create(dto);
-
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainTokenTransferEventDecoded)

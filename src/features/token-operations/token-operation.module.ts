@@ -1,20 +1,16 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { TokenOperationService } from './token-operation.service';
-import { TokenOperationRepository } from './token-operation.repository';
 import { TokenOperationEventHandler } from './token-operation-event.handler';
-import { TokenOperationSchema, TokenOperation } from './token-operation.schema';
+import { TokenOperation } from './entities';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: TokenOperation.name, schema: TokenOperationSchema },
-    ]),
+    TypeOrmModule.forFeature([TokenOperation]),
   ],
   providers: [
     TokenOperationService,
-    TokenOperationRepository,
     TokenOperationEventHandler,
   ],
   exports: [TokenOperationService],

@@ -14,13 +14,13 @@ export class PaymentAgreementsIpnNotificationsHandler {
   async sendNewSubscriptionMembershipIpn(payload: SubscriptionMembershipCreatedEventPayload){
     const { agreement, membership } = payload;
 
-    if((agreement.signAgreementHttpCallbackUrl || '').length === 0) return;
+    if((agreement.signSubscriptionHttpCallbackUrl || '').length === 0) return;
 
-    return this.ipnSender.sendPostWebhook(agreement.signAgreementHttpCallbackUrl, {
+    return this.ipnSender.sendPostWebhook(agreement.signSubscriptionHttpCallbackUrl, {
       eventName: EventType.SubscriptionMembershipCreated,
-      subscriptionId: agreement._id,
+      subscriptionId: agreement.id,
       walletAddress: membership.member,
-      metadata: membership.metadata,
+      // metadata: membership.metadata,
     });
   }
 
@@ -28,12 +28,12 @@ export class PaymentAgreementsIpnNotificationsHandler {
   async sendNewSubscriptionChargeIpn(payload: SubscriptionChargeCreatedEventPayload){
     const { agreement, totalAmount, memberInformation } = payload;
 
-    if((agreement.signAgreementHttpCallbackUrl || '').length === 0) return;
+    if((agreement.signSubscriptionHttpCallbackUrl || '').length === 0) return;
 
-    return this.ipnSender.sendPostWebhook(agreement.signAgreementHttpCallbackUrl, {
+    return this.ipnSender.sendPostWebhook(agreement.signSubscriptionHttpCallbackUrl, {
       eventName: EventType.SubscriptionChargeCreated,
       amountCharged: totalAmount,
-      subscriptionId: agreement._id,
+      subscriptionId: agreement.id,
       walletsCharged: memberInformation,
     });
   }

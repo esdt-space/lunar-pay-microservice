@@ -1,73 +1,63 @@
-import { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { In, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateAgreementMemberDto } from './dto';
-import { PaymentAgreement } from './payment-agreement.schema';
-import { PaymentAgreementMemberRepository } from './payment-agreement-member.repository';
-import { PaymentAgreementRepository } from './payment-agreement.repository';
-import { SignedAgreementDto } from './dto/signed-agreement.dto';
-import { PaymentAgreementMember } from './payment-agreement-member.schema';
 import PaginationParams from '@/common/models/pagination.params.model';
+import { PaymentAgreement, PaymentAgreementMember } from './entities';
+import { PaginatedResponse } from '@/common/models/paginated-response';
 
 @Injectable()
 export class PaymentAgreementMembersService {
-  private static readonly ITEMS_PER_PAGE = 10;
-
   constructor(
-    private readonly repository: PaymentAgreementMemberRepository,
-    private readonly agreementsRepository: PaymentAgreementRepository,
+    @InjectRepository(PaymentAgreementMember) private readonly agreementMembersRepository: Repository<PaymentAgreementMember>,
+    @InjectRepository(PaymentAgreement) private readonly agreementsRepository: Repository<PaymentAgreement>
   ) {}
 
   async findAddressMemberships(address: string, pagination: PaginationParams = new PaginationParams()) {
-    const memberships = await this.repository.findMembershipsByAddress(address)
-    
+    const [memberships, operationsCount] = await this.agreementMembersRepository.findAndCount({
+      where: { member: address }
+    });
+
     const agreementIds = memberships.map(item => item.internalAgreementId);
 
-    const operationsCount = await this.repository.getAgreementsByIdsCount(agreementIds);
-    const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE;
-    const numberOfPages = Math.ceil(operationsCount / itemsPerPage);
+    const allSignedAgreements = await this.agreementsRepository.findBy({ 
+      id: In(agreementIds) 
+    });
 
-    const allSignedAgreements: PaymentAgreement[] = await this.agreementsRepository.model
-      .find({ _id: { $in: agreementIds } })
-      .skip(pagination.skip)
-      .limit(pagination.limit)
-      .sort({ createdAt: 'desc' })
-      .lean();
-
-    return {
-      agreements: allSignedAgreements.map((el) => {
-        return new SignedAgreementDto(el);
-      }),
-      numberOfPages: numberOfPages
-    };
+    return new PaginatedResponse<PaymentAgreement>(allSignedAgreements, operationsCount, pagination)
   }
 
-  async findAgreementMembers(id: Types.ObjectId, pagination: PaginationParams = new PaginationParams()) {
-    const operationsCount = await this.repository.findMembersCountById(id);
-    const itemsPerPage = PaymentAgreementMembersService.ITEMS_PER_PAGE;
-    const numberOfPages = Math.ceil(operationsCount / itemsPerPage);
-    
-    const allMemberships = await this.repository.model
-      .find({ internalAgreementId: id })
-      .skip(pagination.skip)
-      .limit(pagination.limit)
-      .sort({ createdAt: 'desc' });
+  async findAgreementMembers(id: string, pagination: PaginationParams = new PaginationParams()) {
+    const [allMemberships, operationsCount] = await this.agreementMembersRepository.findAndCount({
+      where: { internalAgreementId: id },
+      skip: pagination.skip,
+      take: pagination.limit,
+      order: { createdAt: 'DESC' }
+    });
 
-    return {
-      memberships: allMemberships,
-      numberOfPages: numberOfPages
-    };
+    return new PaginatedResponse<PaymentAgreementMember>(allMemberships, operationsCount, pagination)
   }
 
-  async updateLastChargedAt(member: string, date: Date){
-    return this.repository.updateLastMembershipCharged(member, date);
-  }
-  
-  async findMembership(id: Types.ObjectId, address: string): Promise<PaymentAgreementMember> {
-    return this.repository.findMembershipByIdAndAddress(id, address);
+  async updateLastChargedAt(member: string, date: Date) {
+    await this.agreementMembersRepository.update({ member: member }, {
+      lastSuccessfulCharge: date.toString()
+    });
   }
 
-  createMembership(dto: CreateAgreementMemberDto) {
-    return this.repository.createNewMembership(dto);
+  async findMembership(id: string, address: string): Promise<PaymentAgreementMember> {
+    return this.agreementMembersRepository.findOneBy({ 
+      internalAgreementId: id, 
+      member: address 
+    });
+  }
+
+  async createMembership(dto: CreateAgreementMemberDto): Promise<PaymentAgreementMember> {
+    const membership = this.agreementMembersRepository.create({
+      ...dto,
+      lastChargedAt: dto.createdAt,
+      lastSuccessfulCharge: dto.createdAt,
+    });
+    return this.agreementMembersRepository.save(membership);
   }
 }
