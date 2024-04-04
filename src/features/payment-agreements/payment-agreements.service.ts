@@ -9,8 +9,6 @@ import PaginationParams from '@/common/models/pagination.params.model';
 
 @Injectable()
 export class PaymentAgreementsService {
-  private static readonly ITEMS_PER_PAGE = 10;
-
   constructor(private readonly repository: PaymentAgreementRepository) {}
 
   async findOneAgreementById(id: Types.ObjectId): Promise<PaymentAgreement> {
@@ -63,8 +61,7 @@ export class PaymentAgreementsService {
     id: string,
     dto: UpdateAgreementDto,
   ): Promise<PaymentAgreement> {
-    return this.repository.model.findByIdAndUpdate(id, {
-      owner: address,
+    return this.repository.model.findOneAndUpdate({ _id: id, owner: address }, {
       ...dto,
     });
   }
