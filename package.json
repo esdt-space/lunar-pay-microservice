@@ -41,6 +41,7 @@
     "@nestjs/platform-express": "^9.4.0",
     "@nestjs/schedule": "^3.0.1",
     "@nestjs/swagger": "^6.2.1",
+    "@nestjs/throttler": "^5.1.2",
     "@nestjs/typeorm": "^10.0.2",
     "@tirke/node-cache-manager-ioredis": "^3.4.0",
     "axios": "^1.4.0",

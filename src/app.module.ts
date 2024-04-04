@@ -30,8 +30,8 @@ import { AgreementTriggerModule } from './features/agreement-triggers/agreement-
 import { SubscriptionTriggerModule } from './features/subscription-triggers/subscription-triggers.module';
 import { SubscriptionsModule } from './features/subscriptions/subscriptions.module';
 import { AgreementTriggersController } from './features/agreement-triggers/agreement-triggers.controller';
-import { EmailSeviceModule } from './features/email/email.module';
-import { EmailServiceController } from './features/email/email.controller';
+import { EmailServiceModule } from './features/email/email.module';
+import { ContactController } from './features/email/email.controller';
 import { DonationsController } from './features/donations/donations.controller';
 import { EventController } from './features/event/event.controller';
 import { EventModule } from './features/event/event.module';
@@ -66,7 +66,7 @@ import { SubscriptionTriggersController } from './features/subscription-triggers
     TokenOperationModule,
     PaymentsModule,
 
-    EmailSeviceModule,
+    EmailServiceModule,
 
     VaultModule,
     EventsNotifierModule,
@@ -85,7 +85,7 @@ import { SubscriptionTriggersController } from './features/subscription-triggers
     SubscriptionsController,
     TokenOperationController,
 
-    EmailServiceController,
+    ContactController,
 
     VaultController,
 

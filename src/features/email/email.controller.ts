@@ -6,9 +6,9 @@ import { ThrottlerGuard } from '@nestjs/throttler'
 import { EmailService } from "./email.service";
 import { ContactDto } from "./dto";
 
-@ApiTags('Email Service')
-@Controller('email-service')
-export class EmailServiceController {
+@ApiTags('Contact')
+@Controller('contact')
+export class ContactController {
   constructor(
     private readonly emailService: EmailService,
     private readonly config: ConfigService,
@@ -16,7 +16,7 @@ export class EmailServiceController {
 
   @Post('contact')
   @UseGuards(ThrottlerGuard)
-  async triggerContactEmail(@Body() dto: ContactDto,){
+  async contact(@Body() dto: ContactDto,){
     const input = {
       to: this.config.get('EMAIL_FROM'),
       from: this.config.get('EMAIL_FROM'),
@@ -27,6 +27,6 @@ export class EmailServiceController {
       }
     }
 
-    return await this.emailService.triggerMail(input)
+    return await this.emailService.sendMail(input)
   }
 }
