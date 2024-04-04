@@ -1,12 +1,12 @@
-import { Prop } from '@nestjs/mongoose';
+import { Column } from 'typeorm';
 
 export class RedirectAndWebhooksSettings {
-  @Prop({ type: String })
+  @Column({ type: String })
   signAgreementRedirectUrl = '';
 
-  @Prop({ type: String })
+  @Column({ type: String })
   httpWebhookUrl = '';
 
-  @Prop({ type: String })
+  @Column({ type: String })
   httpWebhookSecret = '';
 }

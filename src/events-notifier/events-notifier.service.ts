@@ -13,7 +13,12 @@ import {
   CreatePaymentAgreementEvent,
   SignPaymentAgreementEvent,
   TriggerAgreementEvent,
+  PaymentEvent,
+  CreateSubscriptionEvent,
+  SignSubscriptionEvent,
+  TriggerSubscriptionEvent,
 } from './events';
+import { DonationEvent } from './events/donation/donation-event';
 
 type QueuePayload = Record<string, unknown> & {
  events: RawEvent[];
@@ -39,6 +44,7 @@ export class EventsNotifierService {
       if(rawEvent.identifier === 'completedTxEvent') continue;
 
       try {
+        console.log(rawEvent)
         const event = this.decodeEvent(rawEvent);
         this.eventEmitter.emit(event.emitEventName, event);
       } catch (error) {
@@ -74,6 +80,21 @@ export class EventsNotifierService {
 
       case EventIdentifier.TRIGGER_AGREEMENT:
         return new TriggerAgreementEvent(rawEvent);
+
+      case EventIdentifier.PAYMENT:
+        return new PaymentEvent(rawEvent);
+
+      case EventIdentifier.DONATE:
+        return new DonationEvent(rawEvent);
+
+      case EventIdentifier.CREATE_SUBSCRIPTION:
+        return new CreateSubscriptionEvent(rawEvent);
+
+      case EventIdentifier.CREATE_SUBSCRIPTION_MEMBERSHIP:
+        return new SignSubscriptionEvent(rawEvent);
+
+      case EventIdentifier.TRIGGER_SUBSCRIPTION:
+        return new TriggerSubscriptionEvent(rawEvent);
     }
   }
 }

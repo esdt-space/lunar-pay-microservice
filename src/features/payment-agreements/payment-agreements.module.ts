@@ -1,19 +1,16 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { IpnModule } from '@/core/ipn/ipn.module';
 import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
 
 import { PaymentAgreementsService } from './payment-agreements.service';
-import { PaymentAgreementRepository } from './payment-agreement.repository';
-import { PaymentAgreement, PaymentAgreementSchema } from './payment-agreement.schema';
-import { PaymentAgreementMember, PaymentAgreementMemberSchema } from './payment-agreement-member.schema';
+import { PaymentAgreementsEventHandler } from './payment-agreements-event.handler';
 
 import { PaymentAgreementMembersService } from './payment-agreement-members.service';
-import { PaymentAgreementMemberRepository } from './payment-agreement-member.repository';
 import { AgreementTriggerModule } from '../agreement-triggers/agreement-triggers.module';
+import { PaymentAgreement, PaymentAgreementMember } from './entities';
 
-import { PaymentAgreementsEventHandler } from './payment-agreements-event.handler';
 import { PaymentAgreementsIpnNotificationsHandler } from './payment-agreements-ipn-notifications.handler';
 
 @Module({
@@ -21,19 +18,16 @@ import { PaymentAgreementsIpnNotificationsHandler } from './payment-agreements-i
     IpnModule,
     AgreementTriggerModule,
     TokenOperationModule,
-    MongooseModule.forFeature([
-      { name: PaymentAgreement.name, schema: PaymentAgreementSchema },
-      { name: PaymentAgreementMember.name, schema: PaymentAgreementMemberSchema },
-    ]),
+    TypeOrmModule.forFeature([PaymentAgreement, PaymentAgreementMember]),
   ],
   providers: [
-    PaymentAgreementsService, PaymentAgreementRepository,
-    PaymentAgreementMembersService, PaymentAgreementMemberRepository,
-    PaymentAgreementsEventHandler, PaymentAgreementsIpnNotificationsHandler
+    PaymentAgreementsService,
+    PaymentAgreementMembersService,
+    PaymentAgreementsEventHandler
   ],
   exports: [
-    PaymentAgreementsService, PaymentAgreementRepository,
-    PaymentAgreementMembersService, PaymentAgreementMemberRepository,
+    PaymentAgreementsService,
+    PaymentAgreementMembersService,
   ],
 })
 export class PaymentAgreementsModule {}

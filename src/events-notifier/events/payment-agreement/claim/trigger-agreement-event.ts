@@ -1,4 +1,4 @@
-import { GenericEvent, GenericToken, RawEventType } from '@/libs/blockchain/mvx/event-decoder';
+import { GenericEvent, RawEventType } from '@/libs/blockchain/mvx/event-decoder';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
 import { LunarPayEvent } from '@/events-notifier/events/lunar-pay-event';

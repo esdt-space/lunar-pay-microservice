@@ -1,16 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsArray, IsOptional } from 'class-validator';
+import { IsString, IsArray, IsOptional } from 'class-validator';
 
 export class UpdateAgreementDto {
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
   @ApiProperty()
   ownerName: string;
 
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
   @ApiProperty()
   itemName: string;
 

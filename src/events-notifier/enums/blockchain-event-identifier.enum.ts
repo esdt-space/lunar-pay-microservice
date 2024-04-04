@@ -9,4 +9,9 @@ export enum EventIdentifier {
   TRIGGER_AGREEMENT = 'triggerAgreement',
   SUCCESSFUL_AGREEMENT_CHARGES = 'successfulAgreementCharges',
   FAILED_AGREEMENT_CHARGES = 'failedAgreementCharges',
+  PAYMENT = 'pay',
+  DONATE = 'donate',
+  CREATE_SUBSCRIPTION = 'createSubscription',
+  CREATE_SUBSCRIPTION_MEMBERSHIP = 'createSubscriptionMembership',
+  TRIGGER_SUBSCRIPTION = 'triggerSubscription',
 }

@@ -1,6 +1,17 @@
-import { Types } from 'mongoose';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsDate, IsNotEmpty, IsString } from "class-validator";
+
 
 export class CreateAgreementTriggerDto {
-  agreement: Types.ObjectId;
-  txHash?: string
+  @IsString()
+  @IsNotEmpty()
+  agreement: string;
+
+  @IsString()
+  @IsNotEmpty()
+  txHash: string;
+
+  @IsDate()
+  @ApiProperty()
+  createdAt: Date;
 }

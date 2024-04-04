@@ -22,12 +22,21 @@ import { PaymentAgreementsController } from '@/features/payment-agreements/payme
 import { VaultController } from '@/common/protocol/vault/vault.controller';
 import { VaultModule } from '@/common/protocol/vault/vault.module';
 import { TokenOperationModule } from '@/features/token-operations/token-operation.module';
+import { DonationsModule } from './features/donations/donations.module';
+import { PaymentsModule } from './features/payment/payment.module';
 import { TokenOperationController } from '@/features/token-operations/token-operation.controller';
 import { EventsNotifierModule } from '@/events-notifier';
 import { AgreementTriggerModule } from './features/agreement-triggers/agreement-triggers.module';
+import { SubscriptionTriggerModule } from './features/subscription-triggers/subscription-triggers.module';
+import { SubscriptionsModule } from './features/subscriptions/subscriptions.module';
 import { AgreementTriggersController } from './features/agreement-triggers/agreement-triggers.controller';
 import { EmailSeviceModule } from './features/email/email.module';
 import { EmailServiceController } from './features/email/email.controller';
+import { DonationsController } from './features/donations/donations.controller';
+import { EventController } from './features/event/event.controller';
+import { EventModule } from './features/event/event.module';
+import { SubscriptionsController } from './features/subscriptions/subscriptions.controller';
+import { SubscriptionTriggersController } from './features/subscription-triggers/subscription-triggers.controller';
 
 @Module({
   imports: [
@@ -51,12 +60,18 @@ import { EmailServiceController } from './features/email/email.controller';
 
     AgreementTriggerModule,
     PaymentAgreementsModule,
+    DonationsModule,
+    SubscriptionTriggerModule,
+    SubscriptionsModule,
     TokenOperationModule,
+    PaymentsModule,
 
     EmailSeviceModule,
 
     VaultModule,
     EventsNotifierModule,
+
+    EventModule,
   ],
   controllers: [
     AccountController,
@@ -65,11 +80,16 @@ import { EmailServiceController } from './features/email/email.controller';
 
     AgreementTriggersController,
     PaymentAgreementsController,
+    DonationsController,
+    SubscriptionTriggersController,
+    SubscriptionsController,
     TokenOperationController,
 
     EmailServiceController,
 
     VaultController,
+
+    EventController,
   ],
 })
 export default class AppModule {}

@@ -1,5 +1,5 @@
 type EventData = {
-  agreementId: number;
+  subscriptionId: number;
   accounts: string[];
   cycles: number[];
   amounts: number[];

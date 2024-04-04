@@ -9,39 +9,39 @@ export class CreateAgreementDto {
   @IsNotEmpty()
   agreementIdentifier: number;
 
+  @IsNumber()
+  @IsNotEmpty()
+  tokenNonce: number;
+
   @IsString()
   @IsNotEmpty()
   tokenIdentifier: string;
 
   @IsNumber()
   @IsNotEmpty()
-  tokenNonce: number;
+  agreementType: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  agreementType: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  amountType: number;
+  amountType: string;
 
   @IsNumber()
   @IsNotEmpty()
   frequency: number;
 
-  @IsDate()
-  @IsNotEmpty()
-  createdAt: Date;
-
   @IsOptional()
   @IsString()
   fixedAmount: string | undefined;
-
+  
   @IsOptional()
   @IsString()
   minimumAmount: string | undefined;
-
+  
   @IsOptional()
   @IsString()
   maximumAmount: string | undefined;
+
+  @IsDate()
+  @IsNotEmpty()
+  createdAt: Date;
 }

@@ -1,22 +1,17 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AgreementTrigger, AgreementTriggerSchema } from './agreement-trigger.schema';
-import { AgreementTriggerRepository } from './agreement-trigger.repository';
 import { AgreementTriggerService } from './agreement-triggers.service';
+import { AgreementTrigger } from './entities';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: AgreementTrigger.name, schema: AgreementTriggerSchema },
-    ]),
+    TypeOrmModule.forFeature([AgreementTrigger]),
   ],
   providers: [
-    AgreementTriggerRepository,
     AgreementTriggerService
   ],
   exports: [
-    AgreementTriggerRepository,
     AgreementTriggerService
   ],
 })

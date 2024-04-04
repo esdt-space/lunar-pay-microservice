@@ -13,13 +13,24 @@ import PaginationParams from '@/common/models/pagination.params.model';
 
 import { TokenOperationService } from './token-operation.service';
 import TokenOperationFilters from './models/token-operation.filters.model';
-import { MongooseObjectIdPipe } from '@/libs/database/mongo';
 
 @Injectable()
 @ApiTags('Token Operations')
 @Controller('token-operations')
 export class TokenOperationController {
   constructor(private readonly tokenOperationService: TokenOperationService) {}
+
+  @Get('all/operations')
+  @ApiOperation({
+    summary: 'Token Operations list',
+    description: 'Returns a list of all token-operations.',
+  })
+  async listAll(
+    @Query() filters: TokenOperationFilters,
+    @Query() pagination: PaginationParams,
+  ) {
+    return this.tokenOperationService.findAllTokenOperations(filters, pagination);
+  }
 
   @Get()
   @UseGuards(NativeAuthGuard)
@@ -39,10 +50,10 @@ export class TokenOperationController {
   @UseGuards(NativeAuthGuard)
   @ApiOperation({
     summary: 'Token Operations list',
-    description: 'Returns a list of payment agreement charge operations.',
+    description: 'Returns a list of token operations.',
   })
   async getOperationsByParentId(
-    @Param('id', MongooseObjectIdPipe) id,
+    @Param('id') id: string,
     @Query() pagination: PaginationParams,
   ) {
     return this.tokenOperationService.findChargeTokenOperationsByParentId(id, pagination);
