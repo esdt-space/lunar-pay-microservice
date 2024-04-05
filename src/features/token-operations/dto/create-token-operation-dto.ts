@@ -56,7 +56,7 @@ export class CreateTokenOperationDto {
 
   @IsString()
   @IsOptional()
-  details: string;
+  details?: string;
 
   @IsDate()
   @ApiProperty()

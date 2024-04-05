@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
-import { CreateSubscriptionEvent, SignSubscriptionEvent, TriggerSubscriptionEvent } from '@/events-notifier/events';
 
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { SubscriptionsService } from './subscriptions.service';
@@ -15,6 +14,10 @@ import { SubscriptionMembersService } from './subscription-members.service';
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
 import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
 import { SubscriptionTriggerService } from '@/features/subscription-triggers/subscription-triggers.service';
+import { TriggerEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { CreateSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/create-subscription-event.topics';
+import { SignSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/sign-subscription-event.topics';
+import { TriggerSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/trigger-subscription-event.topics';
 
 @Injectable()
 export class SubscriptionsEventHandler {
@@ -26,7 +29,7 @@ export class SubscriptionsEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.SignSubscription)
-  async handleSubscriptionSignedEvent(event: SignSubscriptionEvent){
+  async handleSubscriptionSignedEvent(event: TriggerEvent<SignSubscriptionEventTopics>){
     const eventData = event.decodedTopics.toPlainObject();
 
     const subscription = await this.subscriptionsService
@@ -62,7 +65,7 @@ export class SubscriptionsEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.CreateSubscription)
-  async handleSubscriptionCreatedEvent(event: CreateSubscriptionEvent) {
+  async handleSubscriptionCreatedEvent(event: TriggerEvent<CreateSubscriptionEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     const dto = {
@@ -84,7 +87,7 @@ export class SubscriptionsEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.TriggerSubscription)
-  async handleTriggerSubscriptionEvent(event: TriggerSubscriptionEvent) {
+  async handleTriggerSubscriptionEvent(event: TriggerEvent<TriggerSubscriptionEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     const chargesAmountResult = eventData.data.reduce((acc, val) => {

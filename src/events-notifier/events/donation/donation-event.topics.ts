@@ -1,19 +1,11 @@
-import BigNumber from 'bignumber.js';
-import { AbiRegistry, Address, OptionValue, ResultsParser } from '@multiversx/sdk-core/out';
+import { AbiRegistry, Address, ResultsParser } from '@multiversx/sdk-core/out';
 import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
 
 import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
 import { Token } from '@/libs/blockchain/mvx/models';
 
-type ParseResult = {
-  sender: Address,
-  receiver: Address,
-  token_identifier: Token,
-  token_nonce: number,
-  amount: BigNumber,
-  metadata: OptionValue,
-}
+import { DonationParseResult } from './types';
 
 export class DonationEventTopics extends LunarPayEventTopics {
   private readonly sender: Address;
@@ -43,7 +35,7 @@ export class DonationEventTopics extends LunarPayEventTopics {
       ],
     });
 
-    const parsedEvent = parser.parseEvent(event, eventDefinition) as ParseResult;
+    const parsedEvent = parser.parseEvent(event, eventDefinition) as DonationParseResult;
 
     this.sender = new Address(parsedEvent.sender);
     this.receiver = new Address(parsedEvent.receiver);

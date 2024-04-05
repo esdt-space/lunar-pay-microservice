@@ -38,6 +38,7 @@ export class CreateDonationDto {
   fixedAmount?: string;
 
   @IsDate()
+  @IsOptional()
   @ApiProperty()
   createdAt: Date;
 }

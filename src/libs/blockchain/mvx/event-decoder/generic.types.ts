@@ -1,3 +1,9 @@
+import { DonationParsedEventResult } from "@/events-notifier/events/donation";
+import { PaymentParsedEventResult } from "@/events-notifier/events/payment";
+import { SignedAgreementParsedEventResult, TriggerAgreementParsedEventResult } from "@/events-notifier/events/payment-agreement";
+import { SignSubscriptionParsedEventResult, TriggerSubscriptionParsedEventResult } from "@/events-notifier/events/subscription";
+import { DepositWithdrawParsedEventResult, TransferParsedEventResult } from "@/events-notifier/events/token-management";
+
 export enum TRANSACTION_EVENTS {
   ESDT_NFT_Transfer = 'ESDTNFTTransfer',
   ESDT_NFT_Burn = 'ESDTNFTBurn',
@@ -32,3 +38,13 @@ export type GenericEventType = {
   epoch: number | undefined;
   timestamp: number | undefined;
 };
+
+export type GenericParsedEventType = 
+  DonationParsedEventResult | 
+  PaymentParsedEventResult | 
+  TriggerSubscriptionParsedEventResult |
+  TransferParsedEventResult |
+  DepositWithdrawParsedEventResult |
+  TriggerAgreementParsedEventResult |
+  SignSubscriptionParsedEventResult |
+  SignedAgreementParsedEventResult;

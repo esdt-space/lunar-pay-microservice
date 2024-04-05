@@ -77,13 +77,12 @@ export class DonationsService {
   }
 
 
-  async createDonation(address: string, dto: CreateDonationDto) {
+  createDonation(address: string, dto: CreateDonationDto) {
     const donation = this.repository.create({
       ...dto,
       owner: address,
+      createdAt: new Date(Date.now())
     });
-
-    donation.createdAt = new Date()
 
     return this.repository.save(donation);
   }

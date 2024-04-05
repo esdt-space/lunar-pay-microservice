@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
-import { DonationEvent } from '@/events-notifier/events/donation/donation-event';
 import { TokenOperationService } from '../token-operations/token-operation.service';
 import { DonationsService } from './donations.service';
 import { TokenOperationType } from '../token-operations/enums';
+import { TriggerEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { DonationEventTopics } from '@/events-notifier/events/donation/donation-event.topics';
 
 @Injectable()
 export class DonationsEventHandler {
@@ -15,7 +16,7 @@ export class DonationsEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.Donation)
-  async handlePaymentEvent(event: DonationEvent) {
+  async handlePaymentEvent(event: TriggerEvent<DonationEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     const donation = await this.donationsService.findOneDonationByAccount(eventData.receiver.toString())
