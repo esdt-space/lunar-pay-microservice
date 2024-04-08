@@ -40,8 +40,10 @@ export class SubscriptionsEventHandler {
       internalSubscriptionId: subscription.id,
       blockchainSubscriptionId: eventData.subscriptionId,
 
-      createdAt: eventData.signedAt,
       subscriptionType: subscription.subscriptionType,
+      createdAt: eventData.signedAt,
+      lastChargedAt: eventData.signedAt,
+      lastSuccessfulCharge: eventData.signedAt,
     } as CreateSubscriptionMemberDto;
 
     await this.subscriptionsService.incrementMembersCount(subscription.id);

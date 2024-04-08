@@ -30,24 +30,25 @@ export class CreateSubscriptionMemberDto {
   @IsString()
   @IsOptional()
   @ApiProperty()
-  status: string;
+  status?: string;
 
-  @IsString()
+  @IsDate()
   @IsOptional()
   @ApiProperty()
-  lastChargedAt: string;
+  lastChargedAt: Date;
 
-  @IsString()
+  @IsDate()
   @IsOptional()
   @ApiProperty()
-  lastSuccessfulCharge: string;
+  lastSuccessfulCharge: Date;
 
-  @IsString()
+  @IsDate()
   @IsOptional()
   @ApiProperty()
-  canceledAt: string;
+  canceledAt?: Date;
   
   @IsDate()
+  @IsOptional()
   @ApiProperty()
   createdAt: Date;
 }

@@ -63,14 +63,8 @@ export class SubscriptionMembersService {
     });
   }
 
-  async createMembership(dto: any) {
-    const membership = this.subscriptionMembersRepository.create({
-      ...dto,
-      lastChargedAt: dto.createdAt,
-      lastSuccessfulCharge: dto.createdAt,
-      metadata: dto.metadata,
-      createdAt: new Date()
-    });
+  createMembership(dto: CreateSubscriptionMemberDto) {
+    const membership = this.subscriptionMembersRepository.create(dto);
     
     return this.subscriptionMembersRepository.save(membership);
   }

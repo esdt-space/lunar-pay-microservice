@@ -9,14 +9,11 @@ import { CreateTokenOperationDto } from './dto';
 import { TokenOperationService } from './token-operation.service';
 import { TriggerEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { 
-  DepositEventTopics, 
-  WithdrawEventTopics, 
+  DepositWithdrawEventTopics, 
   TransferEventTopics, 
   DepositWithdrawParsedEventResult, 
   TransferParsedEventResult 
 } from '@/events-notifier/events/token-management';
-
-type TokenOperationEvent = TriggerEvent<DepositEventTopics> | TriggerEvent<WithdrawEventTopics>;
 
 @Injectable()
 export class TokenOperationEventHandler {
@@ -26,7 +23,7 @@ export class TokenOperationEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.BlockchainDepositEventDecoded)
-  async handleDepositEvent(event: TriggerEvent<DepositEventTopics>) {
+  async handleDepositEvent(event: TriggerEvent<DepositWithdrawEventTopics>) {
     const dto =  {
       ...this.getCommonDtoProperties(event),
       sender: event.address,
@@ -39,7 +36,7 @@ export class TokenOperationEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainWithdrawEventDecoded)
-  async handleWithdrawEvent(event: TriggerEvent<WithdrawEventTopics>) {
+  async handleWithdrawEvent(event: TriggerEvent<DepositWithdrawEventTopics>) {
     const dto = {
       ...this.getCommonDtoProperties(event),
       sender: this.config.get('contracts').lunarPayVault as string,
@@ -70,7 +67,7 @@ export class TokenOperationEventHandler {
     return this.tokenOperationService.create(dto);
   }
 
-  private getCommonDtoProperties(event: TokenOperationEvent) {
+  private getCommonDtoProperties(event: TriggerEvent<DepositWithdrawEventTopics>) {
     const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
 
     return {

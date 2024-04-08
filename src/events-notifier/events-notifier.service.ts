@@ -10,7 +10,7 @@ import { DonationEventTopics } from './events/donation';
 import { PaymentEventTopics } from './events/payment';
 import { CreateSubscriptionEventTopics } from './events/subscription/topics/create-subscription-event.topics';
 import { SignSubscriptionEventTopics } from './events/subscription/topics/sign-subscription-event.topics';
-import { DepositEventTopics, WithdrawEventTopics, TransferEventTopics } from './events/token-management';
+import { DepositWithdrawEventTopics, TransferEventTopics } from './events/token-management';
 import { TriggerSubscriptionEventTopics } from './events/subscription/topics/trigger-subscription-event.topics';
 import { CreatePaymentAgreementEventTopics } from './events/payment-agreement/topics/create-payment-agreement-event.topics';
 import { SignPaymentAgreementEventTopics } from './events/payment-agreement/topics/sign-payment-agreement-event.topics';
@@ -58,11 +58,11 @@ export class EventsNotifierService {
     switch (rawEvent.identifier) {
       case EventIdentifier.EGLD_DEPOSIT:
       case EventIdentifier.ESDT_DEPOSIT:
-        return new TriggerEvent<DepositEventTopics>(rawEvent, BlockchainEventDecoded.BlockchainDepositEventDecoded, DepositEventTopics);
+        return new TriggerEvent<DepositWithdrawEventTopics>(rawEvent, BlockchainEventDecoded.BlockchainDepositEventDecoded, DepositWithdrawEventTopics);
 
       case EventIdentifier.EGLD_WITHDRAWAL:
       case EventIdentifier.ESDT_WITHDRAWAL:
-        return new TriggerEvent<WithdrawEventTopics>(rawEvent, BlockchainEventDecoded.BlockchainWithdrawEventDecoded, WithdrawEventTopics);
+        return new TriggerEvent<DepositWithdrawEventTopics>(rawEvent, BlockchainEventDecoded.BlockchainWithdrawEventDecoded, DepositWithdrawEventTopics);
 
       case EventIdentifier.TOKEN_TRANSFER:
         return new TriggerEvent<TransferEventTopics>(rawEvent, BlockchainEventDecoded.BlockchainTokenTransferEventDecoded, TransferEventTopics);
