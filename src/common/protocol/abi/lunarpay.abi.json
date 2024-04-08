@@ -699,31 +699,6 @@
                     "indexed": true
                 },
                 {
-                    "name": "member",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "timestamp",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "data",
-                    "type": "SubscriptionChargeData",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "chargeSubscription",
-            "inputs": [
-                {
-                    "name": "id",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
                     "name": "timestamp",
                     "type": "u64",
                     "indexed": true

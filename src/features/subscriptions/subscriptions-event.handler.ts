@@ -93,20 +93,23 @@ export class SubscriptionsEventHandler {
     const eventData = event.decodedTopics.toPlainObject();
 
     const chargesAmountResult = eventData.data.reduce((acc, val) => {
-      if(val.data.successful !== null) {
-        acc.successfulChargeAmount = Number(val.data.successful[1])
-        acc.successfulAccountsCount++
+      const successfulValue = val.data[0];
+      const failedValue = val.data[1];
+
+      if(successfulValue !== null) {
+        acc.successfulChargeAmount = successfulValue[0]
+        acc.successfulAccountsCount = Number(successfulValue[1])
       }
 
-      if(val.data.failed !== null) {
-        acc.failedChargeAmount = Number(val.data.failed[1])
-        acc.failedAccountsCount++
+      if(failedValue !== null) {
+        acc.failedChargeAmount = failedValue[0]
+        acc.failedAccountsCount =Number(failedValue[1])
       }
 
       return acc
     }, {
-      successfulChargeAmount: 0, 
-      failedChargeAmount: 0, 
+      successfulChargeAmount: "", 
+      failedChargeAmount: "", 
       successfulAccountsCount: 0, 
       failedAccountsCount: 0
     })
@@ -141,7 +144,10 @@ export class SubscriptionsEventHandler {
     })
   
     eventData.data.forEach((member) => {
-      if(member.data.successful !== null) {
+      const successfulValue = member.data[0];
+      const failedValue = member.data[1];
+
+      if(successfulValue !== null) {
         this.membersService.updateLastChargedAt(member.account, new Date()) 
         this.tokenOperationsService.create({
           sender: member.account,
@@ -149,7 +155,7 @@ export class SubscriptionsEventHandler {
           receiver: null,
           subscriptionTriggerId: subscriptionTrigger.id,
           status: TokenOperationStatus.SUCCESS,
-          amount: member.data.successful[0],
+          amount: successfulValue[0],
           tokenIdentifier: subscription.tokenIdentifier,
           tokenNonce: subscription.tokenNonce,
           type: TokenOperationType.SUBSCRIPTION_CHARGE,
@@ -162,7 +168,7 @@ export class SubscriptionsEventHandler {
         })
       }
 
-      if(member.data.failed !== null) {
+      if(failedValue !== null) {
         this.membersService.updateLastChargedAt(member.account, new Date()) 
         this.tokenOperationsService.create({
           sender: member.account,
@@ -170,7 +176,7 @@ export class SubscriptionsEventHandler {
           receiver: null,
           subscriptionTriggerId: subscriptionTrigger.id,
           status: TokenOperationStatus.FAILED,
-          amount: member.data.failed[0],
+          amount: failedValue[0],
           tokenIdentifier: subscription.tokenIdentifier,
           tokenNonce: subscription.tokenNonce,
           type: TokenOperationType.SUBSCRIPTION_CHARGE,

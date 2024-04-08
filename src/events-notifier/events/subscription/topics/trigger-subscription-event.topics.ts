@@ -3,12 +3,12 @@ import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network
 
 import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
-import { TriggerSubscriptionParseEvent } from '..';
+import { SubscriptionMultiChargeResult, TriggerSubscriptionParseEvent } from '..';
 
 export class TriggerSubscriptionEventTopics extends LunarPayEventTopics {
   private readonly subscriptionId: number;
   private readonly createdAt: number;
-  private readonly data: any[];
+  private readonly data: SubscriptionMultiChargeResult[];
 
   constructor(rawTopics: string[]) {
     super(rawTopics);
@@ -23,7 +23,6 @@ export class TriggerSubscriptionEventTopics extends LunarPayEventTopics {
         new TransactionEventTopic(rawTopics[0]),
         new TransactionEventTopic(rawTopics[1]),
         new TransactionEventTopic(rawTopics[2]),
-        new TransactionEventTopic(rawTopics[3]),
       ],
     });
     
