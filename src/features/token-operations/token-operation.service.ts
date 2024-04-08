@@ -60,8 +60,6 @@ export class TokenOperationService {
     try {
       const operation = this.repository.create(transaction);
 
-      operation.createdAt = new Date()
-
       return await this.repository.save(operation);
     } catch (e) {
       this.logger.error('create_transaction', { error: e.stack });
