@@ -32,7 +32,7 @@ export class DepositWithdrawEventTopics extends LunarPayEventTopics {
       ],
     });
 
-    const parsedEvent = parser.parseEvent(event, eventDefinition) as DepositWithdrawParseEvent
+    const parsedEvent = parser.parseEvent(event, eventDefinition) as DepositWithdrawParseEvent;
 
     this.address = new Address(parsedEvent.address);
     this.tokenIdentifier = parsedEvent.token_identifier.toString();
