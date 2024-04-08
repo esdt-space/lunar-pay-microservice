@@ -24,9 +24,14 @@ export class TokenOperationEventHandler {
 
   @OnEvent(BlockchainEventDecoded.BlockchainDepositEventDecoded)
   async handleDepositEvent(event: TriggerEvent<DepositWithdrawEventTopics>) {
+    const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
+
     const dto =  {
-      ...this.getCommonDtoProperties(event),
-      sender: event.address,
+      amount: transactionToken.token.amount.toString(),
+      tokenNonce: Number(transactionToken.token.nonce),
+      tokenIdentifier: transactionToken.token.tokenIdentifier,
+      txHash: event.txHash,
+      sender: transactionToken.address,
       receiver: this.config.get('contracts').lunarPayVault as string,
       type: TokenOperationType.DEPOSIT,
       createdAt: new Date(Date.now()),
@@ -37,10 +42,15 @@ export class TokenOperationEventHandler {
 
   @OnEvent(BlockchainEventDecoded.BlockchainWithdrawEventDecoded)
   async handleWithdrawEvent(event: TriggerEvent<DepositWithdrawEventTopics>) {
+    const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
+
     const dto = {
-      ...this.getCommonDtoProperties(event),
+      amount: transactionToken.token.amount.toString(),
+      tokenNonce: Number(transactionToken.token.nonce),
+      tokenIdentifier: transactionToken.token.tokenIdentifier,
+      txHash: event.txHash,
       sender: this.config.get('contracts').lunarPayVault as string,
-      receiver: event.address,
+      receiver: transactionToken.address,
       type: TokenOperationType.WITHDRAW,
       createdAt: new Date(Date.now()),
     } as CreateTokenOperationDto;
@@ -65,16 +75,5 @@ export class TokenOperationEventHandler {
     } as CreateTokenOperationDto;
 
     return this.tokenOperationService.create(dto);
-  }
-
-  private getCommonDtoProperties(event: TriggerEvent<DepositWithdrawEventTopics>) {
-    const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
-
-    return {
-      amount: transactionToken.token.amount.toString(),
-      tokenNonce: Number(transactionToken.token.nonce),
-      tokenIdentifier: transactionToken.token.tokenIdentifier,
-      txHash: event.txHash,
-    };
   }
 }
