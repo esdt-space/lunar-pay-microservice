@@ -44,12 +44,6 @@ export class TransferEventTopics extends LunarPayEventTopics {
     this.tokenNonce = parsedEvent.token_nonce.toNumber();
     this.amount = parsedEvent.amount.toString();
     this.isInternal = parsedEvent.is_internal;
-    // this.sender = new Address(Buffer.from(rawTopics[1], 'base64'));
-    // this.receiver = new Address(Buffer.from(rawTopics[2], 'base64'));
-    // this.tokenIdentifier = Buffer.from(rawTopics[3], 'base64').toString();
-    // this.tokenNonce = this.parseIntValue(rawTopics[4]);
-    // this.amount = this.parseIntValue(rawTopics[5]);
-    // this.isInternal = Buffer.from(rawTopics[6], 'base64').toString() === 'true';
   }
 
   toPlainObject() {
