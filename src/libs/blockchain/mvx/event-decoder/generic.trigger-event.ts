@@ -6,7 +6,7 @@ export interface Decodable {
   toPlainObject(): GenericParsedEventType;
 }
 
-export class TriggerEvent<T extends Decodable> extends GenericEvent implements LunarPayEvent {
+export class BlockchainEvent<T extends Decodable> extends GenericEvent implements LunarPayEvent {
   readonly decodedTopics: T;
   readonly emitEventName: BlockchainEventDecoded;
 

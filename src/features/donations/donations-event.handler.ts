@@ -5,7 +5,7 @@ import { BlockchainEventDecoded } from '@/events-notifier/enums';
 import { TokenOperationService } from '../token-operations/token-operation.service';
 import { DonationsService } from './donations.service';
 import { TokenOperationType } from '../token-operations/enums';
-import { TriggerEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { DonationEventTopics } from '@/events-notifier/events/donation/donation-event.topics';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class DonationsEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.Donation)
-  async handlePaymentEvent(event: TriggerEvent<DonationEventTopics>) {
+  async handlePaymentEvent(event: BlockchainEvent<DonationEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     const donation = await this.donationsService.findOneDonationByAccount(eventData.receiver.toString())

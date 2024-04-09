@@ -5,7 +5,7 @@ import { BlockchainEventDecoded } from '@/events-notifier/enums';
 
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
 import { TokenOperationType } from '../token-operations/enums';
-import { TriggerEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { PaymentEventTopics } from '@/events-notifier/events/payment/payment-event.topics';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class PaymentEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.Payment)
-  async handlePaymentEvent(event: TriggerEvent<PaymentEventTopics>) {
+  async handlePaymentEvent(event: BlockchainEvent<PaymentEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     await this.tokenOperationsService.create({

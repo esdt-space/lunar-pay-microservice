@@ -16,7 +16,7 @@ import { AgreementTriggerService } from '@/features/agreement-triggers/agreement
 import { UpdateAgreementTriggerDto } from '../agreement-triggers/dto';
 import { EventType } from '@/application-events/enums/event-type.enum';
 import { SubscriptionChargeCreatedEventPayload } from '@/application-events/enums/types/subscription-charge-created-payload.type';
-import { TriggerEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { CreatePaymentAgreementEventTopics } from '@/events-notifier/events/payment-agreement/topics/create-payment-agreement-event.topics';
 import { SignPaymentAgreementEventTopics } from '@/events-notifier/events/payment-agreement/topics/sign-payment-agreement-event.topics';
 import { TriggerAgreementEventTopics } from '@/events-notifier/events/payment-agreement/topics/trigger-agreement-event.topics';
@@ -32,7 +32,7 @@ export class PaymentAgreementsEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.SignPaymentAgreement)
-  async handlePaymentAgreementSignedEvent(event: TriggerEvent<SignPaymentAgreementEventTopics>){
+  async handlePaymentAgreementSignedEvent(event: BlockchainEvent<SignPaymentAgreementEventTopics>){
     const eventData = event.decodedTopics.toPlainObject();
 
     const agreement = await this.agreementsService
@@ -72,7 +72,7 @@ export class PaymentAgreementsEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainCreatePaymentAgreementEventDecoded)
-  async handlePaymentAgreementCreatedEvent(event: TriggerEvent<CreatePaymentAgreementEventTopics>) {
+  async handlePaymentAgreementCreatedEvent(event: BlockchainEvent<CreatePaymentAgreementEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     const dto = {
@@ -98,7 +98,7 @@ export class PaymentAgreementsEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.TriggerPaymentAgreement)
-  async handleTriggerAgreementEvent(payload: TriggerEvent<TriggerAgreementEventTopics>) {
+  async handleTriggerAgreementEvent(payload: BlockchainEvent<TriggerAgreementEventTopics>) {
     const eventData = payload.decodedTopics.toPlainObject();
 
     const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString();

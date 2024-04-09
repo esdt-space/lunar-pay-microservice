@@ -14,7 +14,7 @@ import { SubscriptionMembersService } from './subscription-members.service';
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
 import { TokenOperationStatus, TokenOperationType } from '@/features/token-operations/enums';
 import { SubscriptionTriggerService } from '@/features/subscription-triggers/subscription-triggers.service';
-import { TriggerEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { CreateSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/create-subscription-event.topics';
 import { SignSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/sign-subscription-event.topics';
 import { TriggerSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/trigger-subscription-event.topics';
@@ -29,7 +29,7 @@ export class SubscriptionsEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.SignSubscription)
-  async handleSubscriptionSignedEvent(event: TriggerEvent<SignSubscriptionEventTopics>){
+  async handleSubscriptionSignedEvent(event: BlockchainEvent<SignSubscriptionEventTopics>){
     const eventData = event.decodedTopics.toPlainObject();
 
     const subscription = await this.subscriptionsService
@@ -67,7 +67,7 @@ export class SubscriptionsEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.CreateSubscription)
-  async handleSubscriptionCreatedEvent(event: TriggerEvent<CreateSubscriptionEventTopics>) {
+  async handleSubscriptionCreatedEvent(event: BlockchainEvent<CreateSubscriptionEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     const dto = {
@@ -89,7 +89,7 @@ export class SubscriptionsEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.TriggerSubscription)
-  async handleTriggerSubscriptionEvent(event: TriggerEvent<TriggerSubscriptionEventTopics>) {
+  async handleTriggerSubscriptionEvent(event: BlockchainEvent<TriggerSubscriptionEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     const chargesAmountResult = eventData.data.reduce((acc, val) => {

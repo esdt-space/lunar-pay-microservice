@@ -7,7 +7,7 @@ import { BlockchainEventDecoded } from '@/events-notifier/enums';
 import { TokenOperationType } from './enums';
 import { CreateTokenOperationDto } from './dto';
 import { TokenOperationService } from './token-operation.service';
-import { TriggerEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { 
   DepositWithdrawEventTopics, 
   TransferEventTopics, 
@@ -23,7 +23,7 @@ export class TokenOperationEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.BlockchainDepositEventDecoded)
-  async handleDepositEvent(event: TriggerEvent<DepositWithdrawEventTopics>) {
+  async handleDepositEvent(event: BlockchainEvent<DepositWithdrawEventTopics>) {
     const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
 
     const dto =  {
@@ -41,7 +41,7 @@ export class TokenOperationEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainWithdrawEventDecoded)
-  async handleWithdrawEvent(event: TriggerEvent<DepositWithdrawEventTopics>) {
+  async handleWithdrawEvent(event: BlockchainEvent<DepositWithdrawEventTopics>) {
     const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
 
     const dto = {
@@ -59,7 +59,7 @@ export class TokenOperationEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainTokenTransferEventDecoded)
-  async handleTransferEvent(event: TriggerEvent<TransferEventTopics>) {
+  async handleTransferEvent(event: BlockchainEvent<TransferEventTopics>) {
     const transactionToken = event.getTopics() as TransferParsedEventResult;
 
     const dto = {
