@@ -16,7 +16,7 @@ export type TriggerSubscriptionParseEvent = {
 export type TriggerSubscriptionParsedEventResult = {
   subscriptionId: number;
   createdAt: number;
-  data: any[];
+  data: SubscriptionMultiChargeResult[];
 }
 
 export type SignSubscriptionParsedEventResult = {
