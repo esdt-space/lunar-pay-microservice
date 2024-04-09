@@ -15,6 +15,7 @@ export class DonationWidgetsService {
     const donationWidget = this.repository.create({
       ...dto,
       owner: address,
+      createdAt: new Date(Date.now())
     });
 
     return this.repository.save(donationWidget);

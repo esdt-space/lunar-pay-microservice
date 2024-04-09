@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
-import { CreatePaymentAgreementEvent, SignPaymentAgreementEvent, TriggerAgreementEvent } from '@/events-notifier/events';
 
 import { CreateAgreementDto } from './dto/create-agreement.dto';
 import { PaymentAgreementsService } from './payment-agreements.service';
@@ -17,6 +16,10 @@ import { AgreementTriggerService } from '@/features/agreement-triggers/agreement
 import { UpdateAgreementTriggerDto } from '../agreement-triggers/dto';
 import { EventType } from '@/application-events/enums/event-type.enum';
 import { SubscriptionChargeCreatedEventPayload } from '@/application-events/enums/types/subscription-charge-created-payload.type';
+import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { CreatePaymentAgreementEventTopics } from '@/events-notifier/events/payment-agreement/topics/create-payment-agreement-event.topics';
+import { SignPaymentAgreementEventTopics } from '@/events-notifier/events/payment-agreement/topics/sign-payment-agreement-event.topics';
+import { TriggerAgreementEventTopics } from '@/events-notifier/events/payment-agreement/topics/trigger-agreement-event.topics';
 
 @Injectable()
 export class PaymentAgreementsEventHandler {
@@ -29,7 +32,7 @@ export class PaymentAgreementsEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.SignPaymentAgreement)
-  async handlePaymentAgreementSignedEvent(event: SignPaymentAgreementEvent){
+  async handlePaymentAgreementSignedEvent(event: BlockchainEvent<SignPaymentAgreementEventTopics>){
     const eventData = event.decodedTopics.toPlainObject();
 
     const agreement = await this.agreementsService
@@ -69,7 +72,7 @@ export class PaymentAgreementsEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainCreatePaymentAgreementEventDecoded)
-  async handlePaymentAgreementCreatedEvent(event: CreatePaymentAgreementEvent) {
+  async handlePaymentAgreementCreatedEvent(event: BlockchainEvent<CreatePaymentAgreementEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     const dto = {
@@ -95,7 +98,7 @@ export class PaymentAgreementsEventHandler {
   }
 
   @OnEvent(BlockchainEventDecoded.TriggerPaymentAgreement)
-  async handleTriggerAgreementEvent(payload: TriggerAgreementEvent) {
+  async handleTriggerAgreementEvent(payload: BlockchainEvent<TriggerAgreementEventTopics>) {
     const eventData = payload.decodedTopics.toPlainObject();
 
     const totalAmount = eventData.amounts.reduce((acc, val) => acc + val, 0).toString();
@@ -168,9 +171,9 @@ export class PaymentAgreementsEventHandler {
       })
   
       eventData.data.forEach((el, index) => {
-        this.membersService.updateLastChargedAt(el, new Date()) 
+        this.membersService.updateLastChargedAt(el.account, new Date()) 
         this.tokenOperationsService.create({
-          sender: el,
+          sender: el.account,
           senderAccountsCount: null,
           receiver: null,
           subscriptionTriggerId: agreementTrigger.id,

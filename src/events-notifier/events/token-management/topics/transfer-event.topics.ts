@@ -1,19 +1,19 @@
+import BigNumber from 'bignumber.js';
 import { AbiRegistry, Address, ResultsParser } from '@multiversx/sdk-core/out';
 import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
 
 import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
-import { Token } from '@/libs/blockchain/mvx/models';
+import { GenericToken } from '@/libs/blockchain/mvx/event-decoder';
+import { TransferParseEvent } from '../types';
 
-import { PaymentParseResult } from './types';
-
-export class PaymentEventTopics extends LunarPayEventTopics {
+export class TransferEventTopics extends LunarPayEventTopics {
   private readonly sender: Address;
   private readonly receiver: Address;
-  private readonly tokenIdentifier: Token;
-  private readonly tokenNonce: number;
-  private readonly amount: number;
-  private readonly metadata: string;
+  private readonly tokenIdentifier: string;
+  private readonly tokenNonce: string | number;
+  private readonly amount: string;
+  private readonly isInternal: boolean;
 
   constructor(rawTopics: string[]) {
     super(rawTopics);
@@ -23,7 +23,7 @@ export class PaymentEventTopics extends LunarPayEventTopics {
     const eventDefinition = abiRegistry.getEvent(this.eventName);
 
     const event = new TransactionEvent({
-      identifier: 'payment',
+      identifier: this.eventName,
       topics: [
         new TransactionEventTopic(rawTopics[0]),
         new TransactionEventTopic(rawTopics[1]),
@@ -32,27 +32,31 @@ export class PaymentEventTopics extends LunarPayEventTopics {
         new TransactionEventTopic(rawTopics[4]),
         new TransactionEventTopic(rawTopics[5]),
         new TransactionEventTopic(rawTopics[6]),
+        new TransactionEventTopic(rawTopics[7]),
       ],
     });
 
-    const parsedEvent = parser.parseEvent(event, eventDefinition) as PaymentParseResult;
+    const parsedEvent = parser.parseEvent(event, eventDefinition) as TransferParseEvent;
 
     this.sender = new Address(parsedEvent.sender);
     this.receiver = new Address(parsedEvent.receiver);
-    this.tokenIdentifier = parsedEvent.token_identifier;
-    this.tokenNonce = parsedEvent.token_nonce;
-    this.amount = parsedEvent.amount.toNumber();
-    this.metadata = parsedEvent.metadata !== null ? parsedEvent.metadata.toString() : '';
+    this.tokenIdentifier = parsedEvent.token_identifier.toString();
+    this.tokenNonce = parsedEvent.token_nonce.toNumber();
+    this.amount = parsedEvent.amount.toString();
+    this.isInternal = parsedEvent.is_internal;
   }
 
   toPlainObject() {
     return {
-      sender: this.sender,
-      receiver: this.receiver,
-      tokenIdentifier: this.tokenIdentifier,
-      tokenNonce: this.tokenNonce,
-      amount: this.amount,
-      metadata: this.metadata,
+      eventName: this.eventName,
+      sender: this.sender.bech32(),
+      receiver: this.receiver.bech32(),
+      isInternal: this.isInternal,
+      token: new GenericToken({
+        tokenIdentifier: this.tokenIdentifier,
+        nonce: new BigNumber(this.tokenNonce),
+        amount: new BigNumber(this.amount),
+      }),
     };
   }
 }

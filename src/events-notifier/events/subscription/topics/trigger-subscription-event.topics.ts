@@ -1,20 +1,14 @@
-import BigNumber from 'bignumber.js';
 import { AbiRegistry, ResultsParser } from '@multiversx/sdk-core/out';
 import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
 
 import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
-
-type ParseResult = {
-  id: BigNumber,
-  timestamp: BigNumber,
-  data: any[],
-}
+import { SubscriptionMultiChargeResult, TriggerSubscriptionParseEvent } from '..';
 
 export class TriggerSubscriptionEventTopics extends LunarPayEventTopics {
   private readonly subscriptionId: number;
   private readonly createdAt: number;
-  private readonly data: any[];
+  private readonly data: SubscriptionMultiChargeResult[];
 
   constructor(rawTopics: string[]) {
     super(rawTopics);
@@ -29,11 +23,10 @@ export class TriggerSubscriptionEventTopics extends LunarPayEventTopics {
         new TransactionEventTopic(rawTopics[0]),
         new TransactionEventTopic(rawTopics[1]),
         new TransactionEventTopic(rawTopics[2]),
-        new TransactionEventTopic(rawTopics[3]),
       ],
     });
     
-    const parsedEvent = parser.parseEvent(event, eventDefinition) as ParseResult;
+    const parsedEvent = parser.parseEvent(event, eventDefinition) as TriggerSubscriptionParseEvent;
 
     this.subscriptionId = parsedEvent.id.toNumber();
     this.createdAt = parsedEvent.timestamp.toNumber();

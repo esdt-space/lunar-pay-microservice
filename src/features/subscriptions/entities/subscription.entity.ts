@@ -28,6 +28,9 @@ export class Subscription {
   @Column({ type: 'int' })
   frequency: number;
 
+  @Column({ type: 'varchar', array: true, nullable: true })
+  benefits: string[];
+
   @Column({ type: 'varchar', nullable: true })
   fixedAmount?: string;
 

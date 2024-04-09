@@ -26,8 +26,4 @@ export class CreateDonationWidgetDto {
   @IsNotEmpty()
   @ApiProperty()
   codeString: string;
-
-  @IsDate()
-  @ApiProperty()
-  createdAt: Date;
 }

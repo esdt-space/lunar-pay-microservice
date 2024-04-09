@@ -1,4 +1,5 @@
-import { TriggerSubscriptionEvent } from '@/events-notifier/events';
+import { TriggerSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/trigger-subscription-event.topics';
+import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { SubscriptionTrigger } from '@/features/subscription-triggers/entities';
 import { Subscription, SubscriptionMember } from '@/features/subscriptions/entities';
 
@@ -10,7 +11,7 @@ type MemberInformation = {
 export type SubscriptionChargeCreatedEventPayload = {
   agreement: Subscription,
   agreementTrigger: SubscriptionTrigger,
-  blockchainEvent: TriggerSubscriptionEvent,
+  blockchainEvent: BlockchainEvent<TriggerSubscriptionEventTopics>,
   totalAmount: string,
   memberInformation: MemberInformation[]
 }

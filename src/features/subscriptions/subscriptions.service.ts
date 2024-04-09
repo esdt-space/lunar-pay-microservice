@@ -71,15 +71,6 @@ export class SubscriptionsService {
     return new PaginatedResponse<Subscription>(result, total, pagination)
   }
 
-  async createSubscription(address: string, dto: any) {
-    const agreement = this.repository.create({
-      ...dto,
-      owner: address,
-    });
-  
-    return await this.repository.save(agreement);
-  }
-
   async updateSubscriptionById(
     address: string,
     id: string,

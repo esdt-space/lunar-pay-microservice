@@ -2,23 +2,19 @@ import { ConfigService } from '@nestjs/config';
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import { RawEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { RawEvent, BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { CompetingRabbitConsumer } from '@/libs/blockchain/mvx/events-notifier';
 
-import { EventIdentifier } from './enums';
-import {
-  DepositEvent,
-  WithdrawEvent,
-  TransferEvent,
-  CreatePaymentAgreementEvent,
-  SignPaymentAgreementEvent,
-  TriggerAgreementEvent,
-  PaymentEvent,
-  CreateSubscriptionEvent,
-  SignSubscriptionEvent,
-  TriggerSubscriptionEvent,
-} from './events';
-import { DonationEvent } from './events/donation/donation-event';
+import { BlockchainEventDecoded, EventIdentifier } from './enums';
+import { DonationEventTopics } from './events/donation';
+import { PaymentEventTopics } from './events/payment';
+import { CreateSubscriptionEventTopics } from './events/subscription/topics/create-subscription-event.topics';
+import { SignSubscriptionEventTopics } from './events/subscription/topics/sign-subscription-event.topics';
+import { DepositWithdrawEventTopics, TransferEventTopics } from './events/token-management';
+import { TriggerSubscriptionEventTopics } from './events/subscription/topics/trigger-subscription-event.topics';
+import { CreatePaymentAgreementEventTopics } from './events/payment-agreement/topics/create-payment-agreement-event.topics';
+import { SignPaymentAgreementEventTopics } from './events/payment-agreement/topics/sign-payment-agreement-event.topics';
+import { TriggerAgreementEventTopics } from './events/payment-agreement/topics/trigger-agreement-event.topics';
 
 type QueuePayload = Record<string, unknown> & {
  events: RawEvent[];
@@ -44,7 +40,6 @@ export class EventsNotifierService {
       if(rawEvent.identifier === 'completedTxEvent') continue;
 
       try {
-        console.log(rawEvent)
         const event = this.decodeEvent(rawEvent);
         this.eventEmitter.emit(event.emitEventName, event);
       } catch (error) {
@@ -63,38 +58,38 @@ export class EventsNotifierService {
     switch (rawEvent.identifier) {
       case EventIdentifier.EGLD_DEPOSIT:
       case EventIdentifier.ESDT_DEPOSIT:
-        return new DepositEvent(rawEvent);
+        return new BlockchainEvent<DepositWithdrawEventTopics>(rawEvent, BlockchainEventDecoded.BlockchainDepositEventDecoded, DepositWithdrawEventTopics);
 
       case EventIdentifier.EGLD_WITHDRAWAL:
       case EventIdentifier.ESDT_WITHDRAWAL:
-        return new WithdrawEvent(rawEvent);
+        return new BlockchainEvent<DepositWithdrawEventTopics>(rawEvent, BlockchainEventDecoded.BlockchainWithdrawEventDecoded, DepositWithdrawEventTopics);
 
       case EventIdentifier.TOKEN_TRANSFER:
-        return new TransferEvent(rawEvent);
+        return new BlockchainEvent<TransferEventTopics>(rawEvent, BlockchainEventDecoded.BlockchainTokenTransferEventDecoded, TransferEventTopics);
 
       case EventIdentifier.CREATE_PAYMENT_AGREEMENT:
-        return new CreatePaymentAgreementEvent(rawEvent);
+        return new BlockchainEvent<CreatePaymentAgreementEventTopics>(rawEvent, BlockchainEventDecoded.BlockchainCreatePaymentAgreementEventDecoded, CreatePaymentAgreementEventTopics);
 
       case EventIdentifier.SIGN_PAYMENT_AGREEMENT:
-        return new SignPaymentAgreementEvent(rawEvent);
+        return new BlockchainEvent<SignPaymentAgreementEventTopics>(rawEvent, BlockchainEventDecoded.SignPaymentAgreement, SignPaymentAgreementEventTopics);
 
       case EventIdentifier.TRIGGER_AGREEMENT:
-        return new TriggerAgreementEvent(rawEvent);
+        return new BlockchainEvent<TriggerAgreementEventTopics>(rawEvent, BlockchainEventDecoded.TriggerPaymentAgreement, TriggerAgreementEventTopics);
 
       case EventIdentifier.PAYMENT:
-        return new PaymentEvent(rawEvent);
+        return new BlockchainEvent<PaymentEventTopics>(rawEvent, BlockchainEventDecoded.Payment, PaymentEventTopics);
 
       case EventIdentifier.DONATE:
-        return new DonationEvent(rawEvent);
+        return new BlockchainEvent<DonationEventTopics>(rawEvent, BlockchainEventDecoded.Donation, DonationEventTopics);
 
       case EventIdentifier.CREATE_SUBSCRIPTION:
-        return new CreateSubscriptionEvent(rawEvent);
+        return new BlockchainEvent<CreateSubscriptionEventTopics>(rawEvent, BlockchainEventDecoded.CreateSubscription, CreateSubscriptionEventTopics);
 
       case EventIdentifier.CREATE_SUBSCRIPTION_MEMBERSHIP:
-        return new SignSubscriptionEvent(rawEvent);
+        return new BlockchainEvent<SignSubscriptionEventTopics>(rawEvent, BlockchainEventDecoded.SignSubscription, SignSubscriptionEventTopics);
 
       case EventIdentifier.TRIGGER_SUBSCRIPTION:
-        return new TriggerSubscriptionEvent(rawEvent);
+        return new BlockchainEvent<TriggerSubscriptionEventTopics>(rawEvent, BlockchainEventDecoded.TriggerSubscription, TriggerSubscriptionEventTopics);
     }
   }
 }

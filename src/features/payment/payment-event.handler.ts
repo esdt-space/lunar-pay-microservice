@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
-import { PaymentEvent } from '@/events-notifier/events';
 
 import { TokenOperationService } from '@/features/token-operations/token-operation.service';
 import { TokenOperationType } from '../token-operations/enums';
+import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { PaymentEventTopics } from '@/events-notifier/events/payment/payment-event.topics';
 
 @Injectable()
 export class PaymentEventHandler {
@@ -14,7 +15,7 @@ export class PaymentEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.Payment)
-  async handlePaymentEvent(event: PaymentEvent) {
+  async handlePaymentEvent(event: BlockchainEvent<PaymentEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
     await this.tokenOperationsService.create({

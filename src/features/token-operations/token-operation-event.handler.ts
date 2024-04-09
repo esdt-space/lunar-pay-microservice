@@ -3,13 +3,17 @@ import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { BlockchainEventDecoded } from '@/events-notifier/enums';
-import { DepositEvent, TransferEvent, WithdrawEvent } from '@/events-notifier/events';
 
 import { TokenOperationType } from './enums';
 import { CreateTokenOperationDto } from './dto';
 import { TokenOperationService } from './token-operation.service';
-
-type TokenOperationEvent = DepositEvent | TransferEvent | WithdrawEvent;
+import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
+import { 
+  DepositWithdrawEventTopics, 
+  TransferEventTopics, 
+  DepositWithdrawParsedEventResult, 
+  TransferParsedEventResult 
+} from '@/events-notifier/events/token-management';
 
 @Injectable()
 export class TokenOperationEventHandler {
@@ -19,50 +23,57 @@ export class TokenOperationEventHandler {
   ) {}
 
   @OnEvent(BlockchainEventDecoded.BlockchainDepositEventDecoded)
-  async handleDepositEvent(event: DepositEvent) {
+  async handleDepositEvent(event: BlockchainEvent<DepositWithdrawEventTopics>) {
+    const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
+
     const dto =  {
-      ...this.getCommonDtoProperties(event),
-      sender: event.address,
+      amount: transactionToken.token.amount.toString(),
+      tokenNonce: Number(transactionToken.token.nonce),
+      tokenIdentifier: transactionToken.token.tokenIdentifier,
+      txHash: event.txHash,
+      sender: transactionToken.address,
       receiver: this.config.get('contracts').lunarPayVault as string,
       type: TokenOperationType.DEPOSIT,
+      createdAt: new Date(Date.now()),
     } as CreateTokenOperationDto;
 
     return this.tokenOperationService.create(dto);
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainWithdrawEventDecoded)
-  async handleWithdrawEvent(event: WithdrawEvent) {
+  async handleWithdrawEvent(event: BlockchainEvent<DepositWithdrawEventTopics>) {
+    const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
+
     const dto = {
-      ...this.getCommonDtoProperties(event),
+      amount: transactionToken.token.amount.toString(),
+      tokenNonce: Number(transactionToken.token.nonce),
+      tokenIdentifier: transactionToken.token.tokenIdentifier,
+      txHash: event.txHash,
       sender: this.config.get('contracts').lunarPayVault as string,
-      receiver: event.address,
+      receiver: transactionToken.address,
       type: TokenOperationType.WITHDRAW,
+      createdAt: new Date(Date.now()),
     } as CreateTokenOperationDto;
 
     return this.tokenOperationService.create(dto);
   }
 
   @OnEvent(BlockchainEventDecoded.BlockchainTokenTransferEventDecoded)
-  async handleTransferEvent(event: TransferEvent) {
+  async handleTransferEvent(event: BlockchainEvent<TransferEventTopics>) {
+    const transactionToken = event.getTopics() as TransferParsedEventResult;
+
     const dto = {
-      ...this.getCommonDtoProperties(event),
-      sender: event.sender,
-      receiver: event.receiver,
-      isInternal: event.isInternal,
+      amount: transactionToken.token.amount.toString(),
+      tokenNonce: Number(transactionToken.token.nonce),
+      tokenIdentifier: transactionToken.token.tokenIdentifier,
+      txHash: event.txHash,
+      sender: transactionToken.sender,
+      receiver: transactionToken.receiver,
+      isInternal: transactionToken.isInternal,
       type: TokenOperationType.TRANSFER,
+      createdAt: new Date(Date.now()),
     } as CreateTokenOperationDto;
 
     return this.tokenOperationService.create(dto);
-  }
-
-  private getCommonDtoProperties(event: TokenOperationEvent) {
-    const transactionToken = event.token.toJSON();
-
-    return {
-      amount: transactionToken.amount,
-      tokenNonce: transactionToken.nonce,
-      tokenIdentifier: transactionToken.tokenIdentifier,
-      txHash: event.txHash,
-    } as CreateTokenOperationDto;
   }
 }

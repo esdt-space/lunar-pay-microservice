@@ -6,7 +6,7 @@ export class TokenOperation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'varchar' })
   amount: string;
 
   @Column({ type: 'int' })
@@ -18,7 +18,7 @@ export class TokenOperation {
   @Column({ type: 'varchar' })
   txHash: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   sender: string;
 
   @Column({ type: 'varchar' })
