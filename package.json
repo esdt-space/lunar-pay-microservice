@@ -37,7 +37,7 @@
     "@nestjs/event-emitter": "^2.0.4",
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/microservices": "^9.4.3",
-    "@nestjs/mongoose": "^9.2.2",
+    "@nestjs/mongoose": "^10.0.5",
     "@nestjs/platform-express": "^9.4.0",
     "@nestjs/schedule": "^4.0.1",
     "@nestjs/swagger": "^6.2.1",
