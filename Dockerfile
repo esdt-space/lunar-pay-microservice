@@ -8,7 +8,7 @@ COPY --chown=node:node . .
 
 ARG BUILD_ENV=mainnet
 
-RUN npm ci
+RUN npm install
 RUN npm run build:${BUILD_ENV}
 
 USER node
@@ -22,7 +22,7 @@ WORKDIR /usr/src/app
 COPY --chown=node:node package*.json ./
 
 RUN apk --no-cache add --virtual .builds-deps build-base python3
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 COPY --chown=node:node --from=builder /usr/src/app/dist ./dist
 
