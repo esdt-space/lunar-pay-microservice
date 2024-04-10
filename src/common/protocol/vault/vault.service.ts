@@ -87,18 +87,24 @@ export class VaultService {
       });
   }
 
-  async getSubscriptionsChargeAmounts(address: string): Promise<any> {
-     return this.queryHandler
-      .queryContract(this.contract, 'getUserSubscriptionsInflow', [
-        new AddressValue(new Address(address)),
+  async getSubscriptionsChargeAmounts(id: number): Promise<any> {
+    const typedId = { type: 'u64', value: id.toString() } as any;
+    
+    return this.queryHandler
+      .queryContract(this.contract, 'getUserSubscriptionsChargeAmounts', [
+        typedId,
       ])
       .then((response) => {
         const firstValue = response.firstValue as VariadicValue;
+        const amounts = firstValue.getItems()
 
-        console.log(firstValue)
+        return {
+          pendingAmount: amounts[0],
+          affordableAmount: amounts[1],
+        }
       })
       .catch((err) => {
-        this.logger.log('Unable to call getUserSubscriptionsInflow', err);
+        this.logger.log('Unable to call getUserSubscriptionsChargeAmounts', err);
 
         throw Error(err);
       });

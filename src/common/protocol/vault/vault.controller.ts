@@ -45,11 +45,11 @@ export class VaultController {
     return this.vaultService.getAccountBalances(address);
   }
 
-  @Get('subscription-charge-amount')
+  @Get('subscription-charge-amount/:id')
   @UseInterceptors(HttpCacheInterpreter)
   @CacheTTL(DurationConstants.oneSecond() * 10)
   @UseGuards(NativeAuthGuard)
-  async getSubscriptionsChargeAmounts(@NativeAuth('address') address: string) {
-    return this.vaultService.getSubscriptionsChargeAmounts(address);
+  async getSubscriptionsChargeAmounts(@Param('id') id: number) {
+    return this.vaultService.getSubscriptionsChargeAmounts(id);
   }
 }
