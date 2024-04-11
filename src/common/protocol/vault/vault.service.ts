@@ -6,6 +6,7 @@ import {
   SmartContract,
   TokenIdentifierValue,
   Tuple,
+  TypedValue,
   VariadicValue,
 } from '@multiversx/sdk-core/out';
 
@@ -13,6 +14,11 @@ import { getContractFromAbi } from '@/libs/blockchain/mvx/contract';
 import { ContractQueryHandler } from '@/libs/blockchain/mvx/contract/contract-query.handler';
 
 import vaultAbi from '../abi/lunarpay.abi.json';
+
+type SubscriptionAmounts = {
+  pendingAmount: TypedValue,
+  affordableAmount: TypedValue,
+}
 
 @Injectable()
 export class VaultService {
@@ -87,7 +93,7 @@ export class VaultService {
       });
   }
 
-  async getSubscriptionsChargeAmounts(id: number): Promise<any> {
+  async getSubscriptionsChargeAmounts(id: number): Promise<SubscriptionAmounts> {
     const typedId = { type: 'u64', value: id.toString() } as any;
     
     return this.queryHandler
