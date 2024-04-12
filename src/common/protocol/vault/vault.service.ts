@@ -94,7 +94,7 @@ export class VaultService {
   }
 
   async getSubscriptionsChargeAmounts(id: number): Promise<SubscriptionAmounts> {
-    const typedId = { type: 'u64', value: id.toString() } as any;
+    const typedId = { type: 'u64', value: id.toString() } as unknown as TypedValue;
     
     return this.queryHandler
       .queryContract(this.contract, 'getUserSubscriptionsChargeAmounts', [
