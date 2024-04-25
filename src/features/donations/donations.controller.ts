@@ -1,10 +1,9 @@
 import { ApiTags } from '@nestjs/swagger';
 import {
   Body,
-  CacheTTL,
   Controller, Get, Param, Post, Put, UseGuards, UseInterceptors,
 } from '@nestjs/common';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 
 import { DonationsService } from './donations.service';

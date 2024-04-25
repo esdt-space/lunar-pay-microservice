@@ -12,6 +12,7 @@ import { DurationConstants } from '@/utils/time/duration-constants';
 import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 
 import { AccountTokensService } from './account-tokens.service';
+import { RolesGuard } from '@/core/auth/guards';
 
 @Injectable()
 @ApiTags('Account')
@@ -22,6 +23,7 @@ export class AccountController {
   @Get('tokens/esdt')
   @UseInterceptors(CacheInterceptor)
   @CacheTTL(DurationConstants.oneSecond() * 20)
+  @UseGuards(RolesGuard)
   @UseGuards(NativeAuthGuard)
   async getEsdtTokens(@NativeAuth('address') address: string) {
     return this.accountTokensService.getEsdtTokens(address);
