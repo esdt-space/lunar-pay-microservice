@@ -267,8 +267,29 @@
             "outputs": []
         },
         {
-            "name": "payWithWalletBalance",
+            "name": "payWithEgldWalletBalance",
             "mutability": "mutable",
+            "payableInTokens": [
+                "EGLD"
+            ],
+            "inputs": [
+                {
+                    "name": "receiver",
+                    "type": "Address"
+                },
+                {
+                    "name": "metadata",
+                    "type": "Option<bytes>"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "payWithEsdtWalletBalance",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "*"
+            ],
             "inputs": [
                 {
                     "name": "receiver",
@@ -305,8 +326,29 @@
             "outputs": []
         },
         {
-            "name": "donateWithWalletBalance",
+            "name": "donateWithEgldWalletBalance",
             "mutability": "mutable",
+            "payableInTokens": [
+                "EGLD"
+            ],
+            "inputs": [
+                {
+                    "name": "receiver",
+                    "type": "Address"
+                },
+                {
+                    "name": "metadata",
+                    "type": "Option<bytes>"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "donateWithEsdtWalletBalance",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "*"
+            ],
             "inputs": [
                 {
                     "name": "receiver",
@@ -393,7 +435,11 @@
                     "type": "Option<BigUint>"
                 }
             ],
-            "outputs": []
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
         },
         {
             "name": "addSubscriptionMember",
@@ -419,7 +465,7 @@
                     "type": "u64"
                 },
                 {
-                    "name": "address",
+                    "name": "opt_address",
                     "type": "Option<Address>"
                 }
             ],
@@ -699,6 +745,31 @@
                     "indexed": true
                 },
                 {
+                    "name": "member",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "timestamp",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "data",
+                    "type": "SubscriptionChargeData",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "chargeSubscriptionMulti",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
                     "name": "timestamp",
                     "type": "u64",
                     "indexed": true
@@ -706,6 +777,31 @@
                 {
                     "name": "data",
                     "type": "variadic<SubscriptionMultiChargeResult>",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "cancelSubscriptionMembership",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "canceled_by",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "member",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "cancelled_at",
+                    "type": "u64",
                     "indexed": true
                 }
             ]
