@@ -68,4 +68,8 @@ export class SubscriptionMembersService {
     
     return this.subscriptionMembersRepository.save(membership);
   }
+
+  async deleteMembership(subscriptionId: string, member: string){
+    await this.subscriptionMembersRepository.delete({ internalSubscriptionId: subscriptionId, member: member })
+  }
 }
