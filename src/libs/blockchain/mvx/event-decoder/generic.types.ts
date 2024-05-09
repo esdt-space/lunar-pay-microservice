@@ -1,7 +1,7 @@
 import { DonationParsedEventResult } from "@/events-notifier/events/donation";
 import { PaymentParsedEventResult } from "@/events-notifier/events/payment";
 import { SignedAgreementParsedEventResult, TriggerAgreementParsedEventResult } from "@/events-notifier/events/payment-agreement";
-import { SignSubscriptionParsedEventResult, TriggerSubscriptionParsedEventResult } from "@/events-notifier/events/subscription";
+import { CancelSubscriptionResult, SignSubscriptionParsedEventResult, TriggerSubscriptionParsedEventResult } from "@/events-notifier/events/subscription";
 import { DepositWithdrawParsedEventResult, TransferParsedEventResult } from "@/events-notifier/events/token-management";
 
 export enum TRANSACTION_EVENTS {
@@ -47,4 +47,5 @@ export type GenericParsedEventType =
   DepositWithdrawParsedEventResult |
   TriggerAgreementParsedEventResult |
   SignSubscriptionParsedEventResult |
-  SignedAgreementParsedEventResult;
+  SignedAgreementParsedEventResult |
+  CancelSubscriptionResult;

@@ -25,3 +25,12 @@ export type SignSubscriptionParsedEventResult = {
   address: string;
   signedAt: Date;
 }
+
+// Cancel Subscription
+export type CancelSubscriptionResult = {
+  eventName: string;
+  subscriptionId: number;
+  canceledMember: string;
+  canceledBy: string;
+  canceledAt: Date;
+}

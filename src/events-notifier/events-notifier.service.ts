@@ -15,6 +15,7 @@ import { TriggerSubscriptionEventTopics } from './events/subscription/topics/tri
 import { CreatePaymentAgreementEventTopics } from './events/payment-agreement/topics/create-payment-agreement-event.topics';
 import { SignPaymentAgreementEventTopics } from './events/payment-agreement/topics/sign-payment-agreement-event.topics';
 import { TriggerAgreementEventTopics } from './events/payment-agreement/topics/trigger-agreement-event.topics';
+import { CancelSubscriptionEventTopics } from './events/subscription/topics/cancel-subscription-event.topics';
 
 type QueuePayload = Record<string, unknown> & {
  events: RawEvent[];
@@ -90,6 +91,9 @@ export class EventsNotifierService {
 
       case EventIdentifier.TRIGGER_SUBSCRIPTION:
         return new BlockchainEvent<TriggerSubscriptionEventTopics>(rawEvent, BlockchainEventDecoded.TriggerSubscription, TriggerSubscriptionEventTopics);
+
+      case EventIdentifier.CANCEL_SUBSCRIPTION:
+        return new BlockchainEvent<CancelSubscriptionEventTopics>(rawEvent, BlockchainEventDecoded.CancelSubscription, CancelSubscriptionEventTopics);
     }
   }
 }
