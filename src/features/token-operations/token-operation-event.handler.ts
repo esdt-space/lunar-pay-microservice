@@ -11,8 +11,8 @@ import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { 
   DepositWithdrawEventTopics, 
   TransferEventTopics, 
-  DepositWithdrawParsedEventResult, 
-  TransferParsedEventResult 
+  DepositWithdrawResult, 
+  TransferResult 
 } from '@/events-notifier/events/token-management';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class TokenOperationEventHandler {
 
   @OnEvent(BlockchainEventDecoded.BlockchainDepositEventDecoded)
   async handleDepositEvent(event: BlockchainEvent<DepositWithdrawEventTopics>) {
-    const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
+    const transactionToken = event.getTopics() as DepositWithdrawResult;
 
     const dto =  {
       amount: transactionToken.token.amount.toString(),
@@ -42,7 +42,7 @@ export class TokenOperationEventHandler {
 
   @OnEvent(BlockchainEventDecoded.BlockchainWithdrawEventDecoded)
   async handleWithdrawEvent(event: BlockchainEvent<DepositWithdrawEventTopics>) {
-    const transactionToken = event.getTopics() as DepositWithdrawParsedEventResult;
+    const transactionToken = event.getTopics() as DepositWithdrawResult;
 
     const dto = {
       amount: transactionToken.token.amount.toString(),
@@ -60,7 +60,7 @@ export class TokenOperationEventHandler {
 
   @OnEvent(BlockchainEventDecoded.BlockchainTokenTransferEventDecoded)
   async handleTransferEvent(event: BlockchainEvent<TransferEventTopics>) {
-    const transactionToken = event.getTopics() as TransferParsedEventResult;
+    const transactionToken = event.getTopics() as TransferResult;
 
     const dto = {
       amount: transactionToken.token.amount.toString(),
