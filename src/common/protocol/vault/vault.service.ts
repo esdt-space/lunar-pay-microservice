@@ -6,6 +6,7 @@ import {
   SmartContract,
   TokenIdentifierValue,
   Tuple,
+  TypedValue,
   VariadicValue,
 } from '@multiversx/sdk-core/out';
 
@@ -13,6 +14,11 @@ import { getContractFromAbi } from '@/libs/blockchain/mvx/contract';
 import { ContractQueryHandler } from '@/libs/blockchain/mvx/contract/contract-query.handler';
 
 import vaultAbi from '../abi/lunarpay.abi.json';
+
+type SubscriptionAmounts = {
+  pendingAmount: TypedValue,
+  affordableAmount: TypedValue,
+}
 
 @Injectable()
 export class VaultService {
@@ -87,18 +93,24 @@ export class VaultService {
       });
   }
 
-  async getSubscriptionsChargeAmounts(address: string): Promise<any> {
-     return this.queryHandler
-      .queryContract(this.contract, 'getUserSubscriptionsInflow', [
-        new AddressValue(new Address(address)),
+  async getSubscriptionsChargeAmounts(id: number): Promise<SubscriptionAmounts> {
+    const typedId = { type: 'u64', value: id.toString() } as unknown as TypedValue;
+    
+    return this.queryHandler
+      .queryContract(this.contract, 'getUserSubscriptionsChargeAmounts', [
+        typedId,
       ])
       .then((response) => {
         const firstValue = response.firstValue as VariadicValue;
+        const amounts = firstValue.getItems()
 
-        console.log(firstValue)
+        return {
+          pendingAmount: amounts[0],
+          affordableAmount: amounts[1],
+        }
       })
       .catch((err) => {
-        this.logger.log('Unable to call getUserSubscriptionsInflow', err);
+        this.logger.log('Unable to call getUserSubscriptionsChargeAmounts', err);
 
         throw Error(err);
       });
