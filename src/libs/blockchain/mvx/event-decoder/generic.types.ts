@@ -1,8 +1,8 @@
-import { DonationParsedEventResult } from "@/events-notifier/events/donation";
-import { PaymentParsedEventResult } from "@/events-notifier/events/payment";
-import { SignedAgreementParsedEventResult, TriggerAgreementParsedEventResult } from "@/events-notifier/events/payment-agreement";
-import { CancelSubscriptionResult, SignSubscriptionParsedEventResult, TriggerSubscriptionParsedEventResult } from "@/events-notifier/events/subscription";
-import { DepositWithdrawParsedEventResult, TransferParsedEventResult } from "@/events-notifier/events/token-management";
+import { DonationResult } from "@/events-notifier/events/donation";
+import { PaymentResult } from "@/events-notifier/events/payment";
+import { SignedAgreementResult, TriggerAgreementResult } from "@/events-notifier/events/payment-agreement";
+import { CancelSubscriptionResult, SignSubscriptionResult, TriggerSubscriptionResult } from "@/events-notifier/events/subscription";
+import { DepositWithdrawResult, TransferResult } from "@/events-notifier/events/token-management";
 
 export enum TRANSACTION_EVENTS {
   ESDT_NFT_Transfer = 'ESDTNFTTransfer',
@@ -40,12 +40,12 @@ export type GenericEventType = {
 };
 
 export type GenericParsedEventType = 
-  DonationParsedEventResult | 
-  PaymentParsedEventResult | 
-  TriggerSubscriptionParsedEventResult |
-  TransferParsedEventResult |
-  DepositWithdrawParsedEventResult |
-  TriggerAgreementParsedEventResult |
-  SignSubscriptionParsedEventResult |
-  SignedAgreementParsedEventResult |
+  DonationResult | 
+  PaymentResult | 
+  TriggerSubscriptionResult |
+  TransferResult |
+  DepositWithdrawResult |
+  TriggerAgreementResult |
+  SignSubscriptionResult |
+  SignedAgreementResult |
   CancelSubscriptionResult;

@@ -2,7 +2,7 @@ import { Token } from "@/libs/blockchain/mvx/models";
 import { Address, OptionValue } from "@multiversx/sdk-core/out";
 import BigNumber from "bignumber.js";
 
-export type DonationParseResult = {
+export type DonationParsedResult = {
   sender: Address,
   receiver: Address,
   token_identifier: Token,
@@ -11,7 +11,7 @@ export type DonationParseResult = {
   metadata: OptionValue,
 }
 
-export type DonationParsedEventResult = {
+export type DonationResult = {
   sender: Address;
   receiver: Address;
   tokenIdentifier: Token;

@@ -2,7 +2,7 @@ import { GenericToken } from "@/libs/blockchain/mvx/event-decoder";
 import { Address } from "@multiversx/sdk-core/out";
 import BigNumber from "bignumber.js";
 
-export type TransferParseEvent = {
+export type TransferParsedEvent = {
   sender: string;
   receiver: string;
   token_identifier: string;
@@ -11,7 +11,7 @@ export type TransferParseEvent = {
   is_internal: boolean;
 }
 
-export type TransferParsedEventResult = {
+export type TransferResult = {
   sender: string;
   receiver: string;
   eventName: string;
@@ -19,14 +19,14 @@ export type TransferParsedEventResult = {
   token: GenericToken;
 }
 
-export type DepositWithdrawParseEvent = {
+export type DepositWithdrawParsedEvent = {
   address: Address;
   token_identifier: string;
   token_nonce: BigNumber;
   amount: string;
 }
 
-export type DepositWithdrawParsedEventResult = {
+export type DepositWithdrawResult = {
   address: string;
   eventName: string;
   token: GenericToken;

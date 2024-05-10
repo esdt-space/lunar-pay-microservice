@@ -1,5 +1,34 @@
 import BigNumber from "bignumber.js";
+import { Address } from '@multiversx/sdk-core/out';
 
+// Create Subscription
+export type CreateSubscriptionParsedEvent = {
+  id: BigNumber,
+  owner: Address,
+  token_nonce: BigNumber,
+  token_identifier: string,
+  frequency: BigNumber,
+  time_created: BigNumber,
+  subscription_type: number,
+  amount_type: number,
+  amount: string,
+}
+
+// Sign Subscription
+export type SignSubscriptionParsedEvent = {
+  id: BigNumber,
+  member: Address,
+  created_at: BigNumber,
+}
+
+export type SignSubscriptionResult = {
+  eventName: string;
+  subscriptionId: number;
+  address: string;
+  signedAt: Date;
+}
+
+// Trigger Subscription
 type ChargeOperationValue = [string, number] | null;
 
 export type SubscriptionMultiChargeResult = {
@@ -7,13 +36,13 @@ export type SubscriptionMultiChargeResult = {
   data: [ChargeOperationValue, ChargeOperationValue];
 }
 
-export type TriggerSubscriptionParseEvent = {
+export type TriggerSubscriptionParsedEvent = {
   id: BigNumber,
   timestamp: BigNumber,
   data: SubscriptionMultiChargeResult[],
 }
 
-export type TriggerSubscriptionParsedEventResult = {
+export type TriggerSubscriptionResult = {
   subscriptionId: number;
   createdAt: number;
   data: SubscriptionMultiChargeResult[];

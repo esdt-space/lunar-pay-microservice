@@ -1,9 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { AbiRegistry, Address, OptionValue, ResultsParser } from '@multiversx/sdk-core/out';
-import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
+import { Address, OptionValue } from '@multiversx/sdk-core/out';
 
-import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
+import { LunarPayEventParser } from '@/libs/blockchain/mvx/event-decoder/generic.event-parser';
 
 type ParseResult = {
   agreement_id: BigNumber,
@@ -21,24 +20,8 @@ export class SignPaymentAgreementEventTopics extends LunarPayEventTopics {
   constructor(rawTopics: string[]) {
     super(rawTopics);
 
-    const parser = new ResultsParser();
-    const abiRegistry = AbiRegistry.create(abi);
-    const eventDefinition = abiRegistry.getEvent(this.eventName);
-
-    const eventIdentifier = 'signPaymentAgreement';
-
-    const event = new TransactionEvent({
-      identifier: eventIdentifier,
-      topics: [
-        new TransactionEventTopic(rawTopics[0]),
-        new TransactionEventTopic(rawTopics[1]),
-        new TransactionEventTopic(rawTopics[2]),
-        new TransactionEventTopic(rawTopics[3]),
-        new TransactionEventTopic(rawTopics[4]),
-      ],
-    });
-
-    const parsedEvent = parser.parseEvent(event, eventDefinition) as ParseResult;
+    const eventParser = new LunarPayEventParser<ParseResult>();
+    const parsedEvent = eventParser.parse(rawTopics, this.eventName);
 
     this.agreementId = parsedEvent.agreement_id.toNumber();
     this.address = new Address(parsedEvent.member);
