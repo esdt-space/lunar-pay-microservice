@@ -14,4 +14,5 @@ export enum EventIdentifier {
   CREATE_SUBSCRIPTION = 'createSubscription',
   CREATE_SUBSCRIPTION_MEMBERSHIP = 'createSubscriptionMembership',
   TRIGGER_SUBSCRIPTION = 'triggerSubscription',
+  CANCEL_SUBSCRIPTION = 'cancelSubscriptionMembership',
 }

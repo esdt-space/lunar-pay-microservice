@@ -47,3 +47,19 @@ export type TriggerSubscriptionResult = {
   createdAt: number;
   data: SubscriptionMultiChargeResult[];
 }
+
+export type SignSubscriptionParsedEventResult = {
+  eventName: string;
+  subscriptionId: number;
+  address: string;
+  signedAt: Date;
+}
+
+// Cancel Subscription
+export type CancelSubscriptionResult = {
+  eventName: string;
+  subscriptionId: number;
+  canceledMember: string;
+  canceledBy: string;
+  canceledAt: Date;
+}

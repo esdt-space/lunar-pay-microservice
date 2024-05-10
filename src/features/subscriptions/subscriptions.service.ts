@@ -98,4 +98,8 @@ export class SubscriptionsService {
   async incrementMembersCount(id: string): Promise<void> {
     await this.repository.increment({ id }, 'accountsCount', 1);
   }
+
+  async decrementMembersCount(id: string): Promise<void> {
+    await this.repository.decrement({ id }, 'accountsCount', 1);
+  }
 }

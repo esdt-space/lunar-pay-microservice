@@ -18,6 +18,7 @@ import { BlockchainEvent } from '@/libs/blockchain/mvx/event-decoder';
 import { CreateSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/create-subscription-event.topics';
 import { SignSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/sign-subscription-event.topics';
 import { TriggerSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/trigger-subscription-event.topics';
+import { CancelSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/cancel-subscription-event.topics';
 
 @Injectable()
 export class SubscriptionsEventHandler {
@@ -189,5 +190,17 @@ export class SubscriptionsEventHandler {
         })
       }
     })
+  }
+
+  @OnEvent(BlockchainEventDecoded.CancelSubscription)
+  async handleSubscriptionCanceledEvent(event: BlockchainEvent<CancelSubscriptionEventTopics>){
+    const eventData = event.decodedTopics.toPlainObject();
+
+    const subscription = await this.subscriptionsService
+      .findOneByIdSmartContractId(eventData.subscriptionId);
+
+    await this.subscriptionsService.decrementMembersCount(subscription.id);
+
+    await this.membersService.deleteMembership(subscription.id, eventData.canceledMember)
   }
 }
