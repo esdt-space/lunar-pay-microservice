@@ -1,9 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { AbiRegistry, List, ResultsParser } from '@multiversx/sdk-core/out';
-import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
+import { List } from '@multiversx/sdk-core/out';
 
-import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { LunarPayEventTopics } from '@/events-notifier/events/lunar-pay-event.topics';
+import { LunarPayEventParser } from '@/libs/blockchain/mvx/event-decoder/generic.event-parser';
 
 type ParseResult = {
   agreement_id: BigNumber,
@@ -21,27 +20,13 @@ export class TriggerAgreementEventTopics extends LunarPayEventTopics {
   constructor(rawTopics: string[]) {
     super(rawTopics);
 
-    const parser = new ResultsParser();
-    const abiRegistry = AbiRegistry.create(abi);
-    const eventDefinition = abiRegistry.getEvent(this.eventName);
+    const eventParser = new LunarPayEventParser<ParseResult>();
+    const parsedEvent = eventParser.parse(rawTopics, this.eventName);
 
-    const event = new TransactionEvent({
-      identifier: 'triggerAgreement',
-      topics: [
-        new TransactionEventTopic(rawTopics[0]),
-        new TransactionEventTopic(rawTopics[1]),
-        new TransactionEventTopic(rawTopics[2]),
-        new TransactionEventTopic(rawTopics[3]),
-        new TransactionEventTopic(rawTopics[4]),
-      ],
-    });
-
-    const bundle = parser.parseEvent(event, eventDefinition) as ParseResult;
-
-    this.agreementId = bundle.agreement_id.toNumber();
-    this.accounts = bundle.accounts.valueOf().map(item => item.toString());
-    this.amounts = bundle.amounts.valueOf().map(item => item.toNumber());
-    this.cycles = bundle.cycles.valueOf().map(item => item.toNumber());
+    this.agreementId = parsedEvent.agreement_id.toNumber();
+    this.accounts = parsedEvent.accounts.valueOf().map(item => item.toString());
+    this.amounts = parsedEvent.amounts.valueOf().map(item => item.toNumber());
+    this.cycles = parsedEvent.cycles.valueOf().map(item => item.toNumber());
   }
 
   toPlainObject() {

@@ -1,11 +1,10 @@
 import BigNumber from 'bignumber.js';
-import { AbiRegistry, Address, ResultsParser } from '@multiversx/sdk-core/out';
-import { TransactionEvent, TransactionEventTopic } from '@multiversx/sdk-network-providers/out';
+import { Address } from '@multiversx/sdk-core/out';
 
-import abi from '@/common/protocol/abi/lunarpay.abi.json';
 import { GenericToken } from '@/libs/blockchain/mvx/event-decoder';
 import { LunarPayEventTopics } from '../../lunar-pay-event.topics';
-import { DepositWithdrawParseEvent } from '../types';
+import { LunarPayEventParser } from '@/libs/blockchain/mvx/event-decoder/generic.event-parser';
+import { DepositWithdrawParsedEvent } from '../types';
 
 export class DepositWithdrawEventTopics extends LunarPayEventTopics {
   private readonly address: Address;
@@ -16,23 +15,8 @@ export class DepositWithdrawEventTopics extends LunarPayEventTopics {
   constructor(rawTopics: string[]) {
     super(rawTopics);
 
-    const parser = new ResultsParser();
-    const abiRegistry = AbiRegistry.create(abi);
-    const eventDefinition = abiRegistry.getEvent(this.eventName);
-
-    const event = new TransactionEvent({
-      identifier: this.eventName,
-      topics: [
-        new TransactionEventTopic(rawTopics[0]),
-        new TransactionEventTopic(rawTopics[1]),
-        new TransactionEventTopic(rawTopics[2]),
-        new TransactionEventTopic(rawTopics[3]),
-        new TransactionEventTopic(rawTopics[4]),
-        new TransactionEventTopic(rawTopics[5]),
-      ],
-    });
-
-    const parsedEvent = parser.parseEvent(event, eventDefinition) as DepositWithdrawParseEvent;
+    const eventParser = new LunarPayEventParser<DepositWithdrawParsedEvent>();
+    const parsedEvent = eventParser.parse(rawTopics, this.eventName);
 
     this.address = new Address(parsedEvent.address);
     this.tokenIdentifier = parsedEvent.token_identifier.toString();
