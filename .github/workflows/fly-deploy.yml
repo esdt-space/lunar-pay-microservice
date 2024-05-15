@@ -3,8 +3,7 @@ on:
   push:
     branches:
       - main
-      - devnet
-      - testnet
+      - dev
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -29,11 +28,6 @@ jobs:
           flyctl deploy -c fly.devnet.toml --remote-only
 
       - name: Deploy devnet app to fly.io
-        if: ${{ github.ref_name == 'devnet' }}
+        if: ${{ github.ref_name == 'dev' }}
         run: |
           flyctl deploy -c fly.devnet.toml --remote-only
-
-      - name: Deploy testnet app to fly.io
-        if: ${{ github.ref_name == 'testnet' }}
-        run: |
-          flyctl deploy -c fly.testnet.toml --remote-only

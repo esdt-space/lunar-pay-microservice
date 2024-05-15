@@ -1,8 +1,5 @@
-app = "lunar-pay-api"
+app = "lunar-pay-devnet-api"
 primary_region = "ams"
-
-[env]
-  MONGO_DB_NAME = "lunar-pay"
 
 [build.args]
   BUILD_ENV="devnet"

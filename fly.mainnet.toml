@@ -1,9 +1,6 @@
 app = "lunar-pay-api"
 primary_region = "ams"
 
-[env]
-  MONGO_DB_NAME = "lunar-pay"
-
 [build.args]
   BUILD_ENV="mainnet"
 
