@@ -1,9 +1,9 @@
-import { CacheTTL, Controller, Get, UseInterceptors } from "@nestjs/common";
-import { CacheInterceptor } from "@nestjs/cache-manager";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { ApiTags } from '@nestjs/swagger';
 
-import { EventService } from "./event.service";
-import { DurationConstants } from "@/utils/time/duration-constants";
+import { EventService } from './event.service';
+import { DurationConstants } from '@/utils/time/duration-constants';
 
 @ApiTags('Event')
 @Controller('event')
