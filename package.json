@@ -11,7 +11,8 @@
     "start:devnet": "npm run copy-devnet-config && nest start --watch",
     "start:mainnet": "npm run copy-mainnet-config && nest start --watch",
     "copy-devnet-config": "cp ./config/config.devnet.yaml ./config/config.yaml",
-    "copy-mainnet-config": "cp ./config/config.mainnet.yaml ./config/config.yaml"
+    "copy-mainnet-config": "cp ./config/config.mainnet.yaml ./config/config.yaml",
+    "deploy-devnet": "fly deploy -c fly.devnet.toml"
   },
   "dependencies": {
     "@multiversx/sdk-core": "^12.18.0",

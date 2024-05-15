@@ -1,5 +1,5 @@
 app = "lunar-pay-devnet-api"
-primary_region = "ams"
+primary_region = "lhr"
 
 [build.args]
   BUILD_ENV="devnet"
