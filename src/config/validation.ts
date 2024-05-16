@@ -3,11 +3,6 @@ import { IsNumber, IsString, validateSync } from 'class-validator';
 
 class EnvironmentVariables {
   @IsString()
-  MONGO_DB_HOST: string;
-  @IsString()
-  MONGO_DB_NAME: string;
-
-  @IsString()
   REDIS_HOST: string;
   @IsNumber()
   REDIS_PORT: number;

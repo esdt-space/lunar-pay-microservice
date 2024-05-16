@@ -1,8 +1,13 @@
 app = "lunar-pay-devnet-api"
-primary_region = "lhr"
+primary_region = 'lhr'
+
+[env]
 
 [build.args]
   BUILD_ENV="devnet"
+
+[processes]
+  api = "node dist/src/main"
 
 [http_service]
   internal_port = 3000
@@ -10,4 +15,4 @@ primary_region = "lhr"
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 1
-  processes = ["app"]
+  processes = ['api']
