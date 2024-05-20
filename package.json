@@ -44,7 +44,7 @@
     "@nestjs/throttler": "^5.1.2",
     "@nestjs/typeorm": "^10.0.2",
     "@tirke/node-cache-manager-ioredis": "^3.6.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.1",
     "bcrypt": "^5.1.1",
     "bech32": "^2.0.0",
     "bignumber.js": "^9.1.2",
