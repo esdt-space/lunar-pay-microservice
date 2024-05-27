@@ -17,7 +17,7 @@
     "copy-mainnet-config": "cp ./config/config.mainnet.yaml ./config/config.yaml"
   },
   "dependencies": {
-    "@multiversx/sdk-core": "^13.1.0",
+    "@multiversx/sdk-core": "^13.2.0",
     "@multiversx/sdk-nestjs-auth": "^1.5.0",
     "@multiversx/sdk-nestjs-cache": "^1.5.0",
     "@multiversx/sdk-nestjs-common": "^1.5.0",
