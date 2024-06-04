@@ -6,7 +6,7 @@ import {
   SmartContract,
   TokenIdentifierValue,
   Tuple,
-  TypedValue,
+  U64Value,
   VariadicValue,
 } from '@multiversx/sdk-core/out';
 
@@ -14,10 +14,11 @@ import { getContractFromAbi } from '@/libs/blockchain/mvx/contract';
 import { ContractQueryHandler } from '@/libs/blockchain/mvx/contract/contract-query.handler';
 
 import vaultAbi from '../abi/lunarpay.abi.json';
+import { Struct } from './types';
 
 type SubscriptionAmounts = {
-  pendingAmount: TypedValue,
-  affordableAmount: TypedValue,
+  pendingAmount: string,
+  affordableAmount: string,
 }
 
 @Injectable()
@@ -93,24 +94,24 @@ export class VaultService {
       });
   }
 
-  async getSubscriptionsChargeAmounts(id: number): Promise<SubscriptionAmounts> {
-    const typedId = { type: 'u64', value: id.toString() } as unknown as TypedValue;
-    
+  async getSubscriptionChargeAmounts(id: number): Promise<SubscriptionAmounts> {
     return this.queryHandler
-      .queryContract(this.contract, 'getUserSubscriptionsChargeAmounts', [
-        typedId,
+      .queryContract(this.contract, 'getUserSubscriptionChargeAmounts', [
+        new U64Value(id),
       ])
       .then((response) => {
-        const firstValue = response.firstValue as VariadicValue;
-        const amounts = firstValue.getItems()
+        const firstValue = response.firstValue as unknown as Struct;
+
+        const pendingAmount = firstValue.fieldsByName.get('field0').value.value;
+        const affordableAmount = firstValue.fieldsByName.get('field1').value.value;
 
         return {
-          pendingAmount: amounts[0],
-          affordableAmount: amounts[1],
+          pendingAmount,
+          affordableAmount,
         }
       })
       .catch((err) => {
-        this.logger.log('Unable to call getUserSubscriptionsChargeAmounts', err);
+        this.logger.log('Unable to call getUserSubscriptionChargeAmounts', err);
 
         throw Error(err);
       });
