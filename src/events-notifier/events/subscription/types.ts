@@ -48,13 +48,6 @@ export type TriggerSubscriptionResult = {
   data: SubscriptionMultiChargeResult[];
 }
 
-export type SignSubscriptionParsedEventResult = {
-  eventName: string;
-  subscriptionId: number;
-  address: string;
-  signedAt: Date;
-}
-
 // Cancel Subscription
 export type CancelSubscriptionResult = {
   eventName: string;
