@@ -71,7 +71,6 @@ export class TokenOperationService {
     const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
   
     queryBuilder.where('tokenOperation.parentId = :parentId', { parentId: id });
-    queryBuilder.leftJoinAndSelect('tokenOperation.agreement', 'agreement');
     queryBuilder.orderBy('tokenOperation.createdAt', 'DESC');
     queryBuilder.skip(pagination.skip);
     queryBuilder.take(pagination.limit);
