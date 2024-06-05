@@ -121,10 +121,10 @@ export class PaymentAgreementsEventHandler {
       // })
 
       updateTriggerData.failedChargeAmount = totalAmount;
-      updateTriggerData.failedAccountsCount = eventData.accounts.length;
+      updateTriggerData.failedCycles = eventData.accounts.length;
     } else if(payload.name === 'successfulAgreementCharges') {
       updateTriggerData.successfulChargeAmount = totalAmount;
-      updateTriggerData.successfulAccountsCount = eventData.accounts.length;
+      updateTriggerData.successfulCycles = eventData.accounts.length;
     }
 
     const memberInformation = eventData.accounts.map((address, index) => {
@@ -171,9 +171,9 @@ export class PaymentAgreementsEventHandler {
       })
   
       eventData.data.forEach((el, index) => {
-        this.membersService.updateLastChargedAt(el.account, new Date()) 
+        this.membersService.updateLastChargedAt(el.acccount, new Date()) 
         this.tokenOperationsService.create({
-          sender: el.account,
+          sender: el.acccount,
           senderAccountsCount: null,
           receiver: null,
           subscriptionTriggerId: agreementTrigger.id,
