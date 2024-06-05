@@ -12,13 +12,13 @@ export class AgreementTrigger {
   successfulChargeAmount: string;
 
   @Column({ type: 'int', default: 0 })
-  successfulAccountsCount: number;
+  successfulCycles: number;
 
   @Column({ type: 'bigint', default: 0 })
   failedChargeAmount: string;
 
   @Column({ type: 'int', nullable: true })
-  failedAccountsCount: number;
+  failedCycles: number;
   
   @Column({ type: 'varchar' })
   txHash: string;

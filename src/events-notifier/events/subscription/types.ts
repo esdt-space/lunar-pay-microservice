@@ -32,7 +32,7 @@ export type SignSubscriptionResult = {
 type ChargeOperationValue = [string, number] | null;
 
 export type SubscriptionMultiChargeResult = {
-  account: string;
+  acccount: string;
   data: [ChargeOperationValue, ChargeOperationValue];
 }
 

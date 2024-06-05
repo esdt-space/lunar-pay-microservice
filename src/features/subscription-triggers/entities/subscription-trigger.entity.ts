@@ -8,17 +8,17 @@ export class SubscriptionTrigger {
   @Column({ type: 'varchar', nullable: true  })
   subscription: string;
 
-  @Column({ type: 'varchar', default: '0'  })
+  @Column({ type: 'varchar', nullable: true })
   successfulChargeAmount: string;
 
-  @Column({ type: 'int', default: 0 })
-  successfulAccountsCount: number;
+  @Column({ type: 'int', nullable: true })
+  successfulCycles: number;
 
-  @Column({ type: 'varchar', default: '0'   })
+  @Column({ type: 'varchar', nullable: true })
   failedChargeAmount: string;
 
-  @Column({ type: 'int', default: 0 })
-  failedAccountsCount: number;
+  @Column({ type: 'int', nullable: true })
+  failedCycles: number;
   
   @Column({ type: 'varchar' })
   txHash: string;
