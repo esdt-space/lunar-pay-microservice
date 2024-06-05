@@ -1,8 +1,7 @@
-import { MongoServerError } from 'mongodb';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class MongoDatabaseException extends HttpException {
-  constructor(exception: MongoServerError) {
+  constructor(exception: any) {
     let message = 'Unknown database error',
       status = HttpStatus.INTERNAL_SERVER_ERROR;
 

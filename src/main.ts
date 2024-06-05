@@ -6,7 +6,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 
 import AppModule from './app.module';
-import { GlobalExceptionFilter } from '@/core/filters';
 
 import '@multiversx/sdk-nestjs-common/lib/utils/extensions/array.extensions';
 import '@multiversx/sdk-nestjs-common/lib/utils/extensions/date.extensions';
@@ -20,8 +19,6 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, validateCustomDecorators: true }),
   );
-
-  app.useGlobalFilters(new GlobalExceptionFilter());
 
   const configService = app.get(ConfigService);
 

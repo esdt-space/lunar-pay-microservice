@@ -8,7 +8,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 
-import { MongoServerError } from 'mongodb';
 import { MongoDatabaseException } from '@/libs/database/mongo';
 
 @Catch()
@@ -18,10 +17,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
 
     Logger.log(exception);
-
-    if (exception instanceof MongoServerError) {
-      exception = new MongoDatabaseException(exception);
-    }
 
     if (
       exception instanceof MongoDatabaseException ||
