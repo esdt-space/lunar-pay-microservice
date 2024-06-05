@@ -80,7 +80,10 @@ export class EventsNotifierService {
       case EventIdentifier.PAYMENT:
         return new BlockchainEvent<PaymentEventTopics>(rawEvent, BlockchainEventDecoded.Payment, PaymentEventTopics);
 
-      case EventIdentifier.DONATE:
+      case EventIdentifier.DONATE_WITH_VAULT:
+        return new BlockchainEvent<DonationEventTopics>(rawEvent, BlockchainEventDecoded.Donation, DonationEventTopics);
+        
+      case EventIdentifier.DONATE_WITH_WALLET:
         return new BlockchainEvent<DonationEventTopics>(rawEvent, BlockchainEventDecoded.Donation, DonationEventTopics);
 
       case EventIdentifier.CREATE_SUBSCRIPTION:

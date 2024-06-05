@@ -97,7 +97,7 @@ export class VaultService {
     const typedId = { type: 'u64', value: id.toString() } as unknown as TypedValue;
     
     return this.queryHandler
-      .queryContract(this.contract, 'getUserSubscriptionsChargeAmounts', [
+      .queryContract(this.contract, 'getUserSubscriptionChargeAmounts', [
         typedId,
       ])
       .then((response) => {
@@ -110,7 +110,7 @@ export class VaultService {
         }
       })
       .catch((err) => {
-        this.logger.log('Unable to call getUserSubscriptionsChargeAmounts', err);
+        this.logger.log('Unable to call getUserSubscriptionChargeAmounts', err);
 
         throw Error(err);
       });
