@@ -1,4 +1,4 @@
-FROM node:21-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /usr/src/app
 
@@ -13,7 +13,7 @@ RUN npm run build:${BUILD_ENV}
 
 USER node
 
-FROM node:21-alpine
+FROM node:20-alpine
 
 ENV NODE_ENV=production
 
@@ -28,5 +28,5 @@ COPY --chown=node:node --from=builder /usr/src/app/dist ./dist
 
 USER node
 
-EXPOSE 3000
+EXPOSE 3001 3002
 CMD ["node", "dist/src/main"]
