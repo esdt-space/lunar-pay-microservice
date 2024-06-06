@@ -19,14 +19,13 @@ jobs:
         with:
           node-version: 18
 
+      - name: Setup Fly.io config
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
       - name: Build only for pull request
         if: ${{ github.event_name == 'pull_request' }}
         run: |
           flyctl deploy -c fly.devnet.toml --build-only
-
-      - name: Setup Fly.io config
-        if: ${{ github.event_name == 'push' }}
-        uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy mainnet app to fly.io
         if: ${{ github.event_name == 'push' }}
