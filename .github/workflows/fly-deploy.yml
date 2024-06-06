@@ -3,13 +3,7 @@ on:
   push:
     branches:
       - main
-      - devnet
-      - testnet
   pull_request:
-    branches:
-      - main
-      - devnet
-      - testnet
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -25,21 +19,16 @@ jobs:
         with:
           node-version: 18
 
+      - name: Build only for pull request
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          flyctl deploy -c fly.devnet.toml --build-only
+
       - name: Setup Fly.io config
         if: ${{ github.event_name == 'push' }}
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy mainnet app to fly.io
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name == 'push' }}
         run: |
           flyctl deploy -c fly.devnet.toml --remote-only
-
-      - name: Deploy devnet app to fly.io
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/devnet' }}
-        run: |
-          flyctl deploy -c fly.devnet.toml --remote-only
-
-      - name: Deploy testnet app to fly.io
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/testnet' }}
-        run: |
-          flyctl deploy -c fly.testnet.toml --remote-only
