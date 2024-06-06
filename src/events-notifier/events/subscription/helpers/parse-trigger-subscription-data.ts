@@ -1,25 +1,27 @@
 import { SubscriptionMultiChargeResult } from "../types"
 
 export const parseTriggerSubscriptionData = (eventData: SubscriptionMultiChargeResult[]) => {
-  return eventData.reduce((acc, val) => {
-    const successfulValue = val.data['field0'];
-    const failedValue = val.data['field1'];
+  let successfulChargeAmount = 0
+  let failedChargeAmount = 0
+  let successfulCycles = 0
+  let failedCycles = 0
 
-    if(successfulValue !== null) {
-      acc.successfulChargeAmount = successfulValue['field0'].toString()
-      acc.successfulCycles = Number(successfulValue['field1'].toString())
+  eventData.forEach((val) => {
+    if(val.data['field0'] && val.data['field0']['field0']) {
+      successfulChargeAmount += Number(val.data['field0']['field0'])
+      successfulCycles += Number(val.data['field0']['field1'])
     }
-
-    if(failedValue !== null) {
-      acc.failedChargeAmount = failedValue['field0'].toString()
-      acc.failedCycles =Number(failedValue['field1'].toString())
+    
+    if(val.data['field1'] && val.data['field1']['field0']) {
+      failedChargeAmount += Number(val.data['field1']['field0'])
+      failedCycles += Number(val.data['field1']['field1'])
     }
-
-    return acc
-  }, {
-    successfulChargeAmount: "", 
-    failedChargeAmount: "", 
-    successfulCycles: 0, 
-    failedCycles: 0
   })
+
+  return {
+    successfulChargeAmount: successfulChargeAmount.toString(), 
+    failedChargeAmount: failedChargeAmount.toString(), 
+    successfulCycles: successfulCycles, 
+    failedCycles: failedCycles
+  }
 }
