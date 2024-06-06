@@ -5,6 +5,11 @@ on:
       - main
       - devnet
       - testnet
+  pull_request:
+    branches:
+      - main
+      - devnet
+      - testnet
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -21,19 +26,20 @@ jobs:
           node-version: 18
 
       - name: Setup Fly.io config
+        if: ${{ github.event_name == 'push' }}
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy mainnet app to fly.io
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: |
           flyctl deploy -c fly.devnet.toml --remote-only
 
       - name: Deploy devnet app to fly.io
-        if: ${{ github.ref_name == 'devnet' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/devnet' }}
         run: |
           flyctl deploy -c fly.devnet.toml --remote-only
 
       - name: Deploy testnet app to fly.io
-        if: ${{ github.ref_name == 'testnet' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/testnet' }}
         run: |
           flyctl deploy -c fly.testnet.toml --remote-only
