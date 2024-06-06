@@ -37,9 +37,13 @@ export class SubscriptionTriggerService {
     let subscriptionTrigger = await this.findOneByTxHash(hash);
 
     if(!subscriptionTrigger) {
-      const subscriptionTrigger = await this.create(triggerData);
+      let newSubscriptionTrigger = await this.create(triggerData);
+      
+      newSubscriptionTrigger = { ...newSubscriptionTrigger, ...updateData }
 
-      return this.repository.save(subscriptionTrigger);
+      if(newSubscriptionTrigger.successfulChargeAmount !== null && newSubscriptionTrigger.failedChargeAmount !== null) {
+        return this.repository.save(newSubscriptionTrigger);
+      }
     } else {
       subscriptionTrigger = { ...subscriptionTrigger, ...updateData };
 
@@ -50,7 +54,7 @@ export class SubscriptionTriggerService {
   async findAllSubscriptionTriggers(subscription: string, pagination: PaginationParams = new PaginationParams()) {
     const [result, total] = await this.repository.findAndCount({
       where: { subscription: subscription },
-      order: { id: 'DESC' },
+      order: { createdAt: 'DESC' },
       skip: pagination.skip,
       take: pagination.limit,
     });

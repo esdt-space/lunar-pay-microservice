@@ -19,6 +19,7 @@ import { CreateSubscriptionEventTopics } from '@/events-notifier/events/subscrip
 import { SignSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/sign-subscription-event.topics';
 import { TriggerSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/trigger-subscription-event.topics';
 import { CancelSubscriptionEventTopics } from '@/events-notifier/events/subscription/topics/cancel-subscription-event.topics';
+import { parseTriggerSubscriptionData } from '@/events-notifier/events/subscription/helpers';
 
 @Injectable()
 export class SubscriptionsEventHandler {
@@ -93,27 +94,7 @@ export class SubscriptionsEventHandler {
   async handleTriggerSubscriptionEvent(event: BlockchainEvent<TriggerSubscriptionEventTopics>) {
     const eventData = event.decodedTopics.toPlainObject();
 
-    const chargesAmountResult = eventData.data.reduce((acc, val) => {
-      const successfulValue = val.data[0];
-      const failedValue = val.data[1];
-
-      if(successfulValue !== null) {
-        acc.successfulChargeAmount = successfulValue[0]
-        acc.successfulAccountsCount = Number(successfulValue[1])
-      }
-
-      if(failedValue !== null) {
-        acc.failedChargeAmount = failedValue[0]
-        acc.failedAccountsCount =Number(failedValue[1])
-      }
-
-      return acc
-    }, {
-      successfulChargeAmount: "", 
-      failedChargeAmount: "", 
-      successfulAccountsCount: 0, 
-      failedAccountsCount: 0
-    })
+    const chargeAmountResult = parseTriggerSubscriptionData(eventData.data)
 
     const subscription = await this.subscriptionsService
       .findOneByIdSmartContractId(eventData.subscriptionId);
@@ -124,7 +105,7 @@ export class SubscriptionsEventHandler {
       createdAt: new Date()
     }
 
-    const subscriptionTrigger = await this.subscriptionTriggersService.createOrUpdate(newSubscriptionTrigger, chargesAmountResult, event.txHash)
+    const subscriptionTrigger = await this.subscriptionTriggersService.createOrUpdate(newSubscriptionTrigger, chargeAmountResult, event.txHash)
 
     const providerOperation = await this.tokenOperationsService.create({
       sender: null,
@@ -132,7 +113,7 @@ export class SubscriptionsEventHandler {
       receiver: subscription.owner,
       subscriptionTriggerId: null,
       status: TokenOperationStatus.SUCCESS,
-      amount: chargesAmountResult.successfulChargeAmount,
+      amount: chargeAmountResult.successfulChargeAmount,
       tokenIdentifier: subscription.tokenIdentifier,
       tokenNonce: subscription.tokenNonce,
       type: TokenOperationType.SUBSCRIPTION_CHARGE,
@@ -145,18 +126,19 @@ export class SubscriptionsEventHandler {
     })
   
     eventData.data.forEach((member) => {
-      const successfulValue = member.data[0];
-      const failedValue = member.data[1];
+      const successfulValue = member.data['field0'];
+      const failedValue = member.data['field1'];
+      const memberAddress = member.acccount.toString()
 
       if(successfulValue !== null) {
-        this.membersService.updateLastChargedAt(member.account, new Date()) 
+        this.membersService.updateLastChargedAt(memberAddress, new Date()) 
         this.tokenOperationsService.create({
-          sender: member.account,
+          sender: memberAddress,
           senderAccountsCount: null,
           receiver: null,
           subscriptionTriggerId: subscriptionTrigger.id,
           status: TokenOperationStatus.SUCCESS,
-          amount: successfulValue[0],
+          amount: successfulValue['field0'].toString(),
           tokenIdentifier: subscription.tokenIdentifier,
           tokenNonce: subscription.tokenNonce,
           type: TokenOperationType.SUBSCRIPTION_CHARGE,
@@ -170,14 +152,14 @@ export class SubscriptionsEventHandler {
       }
 
       if(failedValue !== null) {
-        this.membersService.updateLastChargedAt(member.account, new Date()) 
+        this.membersService.updateLastChargedAt(memberAddress, new Date()) 
         this.tokenOperationsService.create({
-          sender: member.account,
+          sender: memberAddress,
           senderAccountsCount: null,
           receiver: null,
           subscriptionTriggerId: subscriptionTrigger.id,
           status: TokenOperationStatus.FAILED,
-          amount: failedValue[0],
+          amount: failedValue['field1'].toString(),
           tokenIdentifier: subscription.tokenIdentifier,
           tokenNonce: subscription.tokenNonce,
           type: TokenOperationType.SUBSCRIPTION_CHARGE,

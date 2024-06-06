@@ -50,6 +50,6 @@ export class VaultController {
   @CacheTTL(DurationConstants.oneSecond() * 10)
   @UseGuards(NativeAuthGuard)
   async getSubscriptionsChargeAmounts(@Param('id') id: number) {
-    return this.vaultService.getSubscriptionsChargeAmounts(id);
+    return this.vaultService.getSubscriptionChargeAmounts(id);
   }
 }

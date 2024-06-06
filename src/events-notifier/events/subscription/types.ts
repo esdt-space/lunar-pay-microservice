@@ -32,7 +32,7 @@ export type SignSubscriptionResult = {
 type ChargeOperationValue = [string, number] | null;
 
 export type SubscriptionMultiChargeResult = {
-  account: string;
+  acccount: string;
   data: [ChargeOperationValue, ChargeOperationValue];
 }
 
@@ -46,13 +46,6 @@ export type TriggerSubscriptionResult = {
   subscriptionId: number;
   createdAt: number;
   data: SubscriptionMultiChargeResult[];
-}
-
-export type SignSubscriptionParsedEventResult = {
-  eventName: string;
-  subscriptionId: number;
-  address: string;
-  signedAt: Date;
 }
 
 // Cancel Subscription

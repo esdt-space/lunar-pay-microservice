@@ -13,7 +13,7 @@
         },
         "framework": {
             "name": "multiversx-sc",
-            "version": "0.47.8"
+            "version": "0.50.1"
         }
     },
     "name": "LunarPay",
@@ -21,13 +21,11 @@
         "inputs": [],
         "outputs": []
     },
+    "upgradeConstructor": {
+        "inputs": [],
+        "outputs": []
+    },
     "endpoints": [
-        {
-            "name": "upgrade",
-            "mutability": "mutable",
-            "inputs": [],
-            "outputs": []
-        },
         {
             "name": "isUserAdmin",
             "mutability": "readonly",
@@ -360,6 +358,62 @@
                 }
             ],
             "outputs": []
+        },
+        {
+            "docs": [
+                "    * It returns the subscription charge amount information.\\n     * Returns: (pendingChargeAmount, affordableChargeAmount)\\n     "
+            ],
+            "name": "getUserSubscriptionChargeAmounts",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "tuple<BigUint,BigUint>"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "    * It returns the subscription token outflow for a given account\\n     "
+            ],
+            "name": "getUserSubscriptionsOutflow",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<tuple<EgldOrEsdtTokenIdentifier,BigUint>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "docs": [
+                "    * It returns the subscription token inflow for a given account\\n     "
+            ],
+            "name": "getUserSubscriptionsInflow",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<tuple<EgldOrEsdtTokenIdentifier,BigUint>>",
+                    "multi_result": true
+                }
+            ]
         },
         {
             "name": "getSubscriptionIds",

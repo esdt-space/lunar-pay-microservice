@@ -11,9 +11,9 @@ export class UpdateAgreementTriggerDto {
 
   @IsString()
   @IsOptional()
-  successfulAccountsCount?: number;
+  successfulCycles?: number;
 
   @IsString()
   @IsOptional()
-  failedAccountsCount?: number;
+  failedCycles?: number;
 }

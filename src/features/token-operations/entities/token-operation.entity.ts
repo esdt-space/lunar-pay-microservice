@@ -21,7 +21,7 @@ export class TokenOperation {
   @Column({ type: 'varchar', nullable: true })
   sender: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   receiver: string;
 
   @Column({ type: 'enum', enum: TokenOperationType })
