@@ -50,9 +50,10 @@ export class SubscriptionsService {
 
   async findLatestSubscriptionCreatedByAccount(
     address: string,
+    identifier: number
   ): Promise<Subscription> {
     return this.repository.findOne({
-      where: { owner: address },
+      where: { owner: address, subscriptionIdentifier: identifier },
       order: { createdAt: 'DESC' },
     });
   }
