@@ -67,10 +67,19 @@ export class TokenOperationService {
     }
   }
 
-  async findChargeTokenOperationsByParentId(id: string, pagination: PaginationParams = new PaginationParams()) {
+  async findChargeTokenOperationsByParentId(
+    id: string, 
+    filters: TokenOperationFilters = new TokenOperationFilters(), 
+    pagination: PaginationParams = new PaginationParams()
+  ) {
     const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
-  
+    
     queryBuilder.where('tokenOperation.parentId = :parentId', { parentId: id });
+
+    if(filters.filterByAddress) {
+      queryBuilder.andWhere('tokenOperation.sender = :address', { address: filters.filterByAddress });
+    }
+  
     queryBuilder.orderBy('tokenOperation.createdAt', 'DESC');
     queryBuilder.skip(pagination.skip);
     queryBuilder.take(pagination.limit);
@@ -80,7 +89,10 @@ export class TokenOperationService {
     return new PaginatedResponse<TokenOperation>(operations, total, pagination)
   }
 
-  async findAllTokenOperations(filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
+  async findAllTokenOperations(
+    filters: TokenOperationFilters = new TokenOperationFilters(), 
+    pagination: PaginationParams = new PaginationParams()
+  ) {
     const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
 
     if (filters.type) {

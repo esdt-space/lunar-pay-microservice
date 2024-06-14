@@ -53,8 +53,9 @@ export class TokenOperationController {
   })
   async getOperationsByParentId(
     @Param('id') id: string,
+    @Query() filters: TokenOperationFilters,
     @Query() pagination: PaginationParams,
   ) {
-    return this.tokenOperationService.findChargeTokenOperationsByParentId(id, pagination);
+    return this.tokenOperationService.findChargeTokenOperationsByParentId(id, filters, pagination);
   }
 }
