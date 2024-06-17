@@ -32,10 +32,13 @@ export class SubscriptionsController {
     return this.subscriptionsService.findSubscriptionsCreatedByAccount(address, pagination);
   }
 
-  @Get('created/latest')
+  @Get('created/latest/:identifier')
   @UseGuards(NativeAuthGuard)
-  getLatestSubscriptionCreated(@NativeAuth('address') address: string) {
-    return this.subscriptionsService.findLatestSubscriptionCreatedByAccount(address);
+  getLatestSubscriptionCreated(
+    @NativeAuth('address') address: string,
+    @Param('identifier') identifier: number
+  ) {
+    return this.subscriptionsService.findLatestSubscriptionCreatedByAccount(address, identifier);
   }
 
   @Get('signed')
