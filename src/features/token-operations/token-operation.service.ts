@@ -95,6 +95,10 @@ export class TokenOperationService {
   ) {
     const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
 
+    if(filters.parentId) {
+      queryBuilder.andWhere('tokenOperation.parentId = :parentId', { parentId: filters.parentId });
+    }
+
     if (filters.type) {
       queryBuilder.andWhere('tokenOperation.type = :type', { type: filters.type });
     }

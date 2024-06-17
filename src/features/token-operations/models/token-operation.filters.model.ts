@@ -8,6 +8,11 @@ export default class TokenOperationFilters {
   @IsOptional()
   @IsString()
   filterByAddress?: string;
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  parentId?: string;
 
   @ApiProperty({ required: false, enum: TokenOperationType })
   @IsOptional()
