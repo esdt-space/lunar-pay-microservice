@@ -89,6 +89,10 @@ export class TokenOperationService {
       queryBuilder.andWhere('tokenOperation.type = :type', { type: filters.type });
     }
 
+    if(filters.parentId) {
+      queryBuilder.andWhere('tokenOperation.parentId = :parentId', { parentId: filters.parentId });
+    }
+
     queryBuilder.orderBy('tokenOperation.createdAt', 'DESC');
     queryBuilder.skip(pagination.skip);
     queryBuilder.take(pagination.limit);
