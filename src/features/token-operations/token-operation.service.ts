@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 
 import PaginationParams from '@/common/models/pagination.params.model';
 
@@ -67,10 +67,19 @@ export class TokenOperationService {
     }
   }
 
-  async findChargeTokenOperationsByParentId(id: string, pagination: PaginationParams = new PaginationParams()) {
+  async findChargeTokenOperationsByParentId(
+    id: string, 
+    filters: TokenOperationFilters = new TokenOperationFilters(), 
+    pagination: PaginationParams = new PaginationParams()
+  ) {
     const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
-  
+    
     queryBuilder.where('tokenOperation.parentId = :parentId', { parentId: id });
+
+    if(filters.filterByAddress) {
+      queryBuilder.andWhere('tokenOperation.sender = :address', { address: filters.filterByAddress });
+    }
+  
     queryBuilder.orderBy('tokenOperation.createdAt', 'DESC');
     queryBuilder.skip(pagination.skip);
     queryBuilder.take(pagination.limit);
@@ -80,29 +89,21 @@ export class TokenOperationService {
     return new PaginatedResponse<TokenOperation>(operations, total, pagination)
   }
 
-  async findAllAccountTokenOperations(address: string, filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
+  async findAllTokenOperations(
+    filters: TokenOperationFilters = new TokenOperationFilters(), 
+    pagination: PaginationParams = new PaginationParams()
+  ) {
     const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
-
-    queryBuilder.where('(tokenOperation.sender = :address OR tokenOperation.receiver = :address)', { address });
 
     if (filters.type) {
       queryBuilder.andWhere('tokenOperation.type = :type', { type: filters.type });
     }
-
-    queryBuilder.orderBy('tokenOperation.createdAt', 'DESC');
-    queryBuilder.skip(pagination.skip);
-    queryBuilder.take(pagination.limit);
-    
-    const [allOperations, operationsCount] = await queryBuilder.getManyAndCount();
-
-    return new PaginatedResponse<TokenOperation>(allOperations, operationsCount, pagination)
-  }
-
-  async findAllTokenOperations(filters: TokenOperationFilters = new TokenOperationFilters(), pagination: PaginationParams = new PaginationParams()) {
-    const queryBuilder = this.repository.createQueryBuilder('tokenOperation');
-
-    if (filters.type) {
-      queryBuilder.andWhere('tokenOperation.type = :type', { type: filters.type });
+      
+    if(filters.filterByAddress) {
+      queryBuilder.andWhere(new Brackets(qb => {
+        qb.where('tokenOperation.sender = :address', { address: filters.filterByAddress })
+          .orWhere('tokenOperation.receiver = :address', { address: filters.filterByAddress })
+      }));
     }
 
     queryBuilder.orderBy('tokenOperation.createdAt', 'DESC');

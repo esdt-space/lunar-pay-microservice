@@ -6,7 +6,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { NativeAuth, NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
+import { NativeAuthGuard } from '@multiversx/sdk-nestjs-auth';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import PaginationParams from '@/common/models/pagination.params.model';
@@ -39,11 +39,10 @@ export class TokenOperationController {
     description: 'Returns a list of available token-operations.',
   })
   async list(
-    @NativeAuth('address') address: string,
     @Query() filters: TokenOperationFilters,
     @Query() pagination: PaginationParams,
   ) {
-    return this.tokenOperationService.findAllAccountTokenOperations(address, filters, pagination);
+    return this.tokenOperationService.findAllTokenOperations(filters, pagination);
   }
 
   @Get(':id/all/charge-operations')
@@ -54,8 +53,9 @@ export class TokenOperationController {
   })
   async getOperationsByParentId(
     @Param('id') id: string,
+    @Query() filters: TokenOperationFilters,
     @Query() pagination: PaginationParams,
   ) {
-    return this.tokenOperationService.findChargeTokenOperationsByParentId(id, pagination);
+    return this.tokenOperationService.findChargeTokenOperationsByParentId(id, filters, pagination);
   }
 }
