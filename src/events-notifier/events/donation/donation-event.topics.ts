@@ -12,6 +12,7 @@ export class DonationEventTopics extends LunarPayEventTopics {
   private readonly tokenIdentifier: Token;
   private readonly tokenNonce: number;
   private readonly amount: number;
+  private readonly donationId: string;
   private readonly metadata: string;
 
   constructor(rawTopics: string[]) {
@@ -25,6 +26,7 @@ export class DonationEventTopics extends LunarPayEventTopics {
     this.tokenIdentifier = parsedEvent.token_identifier;
     this.tokenNonce = parsedEvent.token_nonce;
     this.amount = parsedEvent.amount.toNumber();
+    this.donationId = parsedEvent.donation_id.toString();
     this.metadata = parsedEvent.metadata !== null ? parsedEvent.metadata.toString() : '';
   }
 
@@ -35,6 +37,7 @@ export class DonationEventTopics extends LunarPayEventTopics {
       tokenIdentifier: this.tokenIdentifier,
       tokenNonce: this.tokenNonce,
       amount: this.amount,
+      donationId: this.donationId,
       metadata: this.metadata,
     };
   }
