@@ -1,11 +1,11 @@
 {
     "buildInfo": {
         "rustc": {
-            "version": "1.76.0-nightly",
-            "commitHash": "d86d65bbc19b928387f68427fcc3a0da498d8a19",
-            "commitDate": "2023-12-10",
-            "channel": "Nightly",
-            "short": "rustc 1.76.0-nightly (d86d65bbc 2023-12-10)"
+            "version": "1.78.0",
+            "commitHash": "9b00956e56009bab2aa15d7bff10916599e3d6d6",
+            "commitDate": "2024-04-29",
+            "channel": "Stable",
+            "short": "rustc 1.78.0 (9b00956e5 2024-04-29)"
         },
         "contractCrate": {
             "name": "lunarpay",
@@ -13,7 +13,7 @@
         },
         "framework": {
             "name": "multiversx-sc",
-            "version": "0.50.1"
+            "version": "0.50.4"
         }
     },
     "name": "LunarPay",
@@ -317,6 +317,10 @@
                     "type": "Address"
                 },
                 {
+                    "name": "donation_id",
+                    "type": "bytes"
+                },
+                {
                     "name": "metadata",
                     "type": "Option<bytes>"
                 }
@@ -335,6 +339,10 @@
                     "type": "Address"
                 },
                 {
+                    "name": "donation_id",
+                    "type": "bytes"
+                },
+                {
                     "name": "metadata",
                     "type": "Option<bytes>"
                 }
@@ -351,6 +359,10 @@
                 {
                     "name": "receiver",
                     "type": "Address"
+                },
+                {
+                    "name": "donation_id",
+                    "type": "bytes"
                 },
                 {
                     "name": "metadata",
@@ -706,6 +718,11 @@
                 {
                     "name": "amount",
                     "type": "BigUint",
+                    "indexed": true
+                },
+                {
+                    "name": "donation_id",
+                    "type": "bytes",
                     "indexed": true
                 },
                 {

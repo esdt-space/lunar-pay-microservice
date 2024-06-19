@@ -8,6 +8,7 @@ export type DonationParsedResult = {
   token_identifier: Token,
   token_nonce: number,
   amount: BigNumber,
+  donation_id: Uint8Array ,
   metadata: OptionValue,
 }
 
@@ -17,5 +18,6 @@ export type DonationResult = {
   tokenIdentifier: Token;
   tokenNonce: number;
   amount: number;
+  donationId: string;
   metadata: string;
 }
