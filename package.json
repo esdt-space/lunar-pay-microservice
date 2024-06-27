@@ -21,7 +21,7 @@
     "@multiversx/sdk-nestjs-auth": "^3.1.6",
     "@multiversx/sdk-nestjs-cache": "^3.1.6",
     "@multiversx/sdk-nestjs-common": "^3.1.6",
-    "@multiversx/sdk-nestjs-elastic": "^3.1.6",
+    "@multiversx/sdk-nestjs-elastic": "^3.7.1",
     "@multiversx/sdk-nestjs-http": "^3.1.6",
     "@multiversx/sdk-nestjs-monitoring": "^3.1.6",
     "@multiversx/sdk-nestjs-rabbitmq": "^3.1.6",
