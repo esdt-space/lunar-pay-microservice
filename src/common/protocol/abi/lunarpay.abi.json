@@ -13,7 +13,7 @@
         },
         "framework": {
             "name": "multiversx-sc",
-            "version": "0.50.4"
+            "version": "0.50.5"
         }
     },
     "name": "LunarPay",
@@ -42,6 +42,9 @@
             ]
         },
         {
+            "docs": [
+                "Stores the current whitelisted token identifiers"
+            ],
             "name": "getWhitelistedTokenIds",
             "mutability": "readonly",
             "inputs": [],
@@ -53,6 +56,10 @@
             ]
         },
         {
+            "docs": [
+                "Stores the used token identifiers",
+                "A token might get removed from the whitelist but the account might still have balance"
+            ],
             "name": "getUsedTokenIds",
             "mutability": "readonly",
             "inputs": [],
@@ -64,6 +71,9 @@
             ]
         },
         {
+            "docs": [
+                "Stores the addresses that are allowed to create agreements"
+            ],
             "name": "getWhitelistedAddresses",
             "mutability": "readonly",
             "inputs": [],
@@ -148,7 +158,7 @@
         },
         {
             "docs": [
-                "    * It returns the total account balances\\n     "
+                "It returns the total account balances"
             ],
             "name": "getAccountBalances",
             "mutability": "readonly",
@@ -211,7 +221,7 @@
         },
         {
             "docs": [
-                "Stores the last ID assigned to an agreement *"
+                "Stores the last ID assigned to an agreement"
             ],
             "name": "getLastAgreementId",
             "mutability": "readonly",
@@ -317,7 +327,7 @@
                     "type": "Address"
                 },
                 {
-                    "name": "donation_id",
+                    "name": "donation_link_id",
                     "type": "bytes"
                 },
                 {
@@ -339,7 +349,7 @@
                     "type": "Address"
                 },
                 {
-                    "name": "donation_id",
+                    "name": "donation_link_id",
                     "type": "bytes"
                 },
                 {
@@ -361,7 +371,7 @@
                     "type": "Address"
                 },
                 {
-                    "name": "donation_id",
+                    "name": "donation_link_id",
                     "type": "bytes"
                 },
                 {
@@ -373,7 +383,8 @@
         },
         {
             "docs": [
-                "    * It returns the subscription charge amount information.\\n     * Returns: (pendingChargeAmount, affordableChargeAmount)\\n     "
+                "It returns the subscription charge amount information.",
+                "Returns: (pendingChargeAmount, affordableChargeAmount)"
             ],
             "name": "getUserSubscriptionChargeAmounts",
             "mutability": "readonly",
@@ -391,7 +402,7 @@
         },
         {
             "docs": [
-                "    * It returns the subscription token outflow for a given account\\n     "
+                "It returns the subscription token outflow for a given account"
             ],
             "name": "getUserSubscriptionsOutflow",
             "mutability": "readonly",
@@ -410,7 +421,7 @@
         },
         {
             "docs": [
-                "    * It returns the subscription token inflow for a given account\\n     "
+                "It returns the subscription token inflow for a given account"
             ],
             "name": "getUserSubscriptionsInflow",
             "mutability": "readonly",
@@ -440,7 +451,7 @@
         },
         {
             "docs": [
-                "Stores the IDs for all the subscriptions created by an account *"
+                "Stores the IDs for all the subscriptions created by an account"
             ],
             "name": "getAccountSubscriptionsCreatedList",
             "mutability": "readonly",
@@ -459,7 +470,7 @@
         },
         {
             "docs": [
-                "Stores the IDs for all subscription signed by an account *"
+                "Stores the IDs for all subscription signed by an account"
             ],
             "name": "getAccountSubscriptionsMembershipList",
             "mutability": "readonly",
@@ -539,7 +550,7 @@
         },
         {
             "docs": [
-                "    * Subscribe to a subscription\\n     "
+                "Subscribe to a subscription"
             ],
             "name": "createSubscriptionMembership",
             "mutability": "mutable",
@@ -721,7 +732,7 @@
                     "indexed": true
                 },
                 {
-                    "name": "donation_id",
+                    "name": "donation_link_id",
                     "type": "bytes",
                     "indexed": true
                 },
@@ -915,7 +926,7 @@
             "type": "struct",
             "fields": [
                 {
-                    "name": "acccount",
+                    "name": "account",
                     "type": "Address"
                 },
                 {
@@ -936,6 +947,9 @@
                     "discriminant": 1
                 },
                 {
+                    "docs": [
+                        "Can be triggered only for the current cycle"
+                    ],
                     "name": "TermRestrictedPayoutToSend",
                     "discriminant": 2
                 },

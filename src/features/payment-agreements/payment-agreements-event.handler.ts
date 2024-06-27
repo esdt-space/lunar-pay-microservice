@@ -171,9 +171,9 @@ export class PaymentAgreementsEventHandler {
       })
   
       eventData.data.forEach((el, index) => {
-        this.membersService.updateLastChargedAt(el.acccount, new Date()) 
+        this.membersService.updateLastChargedAt(el.account, new Date()) 
         this.tokenOperationsService.create({
-          sender: el.acccount,
+          sender: el.account,
           senderAccountsCount: null,
           receiver: null,
           subscriptionTriggerId: agreementTrigger.id,

@@ -128,7 +128,7 @@ export class SubscriptionsEventHandler {
     eventData.data.forEach((member) => {
       const successfulValue = member.data['field0'];
       const failedValue = member.data['field1'];
-      const memberAddress = member.acccount.toString()
+      const memberAddress = member.account.toString()
 
       if(successfulValue !== null) {
         this.membersService.updateLastChargedAt(memberAddress, new Date()) 
