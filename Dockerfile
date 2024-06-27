@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /usr/src/app
 
@@ -13,7 +13,7 @@ RUN npm run build:${BUILD_ENV}
 
 USER node
 
-FROM node:20-alpine
+FROM node:22-alpine
 
 ENV NODE_ENV=production
 
