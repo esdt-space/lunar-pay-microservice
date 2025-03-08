@@ -28,7 +28,7 @@
     "@multiversx/sdk-nestjs-redis": "^3.1.6",
     "@multiversx/sdk-network-providers": "^2.2.1",
     "@multiversx/sdk-transaction-processor": "^0.1.33",
-    "@nestjs-modules/mailer": "^1.11.2",
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/axios": "^3.0.2",
     "@nestjs/cache-manager": "^2.2.1",
     "@nestjs/common": "^10.3.3",
